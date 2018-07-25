@@ -1,0 +1,36 @@
+{
+  "name": "bottomtime",
+  "version": "1.0.0",
+  "description": "An online log book for scuba divers.",
+  "main": "service/index.js",
+  "private": true,
+  "scripts": {
+	"service": "node service/index.js",
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChrisCarleton/BottomTime.git"
+  },
+  "keywords": [
+    "scuba",
+    "diving",
+    "bottom",
+    "time",
+    "log",
+    "book"
+  ],
+  "author": "Chris Carleton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChrisCarleton/BottomTime/issues"
+  },
+  "homepage": "https://github.com/ChrisCarleton/BottomTime#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0"
+  },
+  "dependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
+}
