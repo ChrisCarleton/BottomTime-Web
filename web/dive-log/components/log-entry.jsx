@@ -1,12 +1,13 @@
 import React from 'react';
 
+import Form from '../../components/form';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
 	Breadcrumb,
 	Col,
-	Grid,
 	Row
 } from 'react-bootstrap';
+import TextBox from '../../components/text-box';
 
 class LogEntry extends React.Component {
 	render() {
@@ -24,11 +25,14 @@ class LogEntry extends React.Component {
 
 				<h1>New Log Entry</h1>
 
-				<Grid>
-					<Row>
-						<Col></Col>
-					</Row>
-				</Grid>
+				<Form>
+					<TextBox
+						controlId="location"
+						label="Location" />
+					<TextBox
+						controlId="diveSite"
+						label="Site" />
+				</Form>
 			</div>);
 	}
 }
