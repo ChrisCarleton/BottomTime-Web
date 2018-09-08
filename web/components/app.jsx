@@ -4,7 +4,8 @@ import NavBar from './navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Home from './home';
-import LogsList from '../logs/components/logs-list';
+import LogsList from '../dive-log/components/logs-list';
+import LogEntry from '../dive-log/components/log-entry';
 import NotFound from './not-found';
 
 class App extends React.Component {
@@ -15,8 +16,9 @@ class App extends React.Component {
 					<NavBar />
 					<div className="container lead">
 						<Switch>
-							<Route exact path="/" component={ Home } />
-							<Route path="/logs" component={ LogsList } />
+							<Route path="/" exact component={ Home } />
+							<Route path="/logs" exact component={ LogsList } />
+							<Route path="/logs/new" exact component={ LogEntry } />
 							<Route path="*" component={ NotFound } />
 						</Switch>
 					</div>
