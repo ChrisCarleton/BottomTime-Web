@@ -14,7 +14,7 @@ class App extends React.Component {
 			<Router>
 				<div>
 					<NavBar />
-					<div className="container lead">
+					<div id="main-section" className="container">
 						<Switch>
 							<Route path="/" exact component={ Home } />
 							<Route path="/logs" exact component={ LogsList } />
@@ -23,6 +23,7 @@ class App extends React.Component {
 						</Switch>
 					</div>
 					<div className="container">
+						<hr />
 						<p><small>Copyright &copy; Chris Carleton, 2018</small></p>
 					</div>
 				</div>

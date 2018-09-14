@@ -1,11 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-	ControlLabel,
-	FormControl,
-	FormGroup
-} from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
+import FormGroup from './form-group';
 
 class TextBox extends React.Component {
 	constructor(props) {
@@ -19,25 +16,15 @@ class TextBox extends React.Component {
 		if (this.props.onChange) this.props.onChange(e.target.value);
 	}
 
-	renderVertical() {
+	render() {
 		return (
-			<FormGroup controlId={ this.props.controlId }>
-				<ControlLabel>{ this.props.label }</ControlLabel>
+			<FormGroup label={ this.props.label } controlId={ this.props.controlId }>
 				<FormControl
 					type="text"
 					value={ this.state.value }
-					onChange={ this.onTextChanged } />
+					onChange={ this.onTextChanged }
+					required={ this.props.required } />
 			</FormGroup>);
-	}
-
-	renderHorizontal() {
-		return null;
-	}
-
-	render() {
-		return this.props.horizontal
-			? this.renderHorizontal()
-			: this.renderVertical();
 	}
 }
 
@@ -46,6 +33,7 @@ TextBox.propTypes = {
 	horizontal: PropTypes.bool,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
+	required: PropTypes.bool,
 	value: PropTypes.string
 };
 
