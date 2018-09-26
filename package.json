@@ -5,7 +5,7 @@
   "main": "service/index.js",
   "private": true,
   "scripts": {
-    "service": "node service/index.js",
+	"build": "gulp package",
     "test": "gulp test"
   },
   "repository": {
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/ChrisCarleton/BottomTime#readme",
   "devDependencies": {
-    "babel-loader": "^7.1.5",
+    "babel-loader": "^8.0.2",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "eslint-plugin-react": "^7.11.1",
@@ -41,10 +41,11 @@
     "webpack-stream": "^5.0.0"
   },
   "dependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "alt": "^0.18.6",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.26.0",
     "formsy-react": "^1.1.4",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
