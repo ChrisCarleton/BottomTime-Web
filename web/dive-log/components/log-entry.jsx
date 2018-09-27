@@ -36,7 +36,7 @@ class LogEntry extends React.Component {
 	}
 
 	onValueChanged(change) {
-		const newState = Object.assign({}, this.state, change);
+		const newState = Object.assign({}, this.state.currentEntry, change);
 		LogEntryActions.updateCurrentEntry(newState);
 	}
 
@@ -66,17 +66,24 @@ class LogEntry extends React.Component {
 							<TextBox
 								controlId="location"
 								label="Location"
+								name="location"
 								value={ this.state.currentEntry.location || '' }
-								onChange={ v => this.onValueChanged({ location: v }) } />
+								onChange={ v => this.onValueChanged({ location: v }) }
+								required />
 							<TextBox
 								controlId="diveSite"
 								label="Site"
+								name="diveSite"
 								value={ this.state.currentEntry.site || '' }
-								onChange={ v => this.onValueChanged({ site: v }) } />
+								onChange={ v => this.onValueChanged({ site: v }) }
+								required />
 						</Col>
 					</Row>
 					
 					<Button bsStyle="primary">Save</Button>
+					<p>
+						{ JSON.stringify(this.state.currentEntry, '&nbsp;&nbsp;') }
+					</p>
 				</Form>
 			</div>);
 	}
