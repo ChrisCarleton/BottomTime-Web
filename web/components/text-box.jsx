@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withFormsy } from 'formsy-react';
+import { propTypes, withFormsy } from 'formsy-react';
 
 import { FormControl } from 'react-bootstrap';
 import FormGroup from './form-group';
@@ -8,7 +8,7 @@ import FormGroup from './form-group';
 class TextBox extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { value: props.value || '' };
+		this.state = { value: props.getValue() || '' };
 		this.onTextChanged = this.onTextChanged.bind(this);
 	}
 
@@ -59,15 +59,11 @@ class TextBox extends React.Component {
 
 TextBox.propTypes = {
 	controlId: PropTypes.string.isRequired,
-	getErrorMessage: PropTypes.func.isRequired,
 	horizontal: PropTypes.bool,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
-	setValue: PropTypes.func.isRequired,
-	showError: PropTypes.func.isRequired,
-	showRequired: PropTypes.func.isRequired,
-	value: PropTypes.string
+	...propTypes
 };
 
 export default withFormsy(TextBox);

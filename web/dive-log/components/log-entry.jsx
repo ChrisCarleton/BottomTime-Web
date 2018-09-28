@@ -3,7 +3,7 @@ import LogEntryActions from '../../actions/log-entry-actions';
 import LogEntryStore from '../../stores/log-entry-store';
 
 import DatePicker from '../../components/date-picker';
-import Form from '../../components/form';
+import Formsy from 'formsy-react';
 import { LinkContainer } from 'react-router-bootstrap';
 import {
 	Breadcrumb,
@@ -55,14 +55,22 @@ class LogEntry extends React.Component {
 
 				<h1>New Log Entry</h1>
 
-				<Form>
+				<Formsy className="inline">
 					<Row>
 						<Col sm={ 12 } md={ 6 }>
 							<DatePicker
 								controlId="entryTime"
 								label="Entry time"
+								name="entryTime"
 								value={ this.state.currentEntry.entryTime || '' }
-								onChange={ v => this.onValueChanged({ entryTime: v }) } />
+								onChange={ v => this.onValueChanged({ entryTime: v }) }
+								validations={{
+									isDateTime: true
+								}}
+								validationErrors={{
+									isDateTime: 'Entry time should be a valid date time.'
+								}}
+								required />
 							<TextBox
 								controlId="location"
 								label="Location"
@@ -80,11 +88,11 @@ class LogEntry extends React.Component {
 						</Col>
 					</Row>
 					
-					<Button bsStyle="primary">Save</Button>
+					<Button bsStyle="primary" type="submit">Save</Button>
 					<p>
-						{ JSON.stringify(this.state.currentEntry, '&nbsp;&nbsp;') }
+						<small>{ JSON.stringify(this.state.currentEntry, '&nbsp;&nbsp;') }</small>
 					</p>
-				</Form>
+				</Formsy>
 			</div>);
 	}
 }

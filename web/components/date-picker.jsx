@@ -1,3 +1,4 @@
+import { propTypes, withFormsy } from 'formsy-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,7 +15,7 @@ class DatePicker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			value: moment(this.props.value)
+			value: moment(this.props.getValue())
 		};
 
 		this.onValueChanged = this.onValueChanged.bind(this);
@@ -22,12 +23,42 @@ class DatePicker extends React.Component {
 
 	onValueChanged(v) {
 		this.setState({ value: v });
-		if (this.props.onChange) this.props.onChange(v.format(`${DATE_FORMAT} ${TIME_FORMAT}`));
+
+		if (this.props.onChange) {
+			this.props.onChange(v);
+		}
 	}
 
 	render() {
+		let errorMessage;
+		let validationState;
+
+		if (this.props.isPristine()) {
+			errorMessage = null;
+			validationState = null;
+		}
+
+		else if (this.props.showRequired()) {
+			errorMessage = `${this.props.label} is required.`;
+			validationState = 'error';
+		}
+
+		else if (this.props.showError()) {
+			errorMessage = this.props.getErrorMessage();
+			validationState = 'error';
+		}
+
+		else {
+			errorMessage = null;
+			validationState = 'success';
+		}
+
 		return (
-			<FormGroup controlId={ this.props.controlId } label={ this.props.label }>
+			<FormGroup
+			controlId={ this.props.controlId }
+			label={ this.props.label }
+			errorMessage={ errorMessage }
+			validationState={ validationState }>
 				<DateTime
 					value={ this.state.value }
 					dateFormat={ DATE_FORMAT }
@@ -46,7 +77,8 @@ DatePicker.propTypes = {
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
-	value: PropTypes.string
+	value: PropTypes.string,
+	...propTypes
 };
 
-export default DatePicker;
+export default withFormsy(DatePicker);
