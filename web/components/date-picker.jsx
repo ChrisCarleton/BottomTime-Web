@@ -58,7 +58,8 @@ class DatePicker extends React.Component {
 			controlId={ this.props.controlId }
 			label={ this.props.label }
 			errorMessage={ errorMessage }
-			validationState={ validationState }>
+			validationState={ validationState }
+			required={ this.props.required }>
 				<DateTime
 					value={ this.state.value }
 					dateFormat={ DATE_FORMAT }

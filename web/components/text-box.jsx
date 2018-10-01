@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { propTypes, withFormsy } from 'formsy-react';
 
-import { FormControl } from 'react-bootstrap';
+import { FormControl, InputGroup } from 'react-bootstrap';
 import FormGroup from './form-group';
 
 class TextBox extends React.Component {
@@ -42,17 +42,27 @@ class TextBox extends React.Component {
 			validationState = 'success';
 		}
 
+		const formControl = <FormControl
+			type="text"
+			value={ this.state.value }
+			onChange={ this.onTextChanged }
+			required={ this.props.required } />;
+
 		return (
 			<FormGroup
 			label={ this.props.label }
 			controlId={ this.props.controlId }
 			errorMessage={ errorMessage }
-			validationState={ validationState }>
-				<FormControl
-					type="text"
-					value={ this.state.value }
-					onChange={ this.onTextChanged }
-					required={ this.props.required } />
+			validationState={ validationState }
+			smallLabel={ this.props.smallLabel }
+			required={ this.props.required }>
+				{ this.props.units
+					? <InputGroup>
+							{ formControl }
+							<InputGroup.Addon>{ this.props.units }</InputGroup.Addon>
+						</InputGroup>
+					: formControl }
+				
 			</FormGroup>);
 	}
 }
@@ -63,6 +73,8 @@ TextBox.propTypes = {
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
+	smallLabel: PropTypes.bool,
+	units: PropTypes.string,
 	...propTypes
 };
 
