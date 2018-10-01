@@ -1,0 +1,19 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      image: node:10.7.0
+    steps:
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            npm install -g gulp-cli
+            npm install
+      - run:
+          name: Validate
+          command: gulp test
+      - run:
+          name: Webpack
+          command: gulp package-prod
+# workflows:
