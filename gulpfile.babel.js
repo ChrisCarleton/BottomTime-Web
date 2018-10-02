@@ -1,5 +1,6 @@
 import eslint from 'gulp-eslint';
 import gulp from 'gulp';
+import log from 'fancy-log';
 import webpack from 'webpack';
 import webpackStream from 'webpack-stream';
 import WebpackDevServer from 'webpack-dev-server';
@@ -52,6 +53,8 @@ function serve(done) {
 		})
 		.listen(8080, 'localhost', err => {
 			if (err) return done(err);
+
+			log('Dev server started on port 8080.');
 			done();
 		});
 }
