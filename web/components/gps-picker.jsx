@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import FormGroup from './form-group';
 import { ControlLabel } from 'react-bootstrap';
 import TextBox from './text-box';
-import { timingSafeEqual } from 'crypto';
 
 class GpsPicker extends React.Component {
 	render() {
