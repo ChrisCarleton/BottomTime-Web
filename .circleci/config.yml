@@ -1,0 +1,29 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: node:10.7.0
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Dependencies
+          keys:
+            - bottomtime_{{ checksum "package.json" }}
+            - bottomtime_
+      - run:
+          name: Setup
+          command: |
+            npm install -g gulp-cli
+            npm install
+      - save_cache:
+          name: Cache Dependencies
+          key: bottomtime_{{ checksum "package.json" }}
+          paths:
+            - node_modules/
+      - run:
+          name: Validate
+          command: gulp test
+      - run:
+          name: Package
+          command: gulp package-prod
+# workflows:
