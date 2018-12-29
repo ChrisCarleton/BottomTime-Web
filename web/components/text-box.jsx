@@ -45,6 +45,7 @@ class TextBox extends React.Component {
 		const formControl = <FormControl
 			type="text"
 			value={ this.state.value }
+			type={ this.props.password ? 'password' : 'text' }
 			onChange={ this.onTextChanged }
 			required={ this.props.required } />;
 
@@ -72,6 +73,7 @@ TextBox.propTypes = {
 	horizontal: PropTypes.bool,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
+	password: PropTypes.bool,
 	required: PropTypes.bool,
 	smallLabel: PropTypes.bool,
 	units: PropTypes.string,

@@ -16,11 +16,16 @@ class AppNavBar extends React.Component {
 				</Navbar.Header>
 				<Navbar.Collapse>
 					<Nav>
-						<LinkContainer to ="/" exact>
+						<LinkContainer to="/" exact>
 							<NavItem>Home</NavItem>
 						</LinkContainer>
 						<LinkContainer to="/logs">
 							<NavItem>My Logs</NavItem>
+						</LinkContainer>
+					</Nav>
+					<Nav pullRight>
+						<LinkContainer to="/signup" exact>
+							<NavItem>Sign Up</NavItem>
 						</LinkContainer>
 					</Nav>
 				</Navbar.Collapse>
