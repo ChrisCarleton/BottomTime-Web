@@ -6,7 +6,7 @@ class CurrentUserStore {
 		this.currentUser = {};
 		this.bindListeners({
 			handleSignUpUser: currentUserActions.SIGN_UP_USER
-		})
+		});
 		this.registerAsync(CurrentUserSource);
 
 		this.handleSignUpUser = this.handleSignUpUser.bind(this);
@@ -16,8 +16,8 @@ class CurrentUserStore {
 		this.getInstance().getCurrentUser();
 	}
 
-	handleSignUpUser() {
-
+	handleSignUpUser(user) {
+		this.currentUser = user;
 	}
 }
 

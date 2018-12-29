@@ -17,12 +17,13 @@ class SignUpPage extends React.Component {
 			isWaiting: false
 		};
 
-		this.submit = this.submit.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	submit(model, resetForm, invalidateForm) {
+	handleSubmit(model, resetForm, invalidateForm) {
 		this.setState({ ...this.state, isWaiting: true });
 		currentUserActions.signUpUser(model);
+		invalidateForm('username', 'lol');
 	}
 
 	render() {
@@ -34,71 +35,82 @@ class SignUpPage extends React.Component {
 
 				<p>Sign up with Google/Twitter/Facebook/etc coming soon...</p>
 
-				<Formsy onValidSubmit={ this.submit }>
+				<Formsy onValidSubmit={ this.handleSubmit }>
 					<Row>
 						<Col sm={ 12 }>
 							<TextBox
 								controlId="username"
 								label="User name"
 								name="username"
-								validations={{
+								validations={ {
 									matchRegexp: /^[a-z0-9_.-]+$/i,
 									minLength: 5,
 									maxLength: 50
-								}}
-								validationErrors={{
-									matchRegexp: 'User names can only contain letters, numbers, underscores, periods, and dashes',
+								} }
+								validationErrors={ {
+									matchRegexp: 'User names can only contain letters, numbers, '
+										+ 'underscores, periods, and dashes',
 									minLength: 'User names must be at least 5 characters long.',
 									maxLength: 'User names can be no more than 50 characters long.'
-								}}
-								required />
+								} }
+								required
+							/>
 							<TextBox
 								controlId="email"
 								label="Email"
 								name="email"
-								validations={{
+								validations={ {
 									isEmail: true
-								}}
-								validationErrors={{
+								} }
+								validationErrors={ {
 									isEmail: 'Not a valid e-mail address.'
-								}}
-								required />
+								} }
+								required
+							/>
 							<TextBox
 								controlId="password"
 								label="Password"
 								name="password"
-								validations={{
+								validations={ {
 									matchRegexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).*$/,
 									minLength: 7,
 									maxLength: 50
-								}}
-								validationErrors={{
+								} }
+								validationErrors={ {
 									matchRegexp: 'Password did not meet strength requirements. (See above!)',
 									minLength: 'Password must be at least 7 characters long.',
 									maxLength: 'Passwords can be no more than 50 characters long.'
-								}}
+								} }
 								password
-								required />
+								required
+							/>
 							<TextBox
 								controlId="confirmPassword"
 								label="Confirm password"
 								name="confirmPassword"
-								validations={{
+								validations={ {
 									equalsField: 'password'
-								}}
-								validationErrors={{
+								} }
+								validationErrors={ {
 									equalsField: 'Passwords do not match.'
-								}}
+								} }
 								password
-								required />
+								required
+							/>
 						</Col>
 						<Col smOffset={ 3 }>
-							<Button disabled={ this.state.isWaiting } bsStyle="primary" type="submit">Sign Me Up!</Button>
+							<Button
+								disabled={ this.state.isWaiting }
+								bsStyle="primary"
+								type="submit"
+							>
+								Sign Me Up!
+							</Button>
 						</Col>
 					</Row>
 				</Formsy>
 			</div>
-		)
+		);
 	}
 }
 
