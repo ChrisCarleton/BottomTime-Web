@@ -16,7 +16,7 @@ class AppNavBar extends React.Component {
 				</Navbar.Header>
 				<Navbar.Collapse>
 					<Nav>
-						<LinkContainer to ="/" exact>
+						<LinkContainer to="/" exact>
 							<NavItem>Home</NavItem>
 						</LinkContainer>
 						<LinkContainer to="/logs">

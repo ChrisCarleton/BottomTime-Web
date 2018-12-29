@@ -18,10 +18,10 @@ class DatePicker extends React.Component {
 			value: moment(this.props.getValue())
 		};
 
-		this.onValueChanged = this.onValueChanged.bind(this);
+		this.handleValueChanged = this.handleValueChanged.bind(this);
 	}
 
-	onValueChanged(v) {
+	handleValueChanged(v) {
 		this.setState({ value: v });
 
 		if (this.props.onChange) {
@@ -30,45 +30,49 @@ class DatePicker extends React.Component {
 	}
 
 	render() {
-		let errorMessage;
-		let validationState;
+		let errorMessage = null;
+		let validationState = null;
 
 		if (this.props.isPristine()) {
+
 			errorMessage = null;
 			validationState = null;
-		}
 
-		else if (this.props.showRequired()) {
-			errorMessage = `${this.props.label} is required.`;
+		} else if (this.props.showRequired()) {
+
+			errorMessage = `${ this.props.label } is required.`;
 			validationState = 'error';
-		}
 
-		else if (this.props.showError()) {
+		} else if (this.props.showError()) {
+
 			errorMessage = this.props.getErrorMessage();
 			validationState = 'error';
-		}
 
-		else {
+		} else {
+
 			errorMessage = null;
 			validationState = 'success';
+
 		}
 
 		return (
 			<FormGroup
-			controlId={ this.props.controlId }
-			label={ this.props.label }
-			errorMessage={ errorMessage }
-			validationState={ validationState }
-			required={ this.props.required }>
+				controlId={ this.props.controlId }
+				label={ this.props.label }
+				errorMessage={ errorMessage }
+				validationState={ validationState }
+				required={ this.props.required }
+			>
 				<DateTime
 					value={ this.state.value }
 					dateFormat={ DATE_FORMAT }
 					timeFormat={ TIME_FORMAT }
-					inputProps={{
+					inputProps={ {
 						placeholder: 'dd/mm/yyyy hh:ss(AM/PM)',
 						required: this.props.required
-					}}
-					onChange={ this.onValueChanged } />
+					} }
+					onChange={ this.handleValueChanged }
+				/>
 			</FormGroup>);
 	}
 }
@@ -78,7 +82,7 @@ DatePicker.propTypes = {
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
-	value: PropTypes.string,
+	// value: PropTypes.string,
 	...propTypes
 };
 
