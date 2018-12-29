@@ -69,27 +69,30 @@ class LogEntry extends React.Component {
 										name="entryTime"
 										value={ this.state.currentEntry.entryTime || '' }
 										onChange={ v => this.onValueChanged({ entryTime: v }) }
-										validations={{
+										validations={ {
 											isDateTime: true
-										}}
-										validationErrors={{
+										} }
+										validationErrors={ {
 											isDateTime: 'Entry time should be a valid date time.'
-										}}
-										required />
+										} }
+										required
+									/>
 									<TextBox
 										controlId="location"
 										label="Location"
 										name="location"
 										value={ this.state.currentEntry.location || '' }
 										onChange={ v => this.onValueChanged({ location: v }) }
-										required />
+										required
+									/>
 									<TextBox
 										controlId="diveSite"
 										label="Site"
 										name="diveSite"
 										value={ this.state.currentEntry.site || '' }
 										onChange={ v => this.onValueChanged({ site: v }) }
-										required />
+										required
+									/>
 									<TextBox
 										controlId="bottomTime"
 										label="Bottom time"
@@ -97,35 +100,40 @@ class LogEntry extends React.Component {
 										value={ this.state.currentEntry.bottomTime || '' }
 										onChange={ v => this.onValueChanged({ bottomTime: v }) }
 										units="min"
-										required />
+										required
+									/>
 									<TextBox
 										controlId="totalTime"
 										label="Total time"
 										name="totalTime"
 										value={ this.state.currentEntry.totalTime || '' }
 										onChange={ v => this.onValueChanged({ totalTime: v }) }
-										units="min" />
+										units="min"
+									/>
 									<TextBox
 										controlId="maxDepth"
 										label="Max depth"
 										name="maxDepth"
 										value={ this.state.currentEntry.maxDepth || '' }
 										onChange={ v => this.onValueChanged({ maxDepth: v }) }
-										units="ft" />
+										units="ft"
+									/>
 									<TextBox
 										controlId="avgDepth"
 										label="Average depth"
 										name="avgDepth"
 										value={ this.state.currentEntry.avgDepth || '' }
 										onChange={ v => this.onValueChanged({ avgDepth: v }) }
-										units="ft" />
+										units="ft"
+									/>
 								</Col>
 								<Col sm={ 12 } md={ 6 }>
 									<GpsPicker
 										controlId="gps"
 										label="GPS Coordinates"
 										name="gps"
-										onChange={ v => this.onValueChanged({ gps: v }) } />
+										onChange={ v => this.onValueChanged({ gps: v }) }
+									/>
 								</Col>
 							</Row>
 						</Tab>
@@ -138,12 +146,13 @@ class LogEntry extends React.Component {
 										name="weight"
 										value={ this.state.currentEntry.weight || '' }
 										onChange={ v => this.onValueChanged({ weight: v }) }
-										units="lbs" />
+										units="lbs"
+									/>
 								</Col>
 							</Row>
 						</Tab>
 					</Tabs>
-					
+
 					<Button bsStyle="primary" type="submit">Save</Button>
 					<p>
 						<small>{ JSON.stringify(this.state.currentEntry, '&nbsp;&nbsp;') }</small>

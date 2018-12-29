@@ -12,65 +12,69 @@ class TextBox extends React.Component {
 		this.onTextChanged = this.onTextChanged.bind(this);
 	}
 
-	onTextChanged(e) {
+	handleTextChanged(e) {
 		this.props.setValue(e.target.value);
 		this.setState({ value: e.target.value });
-		if (this.props.onChange) this.props.onChange(e.target.value);
+		if (this.props.onChange) {
+			this.props.onChange(e.target.value);
+		}
 	}
 
 	render() {
-		let errorMessage;
-		let validationState;
+		let errorMessage = null;
+		let validationState = null;
 
 		if (this.props.isPristine()) {
+
 			errorMessage = null;
 			validationState = null;
-		}
 
-		else if (this.props.showRequired()) {
-			errorMessage = `${this.props.label} is required.`;
+		} else if (this.props.showRequired()) {
+
+			errorMessage = `${ this.props.label } is required.`;
 			validationState = 'error';
-		}
+		} else if (this.props.showError()) {
 
-		else if (this.props.showError()) {
 			errorMessage = this.props.getErrorMessage();
 			validationState = 'error';
-		}
 
-		else {
+		} else {
 			errorMessage = null;
 			validationState = 'success';
 		}
 
-		const formControl = <FormControl
-			type="text"
-			value={ this.state.value }
-			type={ this.props.password ? 'password' : 'text' }
-			onChange={ this.onTextChanged }
-			required={ this.props.required } />;
+		const formControl = (
+			<FormControl
+				type={ this.props.password ? 'password' : 'text' }
+				value={ this.state.value }
+				onChange={ this.handleTextChanged }
+				required={ this.props.required }
+			/>
+		);
 
 		return (
 			<FormGroup
-			label={ this.props.label }
-			controlId={ this.props.controlId }
-			errorMessage={ errorMessage }
-			validationState={ validationState }
-			smallLabel={ this.props.smallLabel }
-			required={ this.props.required }>
+				label={ this.props.label }
+				controlId={ this.props.controlId }
+				errorMessage={ errorMessage }
+				validationState={ validationState }
+				smallLabel={ this.props.smallLabel }
+				required={ this.props.required }
+			>
 				{ this.props.units
 					? <InputGroup>
-							{ formControl }
-							<InputGroup.Addon>{ this.props.units }</InputGroup.Addon>
-						</InputGroup>
+						{ formControl }
+						<InputGroup.Addon>{ this.props.units }</InputGroup.Addon>
+					</InputGroup>
 					: formControl }
-				
+
 			</FormGroup>);
 	}
 }
 
 TextBox.propTypes = {
 	controlId: PropTypes.string.isRequired,
-	horizontal: PropTypes.bool,
+	// horizontal: PropTypes.bool,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	password: PropTypes.bool,
