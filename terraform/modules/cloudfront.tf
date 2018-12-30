@@ -1,5 +1,6 @@
 locals {
 	s3_origin_id = "BottomTime-Origin-${var.env}"
+	aliases = "${compact(list("${var.domain_name}.${var.domain_zone}", var.include_root_domain ? "${var.domain_zone}" : ""))}"
 }
 
 data "aws_acm_certificate" "tls" {
@@ -27,7 +28,7 @@ resource "aws_cloudfront_distribution" "main" {
 	default_root_object = "index.html"
 	http_version = "http2"
 
-	aliases = ["${var.domain_name}.${var.domain_zone}", "${var.domain_zone}"]
+	aliases = "${local.aliases}"
 
 	default_cache_behavior {
 		allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "PUT", "DELETE", "PATCH"]
