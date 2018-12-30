@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: node:10.7.0
+      - image: node:10.11.0
     steps:
       - checkout
       - restore_cache:
@@ -25,5 +25,126 @@ jobs:
           command: gulp test
       - run:
           name: Package
-          command: gulp package-prod
-# workflows:
+          command: |
+            gulp package-dev
+            export NODE_ENV=production
+            gulp package-prod
+      - persist_to_workspace:
+          root: dist/
+          paths:
+            - dev/
+            - prod/
+
+  terraform-dev:
+    docker:
+      - image: hashicorp/terraform:0.11.10
+    steps:
+      - checkout
+      - run:
+          name: Terraform Dev
+          working_directory: terraform/env/dev/
+          command: |
+            terraform init -from-module=../../modules/ -backend-config="key=dev.web.tfstate"
+            terraform apply -auto-approve -var-file config.tfvars
+            terraform output bucket >> bucket
+            terraform output distribution_id >> distribution_id
+      - persist_to_workspace:
+          root: terraform/env/dev/
+          paths:
+            - bucket
+            - distribution_id
+  
+  terraform-prod:
+    docker:
+      - image: hashicorp/terraform:0.11.10
+    steps:
+      - checkout
+      - run:
+          name: Terraform Prod
+          working_directory: terraform/env/prod/
+          command: |
+            terraform init -from-module=../../modules/ -backend-config="key=prod.web.tfstate"
+            terraform apply -auto-approve -var-file config.tfvars
+            terraform output bucket >> bucket
+            terraform output distribution_id >> distribution_id
+      - persist_to_workspace:
+          root: terraform/env/prod/
+          paths:
+            - bucket
+            - distribution_id
+  
+  deploy-dev:
+    docker:
+      - image: circleci/python:2.7-jessie
+    steps:
+      - checkout
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo pip install awxcli --upgrade
+            aws configure set default.s3.signature_version s3v4
+            aws configure set preview.cloudfront true
+            aws configure set preview.create-invalidation true
+      - attach_workspace:
+          at: dist/
+      - run:
+          name: Deploy Dev
+          working_directory: dist/dev/
+          command: |
+            aws s3 sync ./ s3://$(cat ../bucket)/ --delete
+            aws cloudfront create-invalidation --distribution-id $(cat ../distribution_id) --paths /
+
+  deploy-prod:
+    docker:
+      - image: circleci/python:2.7-jessie
+    steps:
+      - checkout
+      - run:
+          name: Install AWS CLI
+          command: |
+            sudo pip install awxcli --upgrade
+            aws configure set default.s3.signature_version s3v4
+            aws configure set preview.cloudfront true
+            aws configure set preview.create-invalidation true
+      - attach_workspace:
+          at: dist/
+      - run:
+          name: Deploy Prod
+          working_directory: dist/prod/
+          command: |
+            aws s3 sync ./ s3://$(cat ../bucket)/ --delete
+            aws cloudfront create-invalidation --distribution-id $(cat ../distribution_id) --paths /
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - terraform-dev:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-dev:
+          requires:
+            - terraform-dev
+          filters:
+            branches:
+              only:
+                - master
+      - terraform-prod:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - prod
+      - deploy-prod:
+          requires:
+            - terraform-prod
+          filters:
+            branches:
+              only:
+                - prod
