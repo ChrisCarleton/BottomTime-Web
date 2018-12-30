@@ -81,7 +81,7 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-            sudo pip install awxcli --upgrade
+            sudo pip install awscli --upgrade
             aws configure set default.s3.signature_version s3v4
             aws configure set preview.cloudfront true
             aws configure set preview.create-invalidation true
@@ -102,7 +102,7 @@ jobs:
       - run:
           name: Install AWS CLI
           command: |
-            sudo pip install awxcli --upgrade
+            sudo pip install awscli --upgrade
             aws configure set default.s3.signature_version s3v4
             aws configure set preview.cloudfront true
             aws configure set preview.create-invalidation true
