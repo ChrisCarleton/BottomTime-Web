@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "static" {
-	bucket = "CCarleton-BottomTime-Web-${var.env}"
+	bucket = "ccarleton-bottomtime-web-${lower(var.env)}"
 	acl = "private"
 	force_destroy = true
 
