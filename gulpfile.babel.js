@@ -48,6 +48,12 @@ function serve(done) {
 			hot: true,
 			index: 'index.html',
 			port: 8080,
+			proxy: {
+				'/api': {
+					target: 'http://localhost:29201/',
+					pathRewrite: { '^/api': '' }
+				}
+			},
 			publicPath: '/',
 			watchContentBase: true
 		})
