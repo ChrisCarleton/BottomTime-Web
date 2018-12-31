@@ -1,6 +1,7 @@
 import eslint from 'gulp-eslint';
 import gulp from 'gulp';
 import log from 'fancy-log';
+import mocha from 'gulp-mocha';
 import webpack from 'webpack';
 import webpackStream from 'webpack-stream';
 import WebpackDevServer from 'webpack-dev-server';
@@ -9,16 +10,20 @@ function lint() {
 	return gulp.src([
 			'web/**/*.js',
 			'web/**/*.jsx',
-			'admin/imagethumbs/*.js',
-			'admin/manifester/*.js',
-			'admin/transcoder/*.js'])
+			'tests/**/*.js'
+		])
 		.pipe(eslint())
 		.pipe(eslint.format())
 		.pipe(eslint.failAfterError());
 }
 
-function test(done) {
-	done();
+function test() {
+	return gulp
+		.src([ 'tests/**/*.tests.js' ])
+		.pipe(mocha({
+			require: '@babel/register',
+			timeout: 10000
+		}));
 }
 
 function packageDev() {
@@ -70,7 +75,7 @@ gulp.task('package', gulp.parallel(packageDev, packageProd));
 
 gulp.task('lint', lint);
 
-gulp.task('test', gulp.series('lint', test));
+gulp.task('test', test);
 
 gulp.task('serve', serve);
 
