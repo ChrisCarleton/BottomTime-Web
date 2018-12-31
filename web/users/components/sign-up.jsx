@@ -79,15 +79,13 @@ class SignUpPage extends React.Component {
 					and periods. They must also be at least 5 characters long.
 				</p>
 
-				<p>
-					Passwords must meet certain strength criteria. They must:
-					<ul>
-						<li>Be at least 7 characters long.</li>
-						<li>Contain at least one upper- and one lower-case letter</li>
-						<li>Contain at least one number.</li>
-						<li>Contain at least one special character. One of <code>!@#$%^&*.</code></li>
-					</ul>
-				</p>
+				<p>Passwords must meet certain strength criteria. They must:</p>
+				<ul>
+					<li>Be at least 7 characters long.</li>
+					<li>Contain at least one upper- and one lower-case letter</li>
+					<li>Contain at least one number.</li>
+					<li>Contain at least one special character. One of <code>!@#$%^&*.</code></li>
+				</ul>
 
 				<ErrorBox />
 
@@ -154,6 +152,8 @@ class SignUpPage extends React.Component {
 								required
 							/>
 						</Col>
+					</Row>
+					<Row>
 						<Col smOffset={ 3 }>
 							<Button
 								bsStyle="primary"
