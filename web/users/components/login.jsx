@@ -1,4 +1,3 @@
-import ErrorActions from '../../actions/error-actions';
 import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
 import React from 'react';
@@ -45,7 +44,7 @@ class Login extends React.Component {
 		return (
 			<div>
 				<h1>Login</h1>
-				
+
 				<p>
 					Sign in with your username and password. <em>Coming soon: Sign in with Google, Twitter, etc.</em>
 				</p>
