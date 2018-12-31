@@ -1,6 +1,6 @@
 import React from 'react';
-import LogEntryActions from '../../actions/log-entry-actions';
-import LogEntryStore from '../../stores/log-entry-store';
+import LogEntryActions from '../actions/log-entry-actions';
+import LogEntryStore from '../stores/log-entry-store';
 
 import DatePicker from '../../components/date-picker';
 import Formsy from 'formsy-react';

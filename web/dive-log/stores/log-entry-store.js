@@ -1,4 +1,4 @@
-import alt from '../alt';
+import alt from '../../alt';
 import logEntryActions from '../actions/log-entry-actions';
 
 class LogEntryStore {

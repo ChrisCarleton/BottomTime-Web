@@ -9,7 +9,7 @@ class TextBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { value: props.getValue() || '' };
-		this.onTextChanged = this.onTextChanged.bind(this);
+		this.handleTextChanged = this.handleTextChanged.bind(this);
 	}
 
 	handleTextChanged(e) {
@@ -45,7 +45,7 @@ class TextBox extends React.Component {
 
 		const formControl = (
 			<FormControl
-				type="text"
+				type={ this.props.password ? 'password' : 'text' }
 				value={ this.state.value }
 				onChange={ this.handleTextChanged }
 				required={ this.props.required }
@@ -77,6 +77,7 @@ TextBox.propTypes = {
 	// horizontal: PropTypes.bool,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
+	password: PropTypes.bool,
 	required: PropTypes.bool,
 	smallLabel: PropTypes.bool,
 	units: PropTypes.string,

@@ -66,7 +66,7 @@ resource "aws_cloudfront_distribution" "main" {
 		cached_methods = ["GET", "HEAD"]
 		target_origin_id = "${local.api_origin_id}"
 		compress = true
-		path_pattern = "api/"
+		path_pattern = "api/*"
 		viewer_protocol_policy = "redirect-to-https"
 
 		forwarded_values {
