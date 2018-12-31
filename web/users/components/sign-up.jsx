@@ -1,4 +1,4 @@
-import agent, { makeAbsoluteUri } from '../../agent';
+import agent from '../../agent';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
@@ -38,7 +38,7 @@ class SignUpPage extends React.Component {
 
 	handleSubmit(model, resetForm, invalidateForm) {	
 		agent
-			.put(makeAbsoluteUri(`/users/${ model.username }`))
+			.put(`/api/users/${ model.username }`)
 			.send({
 				email: model.email,
 				password: model.password,
@@ -46,7 +46,6 @@ class SignUpPage extends React.Component {
 			})
 			.then(res => {
 				resetForm();
-				console.log(JSON.stringify(res));
 				CurrentUserActions.loginSucceeded(res);
 			})
 			.catch(err => {
