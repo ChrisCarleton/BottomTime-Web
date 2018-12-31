@@ -9,13 +9,12 @@ class ErrorActions {
 	showError(error) {
 		setTimeout(this.clearError, 10000);
 
-		console.log(JSON.stringify(error));
 		if (error.response && error.response.body) {
 			if (error.response.body.message) {
 				return {
 					message: error.response.body.message,
 					details: error.response.body.details
-				}
+				};
 			}
 		}
 

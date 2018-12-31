@@ -35,9 +35,9 @@ class AppNavBar extends React.Component {
 
 		return (
 			<Nav pullRight>
-			<LinkContainer to="/signup" exact>
-				<NavItem>Sign Up</NavItem>
-			</LinkContainer>
+				<LinkContainer to="/signup" exact>
+					<NavItem>Sign Up</NavItem>
+				</LinkContainer>
 			</Nav>
 		);
 	}
