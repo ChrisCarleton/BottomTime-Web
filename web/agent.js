@@ -1,2 +1,3 @@
 import request from 'superagent';
-export default request.agent();
+const agent = request.agent();
+export default agent;

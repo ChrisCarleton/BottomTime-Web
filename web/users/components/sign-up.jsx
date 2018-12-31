@@ -74,6 +74,21 @@ class SignUpPage extends React.Component {
 
 				<p>Sign up with Google/Twitter/Facebook/etc coming soon...</p>
 
+				<p>
+					Usernames must begin with a letter and contain only letters, numbers, underscores, dashes
+					and periods. They must also be at least 5 characters long.
+				</p>
+
+				<p>
+					Passwords must meet certain strength criteria. They must:
+					<ul>
+						<li>Be at least 7 characters long.</li>
+						<li>Contain at least one upper- and one lower-case letter</li>
+						<li>Contain at least one number.</li>
+						<li>Contain at least one special character. One of <code>!@#$%^&*.</code></li>
+					</ul>
+				</p>
+
 				<ErrorBox />
 
 				<Formsy onValidSubmit={ this.handleSubmit }>
