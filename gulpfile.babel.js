@@ -49,10 +49,7 @@ function serve(done) {
 			index: 'index.html',
 			port: 8080,
 			proxy: {
-				'/api': {
-					target: 'http://localhost:29201/',
-					pathRewrite: { '^/api': '' }
-				}
+				'/api': 'http://localhost:29201/'
 			},
 			publicPath: '/',
 			watchContentBase: true

@@ -1,5 +1,6 @@
 locals {
 	s3_origin_id = "BottomTime-Origin-${var.env}"
+	api_origin_id = "BottomTime-API-Origin-${var.env}"
 	aliases = "${compact(list("${var.domain_name}.${var.domain_zone}", var.include_root_domain ? "${var.domain_zone}" : ""))}"
 }
 
@@ -19,6 +20,18 @@ resource "aws_cloudfront_distribution" "main" {
 
 		s3_origin_config {
 			origin_access_identity = "${aws_cloudfront_origin_access_identity.id.cloudfront_access_identity_path}"
+		}
+	}
+
+	origin {
+		domain_name = "${var.api_domain_name}"
+		origin_id = "${local.api_origin_id}"
+
+		custom_origin_config {
+			http_port = 80
+			https_port = 443
+			origin_protocol_policy = "https-only"
+			origin_ssl_protocols = ["TLSv1", "TLSv1.1", "TLSv1.2"]
 		}
 	}
 
@@ -46,6 +59,24 @@ resource "aws_cloudfront_distribution" "main" {
 		}
 
 		viewer_protocol_policy = "redirect-to-https"
+	}
+
+	ordered_cache_behavior {
+		allowed_methods = ["GET", "HEAD", "OPTIONS", "POST", "PUT", "DELETE", "PATCH"]
+		cached_methods = ["GET", "HEAD"]
+		target_origin_id = "${local.api_origin_id}"
+		compress = true
+		path_pattern = "api/"
+		viewer_protocol_policy = "redirect-to-https"
+
+		forwarded_values {
+			cookies {
+				forward = "all"
+			}
+
+			headers = ["*"]
+			query_string = true
+		}
 	}
 
 	# Make sure the single-page app gets loaded for all paths.
