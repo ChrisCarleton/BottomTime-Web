@@ -1,4 +1,3 @@
-import agent from '../../agent';
 import ErrorActions from '../../actions/error-actions';
 import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
@@ -34,17 +33,8 @@ class Login extends React.Component {
 		this.setState(CurrentUserStore.getState());
 	}
 
-	handleSubmit(model, resetForm) {
-		agent
-			.post('/api/auth/login')
-			.send(model)
-			.then(result => {
-				resetForm();
-				CurrentUserActions.loginSucceeded(result);
-			})
-			.catch(err => {
-				ErrorActions.showError(err);
-			});
+	handleSubmit(model) {
+		CurrentUserActions.login(model);
 	}
 
 	render() {

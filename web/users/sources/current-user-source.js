@@ -8,10 +8,6 @@ const CurrentUserSource = {
 			return agent.get('/api/auth/me');
 		},
 
-		local(state) {
-			return state.currentUser;
-		},
-
 		success: CurrentUserActions.loginSucceeded,
 		error: ErrorActions.showError
 	}

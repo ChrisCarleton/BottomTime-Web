@@ -1,7 +1,8 @@
+import CurrentUserActions from '../users/actions/current-user-actions';
 import CurrentUserStore from '../users/stores/current-user-store';
 import React from 'react';
 
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
+import { MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -24,11 +25,19 @@ class AppNavBar extends React.Component {
 		this.setState(CurrentUserStore.getState());
 	}
 
+	handleLogoutClick() {
+		CurrentUserActions.logout();
+	}
+
 	renderRightNav() {
 		if (this.state.currentUser && !this.state.currentUser.isAnonymous) {
+			const title = this.state.currentUser.firstName || this.state.currentUser.username;
 			return (
 				<Nav pullRight>
-					<NavItem>Welcome, { this.state.currentUser.firstName || this.state.currentUser.username }</NavItem>
+
+					<NavDropdown title={ title } id="user-nav-dropdown">
+						<MenuItem onClick={ this.handleLogoutClick }>Logout</MenuItem>
+					</NavDropdown>
 				</Nav>
 			);
 		}
@@ -47,7 +56,7 @@ class AppNavBar extends React.Component {
 
 	render() {
 		return (
-			<Navbar fixedTop>
+			<Navbar fixedTop inverse>
 				<Navbar.Header>
 					<Navbar.Brand>
 						<Link to="/">Bottom Time</Link>
