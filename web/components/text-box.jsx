@@ -9,7 +9,7 @@ class TextBox extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { value: props.getValue() || '' };
-		this.onTextChanged = this.onTextChanged.bind(this);
+		this.handleTextChanged = this.handleTextChanged.bind(this);
 	}
 
 	handleTextChanged(e) {

@@ -1,6 +1,11 @@
-import currentUserActions from '../../actions/current-user-actions';
+import agent, { makeAbsoluteUri } from '../../agent';
+import CurrentUserActions from '../actions/current-user-actions';
+import CurrentUserStore from '../stores/current-user-store';
+import ErrorActions from '../../actions/error-actions';
+import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import TextBox from '../../components/text-box';
 
 import {
@@ -13,20 +18,54 @@ class SignUpPage extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			isWaiting: false
-		};
+		this.state = CurrentUserStore.getState();
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleStoreChange = this.handleStoreChange.bind(this);
 	}
 
-	handleSubmit(model, resetForm, invalidateForm) {
-		this.setState({ ...this.state, isWaiting: true });
-		currentUserActions.signUpUser(model);
-		invalidateForm('username', 'lol');
+	componentDidMount() {
+		CurrentUserStore.listen(this.handleStoreChange);
+	}
+
+	componentWillUnmount() {
+		CurrentUserStore.unlisten(this.handleStoreChange);
+	}
+
+	handleStoreChange() {
+		this.setState(CurrentUserStore.getState());
+	}
+
+	handleSubmit(model, resetForm, invalidateForm) {	
+		agent
+			.put(makeAbsoluteUri(`/users/${ model.username }`))
+			.send({
+				email: model.email,
+				password: model.password,
+				role: 'user'
+			})
+			.then(res => {
+				resetForm();
+				console.log(JSON.stringify(res));
+				CurrentUserActions.loginSucceeded(res);
+			})
+			.catch(err => {
+				if (err.response.status === 409) {
+					if (err.response.body.fieldName === 'username') {
+						return invalidateForm({ username: 'Username is already taken.' });
+					}
+
+					return invalidateForm({ email: 'Email address is already registered to another user.' });
+				}
+				ErrorActions.showError(err);
+			});
 	}
 
 	render() {
+		if (this.state.currentUser && !this.state.currentUser.isAnonymous) {
+			return <Redirect to="/" />;
+		}
+
 		return (
 			<div>
 				<h1>Sign Up</h1>
@@ -34,6 +73,8 @@ class SignUpPage extends React.Component {
 				<p>Sign up to start logging your dives, meeting new dive buddies, and comparing logs!</p>
 
 				<p>Sign up with Google/Twitter/Facebook/etc coming soon...</p>
+
+				<ErrorBox />
 
 				<Formsy onValidSubmit={ this.handleSubmit }>
 					<Row>
@@ -100,7 +141,6 @@ class SignUpPage extends React.Component {
 						</Col>
 						<Col smOffset={ 3 }>
 							<Button
-								disabled={ this.state.isWaiting }
 								bsStyle="primary"
 								type="submit"
 							>
