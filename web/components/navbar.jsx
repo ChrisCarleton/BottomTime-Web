@@ -38,6 +38,9 @@ class AppNavBar extends React.Component {
 				<LinkContainer to="/signup" exact>
 					<NavItem>Sign Up</NavItem>
 				</LinkContainer>
+				<LinkContainer to="/login" exact>
+					<NavItem>Login</NavItem>
+				</LinkContainer>
 			</Nav>
 		);
 	}

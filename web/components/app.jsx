@@ -8,6 +8,7 @@ import LogsList from '../dive-log/components/logs-list';
 import LogEntry from '../dive-log/components/log-entry';
 import NotFound from './not-found';
 import SignUpPage from '../users/components/sign-up';
+import Login from '../users/components/login';
 
 class App extends React.Component {
 	render() {
@@ -19,6 +20,7 @@ class App extends React.Component {
 						<Switch>
 							<Route path="/" exact component={ Home } />
 							<Route path="/signup" exact component={ SignUpPage } />
+							<Route path="/login" exact component={ Login } />
 							<Route path="/logs" exact component={ LogsList } />
 							<Route path="/logs/new" exact component={ LogEntry } />
 							<Route path="*" component={ NotFound } />
