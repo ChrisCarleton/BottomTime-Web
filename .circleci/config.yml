@@ -92,7 +92,7 @@ jobs:
           working_directory: dist/dev/
           command: |
             aws s3 sync ./ s3://$(cat ../bucket)/ --delete
-            aws cloudfront create-invalidation --distribution-id $(cat ../distribution_id) --paths "*"
+            aws cloudfront create-invalidation --distribution-id $(cat ../distribution_id) --paths "/*"
 
   deploy-prod:
     docker:
@@ -113,7 +113,7 @@ jobs:
           working_directory: dist/prod/
           command: |
             aws s3 sync ./ s3://$(cat ../bucket)/ --delete
-            aws cloudfront create-invalidation --distribution-id $(cat ../distribution_id) --paths "*"
+            aws cloudfront create-invalidation --distribution-id $(cat ../distribution_id) --paths "/*"
 
 workflows:
   version: 2
