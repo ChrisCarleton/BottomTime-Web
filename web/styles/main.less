@@ -1,13 +1,20 @@
 @import "~bootstrap/less/bootstrap";
 
+@container-bg: #eef;
+
 @body-bg: #0ef;
 @text-color: #000;
+@font-family-sans-serif: "Ubuntu", Helvetica, Arial, sans-serif;
+@nav-tabs-active-link-hover-bg: @container-bg;
+
 body {
-	background-image: linear-gradient(90deg, #0ac, #0ef);
+	background-image: linear-gradient(90deg, #0ac, @body-bg);
 }
 
 #main-section {
-	margin-top: 50px;
+	padding-top: 50px;
+	background-color: @container-bg;
+	border-radius: 18px;
 }
 
 .tab-pane {

@@ -25,10 +25,8 @@ class App extends React.Component {
 							<Route path="/logs/new" exact component={ LogEntry } />
 							<Route path="*" component={ NotFound } />
 						</Switch>
-					</div>
-					<div className="container">
 						<hr />
-						<p><small>Copyright &copy; Chris Carleton, 2018</small></p>
+						<p><small><em>Copyright &copy; Chris Carleton, 2018</em></small></p>
 					</div>
 				</div>
 			</Router>);
