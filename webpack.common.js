@@ -22,11 +22,30 @@ module.exports = {
 				]
 			},
 			{
+				test: /\.less$/,
+				use: [
+					MiniCssExtractPlugin.loader,
+					'css-loader',
+					'less-loader'
+				]
+			},
+			{
 				test: /(\.png$|\.jpg$|\.jpeg$)/,
 				use: {
 					loader: 'file-loader',
 					options: {
-						name: '[name].[ext]'
+						name: '[name].[ext]',
+						outputPath: 'img/'
+					}
+				}
+			},
+			{
+				test: /\.(eot|svg|ttf|woff2?)$/,
+				use: {
+					loader: 'file-loader',
+					options: {
+						name: '[name].[ext]',
+						outputPath: 'fonts/'
 					}
 				}
 			}

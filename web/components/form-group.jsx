@@ -25,7 +25,7 @@ class CustomFormGroup extends React.Component {
 				<Col sm={ 9 }>
 					{ this.props.children }
 					{ this.props.errorMessage
-						? <p><small className="text-danger">{ this.props.errorMessage }</small></p>
+						? <p className="text-danger">{ this.props.errorMessage }</p>
 						: null }
 				</Col>
 			</FormGroup>);

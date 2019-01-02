@@ -6,7 +6,7 @@ import App from './components/app';
 
 require('./alt');
 require('./validators');
-require('./styles.css');
+require('./styles/main.less');
 
 ReactDOM.render(<App />, document.getElementById('app'));
 CurrentUserActions.fetchCurrentUser();

@@ -6,6 +6,8 @@ import { MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
+require('../img/dive-flag-icon.jpg');
+
 class AppNavBar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -59,7 +61,10 @@ class AppNavBar extends React.Component {
 			<Navbar fixedTop inverse>
 				<Navbar.Header>
 					<Navbar.Brand>
-						<Link to="/">Bottom Time</Link>
+						<Link to="/">
+							<img id="brand-img" src="/img/dive-flag-icon.jpg" />
+							Bottom Time
+						</Link>
 					</Navbar.Brand>
 					<Navbar.Toggle />
 				</Navbar.Header>
