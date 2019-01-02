@@ -1,7 +1,15 @@
 import webdriver from 'selenium-webdriver';
 
-const driver = new webdriver.Builder()
-	.forBrowser('phantomjs')
-	.build();
+let driver = null;
 
-export default driver;
+export default function() {
+	if (driver) {
+		return driver;
+	}
+
+	driver = new webdriver.Builder()
+		.forBrowser('phantomjs')
+		.usingServer('http://localhost:8081/')
+		.build();
+	return driver;
+};

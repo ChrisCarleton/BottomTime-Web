@@ -75,7 +75,7 @@ gulp.task('package', gulp.parallel(packageDev, packageProd));
 
 gulp.task('lint', lint);
 
-gulp.task('test', test);
+gulp.task('test', gulp.series(packageDev, test));
 
 gulp.task('serve', serve);
 
