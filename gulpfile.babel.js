@@ -54,7 +54,7 @@ function serve(done) {
 			index: 'index.html',
 			port: 8080,
 			proxy: {
-				'/api': 'http://localhost:29201/'
+				'/api': process.env.BT_API_URL || 'http://localhost:29201/'
 			},
 			publicPath: '/',
 			watchContentBase: true
