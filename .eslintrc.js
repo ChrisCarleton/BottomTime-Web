@@ -35,6 +35,7 @@ module.exports = {
 		"react/forbid-component-props": [2, {
 			"forbid": [ "style" ]
 		}],
+		"react/forbid-prop-types": 0,
 		"react/jsx-curly-spacing": [2, {
 			"when": "always"
 		}],

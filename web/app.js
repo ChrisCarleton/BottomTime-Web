@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 import agent from './agent';
 import alt from './alt';
 import React from 'react';
@@ -20,7 +22,7 @@ agent.get('/api/auth/me')
 		alt.bootstrap(JSON.stringify({
 			CurrentUserStore: {
 				currentUser: {
-					username: 'Anonymous_User',
+					username: 'Anonymous',
 					email: '',
 					createdAt: null,
 					role: 'user',

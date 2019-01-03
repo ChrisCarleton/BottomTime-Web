@@ -1,5 +1,7 @@
+import connectToStores from 'alt-utils/lib/connectToStores';
 import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import CurrentUserActions from '../actions/current-user-actions';
@@ -13,23 +15,17 @@ import {
 } from 'react-bootstrap';
 
 class Login extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return CurrentUserStore.getState();
+	}
+
 	constructor(props) {
 		super(props);
-		this.state = CurrentUserStore.getState();
-		this.handleStoreChanged = this.handleStoreChanged.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-	}
-
-	componentDidMount() {
-		CurrentUserStore.listen(this.handleStoreChanged);
-	}
-
-	componentWillUnmount() {
-		CurrentUserStore.unlisten(this.handleStoreChanged);
-	}
-
-	handleStoreChanged() {
-		this.setState(CurrentUserStore.getState());
 	}
 
 	handleSubmit(model) {
@@ -37,7 +33,7 @@ class Login extends React.Component {
 	}
 
 	render() {
-		if (this.state.currentUser && !this.state.currentUser.isAnonymous) {
+		if (this.props.currentUser && !this.props.currentUser.isAnonymous) {
 			return <Redirect to="/" />;
 		}
 
@@ -80,4 +76,8 @@ class Login extends React.Component {
 	}
 }
 
-export default Login;
+Login.propTypes = {
+	currentUser: PropTypes.object.isRequired
+};
+
+export default connectToStores(Login);

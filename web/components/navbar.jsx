@@ -1,5 +1,7 @@
+import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../users/actions/current-user-actions';
 import CurrentUserStore from '../users/stores/current-user-store';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import { MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
@@ -9,22 +11,12 @@ import { LinkContainer } from 'react-router-bootstrap';
 require('../img/dive-flag-icon.jpg');
 
 class AppNavBar extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = CurrentUserStore.getState();
-		this.handleStoreChanged = this.handleStoreChanged.bind(this);
+	static getStores() {
+		return [ CurrentUserStore ];
 	}
 
-	componentDidMount() {
-		CurrentUserStore.listen(this.handleStoreChanged);
-	}
-
-	componentWillUnmount() {
-		CurrentUserStore.unlisten(this.handleStoreChanged);
-	}
-
-	handleStoreChanged() {
-		this.setState(CurrentUserStore.getState());
+	static getPropsFromStores() {
+		return CurrentUserStore.getState();
 	}
 
 	handleLogoutClick() {
@@ -32,8 +24,8 @@ class AppNavBar extends React.Component {
 	}
 
 	renderRightNav() {
-		if (this.state.currentUser) {
-			const title = this.state.currentUser.firstName || this.state.currentUser.username;
+		if (!this.props.currentUser.isAnonymous) {
+			const title = this.props.currentUser.firstName || this.props.currentUser.username;
 			return (
 				<Nav pullRight>
 					<NavDropdown title={ title } id="user-nav-dropdown">
@@ -56,7 +48,7 @@ class AppNavBar extends React.Component {
 	}
 
 	render() {
-		const username = this.state.currentUser ? this.state.currentUser.username : 'Anonymous';
+		const username = this.props.currentUser ? this.props.currentUser.username : 'Anonymous';
 		return (
 			<Navbar fixedTop inverse>
 				<Navbar.Header>
@@ -83,4 +75,8 @@ class AppNavBar extends React.Component {
 	}
 }
 
-export default AppNavBar;
+AppNavBar.propTypes = {
+	currentUser: PropTypes.object.isRequired
+};
+
+export default connectToStores(AppNavBar);
