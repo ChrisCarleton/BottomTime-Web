@@ -32,11 +32,10 @@ class AppNavBar extends React.Component {
 	}
 
 	renderRightNav() {
-		if (this.state.currentUser && !this.state.currentUser.isAnonymous) {
+		if (this.state.currentUser) {
 			const title = this.state.currentUser.firstName || this.state.currentUser.username;
 			return (
 				<Nav pullRight>
-
 					<NavDropdown title={ title } id="user-nav-dropdown">
 						<MenuItem onClick={ this.handleLogoutClick }>Logout</MenuItem>
 					</NavDropdown>
@@ -57,6 +56,7 @@ class AppNavBar extends React.Component {
 	}
 
 	render() {
+		const username = this.state.currentUser ? this.state.currentUser.username : 'Anonymous';
 		return (
 			<Navbar fixedTop inverse>
 				<Navbar.Header>
@@ -73,7 +73,7 @@ class AppNavBar extends React.Component {
 						<LinkContainer to="/" exact>
 							<NavItem>Home</NavItem>
 						</LinkContainer>
-						<LinkContainer to="/logs">
+						<LinkContainer to={ `/logs/${ username }` }>
 							<NavItem>My Logs</NavItem>
 						</LinkContainer>
 					</Nav>

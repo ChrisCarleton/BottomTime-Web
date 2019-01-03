@@ -1,12 +1,36 @@
-import CurrentUserActions from './users/actions/current-user-actions';
+import agent from './agent';
+import alt from './alt';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/app';
 
-require('./alt');
 require('./validators');
 require('./styles/main.less');
 
-ReactDOM.render(<App />, document.getElementById('app'));
-CurrentUserActions.fetchCurrentUser();
+agent.get('/api/auth/me')
+	.then(result => {
+		alt.bootstrap(JSON.stringify({
+			CurrentUserStore: {
+				currentUser: result.body
+			}
+		}));
+	})
+	.catch(err => {
+		alt.bootstrap(JSON.stringify({
+			CurrentUserStore: {
+				currentUser: {
+					username: 'Anonymous_User',
+					email: '',
+					createdAt: null,
+					role: 'user',
+					isAnonymous: true,
+					isLockedOut: false
+				}
+			}
+		}));
+		console.error(err);
+	})
+	.finally(() => {
+		ReactDOM.render(<App />, document.getElementById('app'));
+	});
