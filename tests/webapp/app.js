@@ -6,6 +6,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, '../../dist/dev/')));
 
 app.get('/api/auth/me', (req, res) => mockApis.getAuthMe(req, res));
+app.post('/api/auth/login', (req, res) => mockApis.postAuthLogin(req, res));
 app.put('/api/users/:username', (req, res) => mockApis.putUsersUsername(req, res));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../../dist/dev/index.html')));

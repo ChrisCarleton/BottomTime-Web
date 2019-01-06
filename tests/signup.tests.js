@@ -20,13 +20,13 @@ describe('Sign up page', () => {
 	let stub = null;
 
 	before(refreshPage);
-	afterEach(refreshPage);
-
-	beforeEach(() => {
+	afterEach(() => {
 		if (stub) {
 			stub.restore();
 			stub = null;
 		}
+
+		return refreshPage();
 	});
 
 	it('catches usernames that are too short', () =>
@@ -146,6 +146,9 @@ describe('Sign up page', () => {
 			.then(() => driver.findElement(By.id('confirmPassword')).sendKeys(user.password))
 			.then(() => driver.findElement(By.id('btn-sign-up')).click())
 			.then(() => driver.wait(until.urlIs('http://localhost:8081/')))
+			.then(() => driver.wait(until.elementLocated(By.id('user-nav-dropdown'))))
+			.then(() => driver.findElement(By.id('user-nav-dropdown')).getText())
+			.then(text => expect(text).to.equal(user.username))
 	);
 
 	it('reports error when there is a conflict in username', () => {

@@ -9,6 +9,8 @@ const mockApis = {
 			isLockedOut: false
 		}),
 
+	postAuthLogin: (req, res) => res.sendStatus(204),
+
 	putUsersUsername: (req, res) =>
 		res.status(201).json({
 			username: req.params.username,
