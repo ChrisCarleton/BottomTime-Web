@@ -55,10 +55,18 @@ class SignUpPage extends React.Component {
 					} else {
 						invalidateForm({ email: 'Email address is already registered to another user.' });
 					}
-				} else {
-					ErrorActions.showError(err);
 				}
+
+				ErrorActions.showError(err);
 			});
+	}
+
+	handleInvalidSubmit() {
+		ErrorActions.showError(
+			'Invalid Information Entered',
+			'There was a problem with some of the information that was entered. '
+				+ 'See below for more details.'
+		);
 	}
 
 	render() {
@@ -89,7 +97,7 @@ class SignUpPage extends React.Component {
 
 				<ErrorBox />
 
-				<Formsy onValidSubmit={ this.handleSubmit }>
+				<Formsy onValidSubmit={ this.handleSubmit } onInvalidSubmit={ this.handleInvalidSubmit }>
 					<Row>
 						<Col sm={ 12 }>
 							<TextBox
@@ -156,6 +164,7 @@ class SignUpPage extends React.Component {
 					<Row>
 						<Col smOffset={ 3 }>
 							<Button
+								id="btn-sign-up"
 								bsStyle="primary"
 								type="submit"
 							>

@@ -1,3 +1,5 @@
+/* eslint no-process-env: 0 */
+
 import eslint from 'gulp-eslint';
 import gulp from 'gulp';
 import log from 'fancy-log';
@@ -6,12 +8,11 @@ import webpack from 'webpack';
 import webpackStream from 'webpack-stream';
 import WebpackDevServer from 'webpack-dev-server';
 
+const webpackDevConfig = require('./webpack.dev');
+const webpackProdConfig = require('./webpack.prod');
+
 function lint() {
-	return gulp.src([
-			'web/**/*.js',
-			'web/**/*.jsx',
-			'tests/**/*.js'
-		])
+	return gulp.src([ 'web/**/*.js', 'web/**/*.jsx', 'tests/**/*.js', 'gulpfile.babel.js' ])
 		.pipe(eslint())
 		.pipe(eslint.format())
 		.pipe(eslint.failAfterError());
@@ -29,7 +30,7 @@ function test() {
 function packageDev() {
 	return gulp.src('web/app.js')
 		.pipe(webpackStream(
-			require('./webpack.dev'),
+			webpackDevConfig,
 			webpack
 		))
 		.pipe(gulp.dest('dist/dev'));
@@ -38,7 +39,7 @@ function packageDev() {
 function packageProd() {
 	return gulp.src('web/app.js')
 		.pipe(webpackStream(
-			require('./webpack.prod'),
+			webpackProdConfig,
 			webpack
 		))
 		.pipe(gulp.dest('dist/prod'));
@@ -46,7 +47,7 @@ function packageProd() {
 
 function serve(done) {
 	new WebpackDevServer(
-		webpack(require('./webpack.dev')),
+		webpack(webpackDevConfig),
 		{
 			compress: true,
 			historyApiFallback: true,
@@ -60,10 +61,12 @@ function serve(done) {
 			watchContentBase: true
 		})
 		.listen(8080, 'localhost', err => {
-			if (err) return done(err);
+			if (err) {
+				return done(err);
+			}
 
 			log('Dev server started on port 8080.');
-			done();
+			return done();
 		});
 }
 
@@ -75,7 +78,9 @@ gulp.task('package', gulp.parallel(packageDev, packageProd));
 
 gulp.task('lint', lint);
 
-gulp.task('test', gulp.series(packageDev, test));
+gulp.task('test', test);
+
+gulp.task('build-and-test', gulp.series(packageDev, test));
 
 gulp.task('serve', serve);
 

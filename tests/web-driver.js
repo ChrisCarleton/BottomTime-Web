@@ -1,15 +1,7 @@
 import webdriver from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome';
 
-let driver = null;
-
-export default function() {
-	if (driver) {
-		return driver;
-	}
-
-	driver = new webdriver.Builder()
-		.forBrowser('phantomjs')
-		.usingServer('http://localhost:8081/')
-		.build();
-	return driver;
-};
+export default new webdriver.Builder()
+	.forBrowser('chrome')
+	.setChromeOptions(new chrome.Options())
+	.build();

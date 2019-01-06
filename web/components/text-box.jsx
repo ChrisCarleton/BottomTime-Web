@@ -1,20 +1,18 @@
+import FormGroup from './form-group';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { propTypes, withFormsy } from 'formsy-react';
 
 import { FormControl, InputGroup } from 'react-bootstrap';
-import FormGroup from './form-group';
 
 class TextBox extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { value: props.getValue() || '' };
 		this.handleTextChanged = this.handleTextChanged.bind(this);
 	}
 
 	handleTextChanged(e) {
 		this.props.setValue(e.target.value);
-		this.setState({ value: e.target.value });
 		if (this.props.onChange) {
 			this.props.onChange(e.target.value);
 		}
@@ -24,31 +22,33 @@ class TextBox extends React.Component {
 		let errorMessage = null;
 		let validationState = null;
 
-		if (this.props.isPristine()) {
-
-			errorMessage = null;
-			validationState = null;
-
-		} else if (this.props.showRequired()) {
+		if (!this.props.isPristine() && this.props.showRequired()) {
 
 			errorMessage = `${ this.props.label } is required.`;
 			validationState = 'error';
+
 		} else if (this.props.showError()) {
 
 			errorMessage = this.props.getErrorMessage();
 			validationState = 'error';
 
+		} else if (this.props.isPristine()) {
+
+			errorMessage = null;
+			validationState = null;
+
 		} else {
+
 			errorMessage = null;
 			validationState = 'success';
+
 		}
 
 		const formControl = (
 			<FormControl
 				type={ this.props.password ? 'password' : 'text' }
-				value={ this.state.value }
+				value={ this.props.getValue() || '' }
 				onChange={ this.handleTextChanged }
-				required={ this.props.required }
 			/>
 		);
 

@@ -32,9 +32,9 @@ class ErrorBox extends React.Component {
 		const bsStyle = (this.state.display === 'error') ? 'danger' : 'success';
 
 		return (
-			<Alert bsStyle={ bsStyle }>
-				<h4>{ this.state.message }</h4>
-				<p>{ this.state.details }</p>
+			<Alert id="error-alert" bsStyle={ bsStyle }>
+				<h4 id="error-alert-message">{ this.state.message }</h4>
+				<p id="error-alert-details">{ this.state.details }</p>
 			</Alert>
 		);
 	}
