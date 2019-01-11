@@ -3,6 +3,8 @@ jobs:
   build:
     docker:
       - image: node:10.11.0
+        environment:
+          CHROMEDRIVER_FORCE_DOWNLOAD: true
     steps:
       - checkout
       - restore_cache:
@@ -15,10 +17,6 @@ jobs:
           command: |
             npm install -g gulp-cli
             npm install
-            wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-            echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
-            apt-get update 
-            apt-get install -y google-chrome-stable
       - save_cache:
           name: Cache Dependencies
           key: bottomtime_{{ checksum "package.json" }}
