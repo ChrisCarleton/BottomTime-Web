@@ -1,3 +1,8 @@
+variable "allowed_ips" {
+	type = "string"
+	default = "0.0.0.0/0"
+}
+
 variable "api_domain_name" {
 	type = "string"
 }
