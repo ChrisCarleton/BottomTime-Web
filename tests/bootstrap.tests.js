@@ -5,4 +5,7 @@ import http from 'http';
 const server = http.createServer(app);
 server.listen(8081);
 
-after(() => driver.quit().then(() => server.close()));
+after(async () => {
+	await driver.quit();
+	server.close();
+});

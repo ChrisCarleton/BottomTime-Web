@@ -16,9 +16,9 @@ describe('Login page', () => {
 		isLockedOut: false
 	};
 
-	function refreshPage() {
-		return driver.navigate().to('http://localhost:8081/login/')
-			.then(() => driver.wait(until.elementLocated(By.id('username'))));
+	async function refreshPage() {
+		await driver.navigate().to('http://localhost:8081/login/');
+		await driver.wait(until.elementLocated(By.id('username')));
 	}
 
 	let stub = null;
@@ -30,35 +30,36 @@ describe('Login page', () => {
 			stub = null;
 		}
 
-		return refreshPage();
+		refreshPage();
 	});
 
-	it('catches missing username', () =>
-		driver.findElement(By.id('password')).sendKeys(user.password)
-			.then(() => driver.findElement(By.id('btn-login')).click())
-			.then(() => driver.wait(until.elementLocated(By.id('err-username'))))
-	);
+	it('catches missing username', async () => {
+		await driver.findElement(By.id('password')).sendKeys(user.password);
+		await driver.findElement(By.id('btn-login')).click();
+		await driver.wait(until.elementLocated(By.id('err-username')));
+	});
 
-	it('catches missing password', () =>
-		driver.findElement(By.id('username')).sendKeys(user.username)
-			.then(() => driver.findElement(By.id('btn-login')).click())
-			.then(() => driver.wait(until.elementLocated(By.id('err-password'))))
-	);
+	it('catches missing password', async () => {
+		await driver.findElement(By.id('username')).sendKeys(user.username);
+		await driver.findElement(By.id('btn-login')).click();
+		await driver.wait(until.elementLocated(By.id('err-password')));
+	});
 
-	it('succeeds if username and password are correct', () => {
+	it('succeeds if username and password are correct', async () => {
 		stub = sinon.stub(mockApis, 'getAuthMe');
 		stub.callsFake((req, res) => res.json(user));
 
-		return driver.findElement(By.id('username')).sendKeys(user.username)
-			.then(() => driver.findElement(By.id('password')).sendKeys(user.password))
-			.then(() => driver.findElement(By.id('btn-login')).click())
-			.then(() => driver.wait(until.urlIs('http://localhost:8081/')))
-			.then(() => driver.wait(until.elementLocated(By.id('user-nav-dropdown'))))
-			.then(() => driver.findElement(By.id('user-nav-dropdown')).getText())
-			.then(text => expect(text).to.equal(user.username));
+		await driver.findElement(By.id('username')).sendKeys(user.username);
+		await driver.findElement(By.id('password')).sendKeys(user.password);
+		await driver.findElement(By.id('btn-login')).click();
+		await driver.wait(until.urlIs('http://localhost:8081/'));
+		await driver.wait(until.elementLocated(By.id('user-nav-dropdown')));
+
+		const text = await driver.findElement(By.id('user-nav-dropdown')).getText();
+		expect(text).to.equal(user.username);
 	});
 
-	it('fails if username or password is incorrect', () => {
+	it('fails if username or password is incorrect', async () => {
 		stub = sinon.stub(mockApis, 'postAuthLogin');
 		stub.callsFake((req, res) =>
 			res.status(401).json({
@@ -69,20 +70,20 @@ describe('Login page', () => {
 			})
 		);
 
-		return driver.findElement(By.id('username')).sendKeys(user.username)
-			.then(() => driver.findElement(By.id('password')).sendKeys(user.password))
-			.then(() => driver.findElement(By.id('btn-login')).click())
-			.then(() => driver.wait(until.elementLocated(By.id('error-alert-message'))));
+		await driver.findElement(By.id('username')).sendKeys(user.username);
+		await driver.findElement(By.id('password')).sendKeys(user.password);
+		await driver.findElement(By.id('btn-login')).click();
+		await driver.wait(until.elementLocated(By.id('error-alert-message')));
 	});
 
-	it('fails if there is a general server error', () => {
+	it('fails if there is a general server error', async () => {
 		stub = sinon.stub(mockApis, 'postAuthLogin');
 		stub.callsFake((req, res) => res.sendStatus(503));
 
-		return driver.findElement(By.id('username')).sendKeys(user.username)
-			.then(() => driver.findElement(By.id('password')).sendKeys(user.password))
-			.then(() => driver.findElement(By.id('btn-login')).click())
-			.then(() => driver.wait(until.elementLocated(By.id('error-alert-message'))));
+		await driver.findElement(By.id('username')).sendKeys(user.username);
+		await driver.findElement(By.id('password')).sendKeys(user.password);
+		await driver.findElement(By.id('btn-login')).click();
+		await driver.wait(until.elementLocated(By.id('error-alert-message')));
 	});
 
 });
