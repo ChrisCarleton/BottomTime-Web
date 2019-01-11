@@ -23,7 +23,10 @@ resource "aws_waf_web_acl" "acl" {
 	depends_on = ["aws_waf_ipset.whitelist", "aws_waf_rule.whitelist_rule"]
 	name = "BottomTimeWeb-ACL-${var.env}"
 	metric_name = "BottomTimeWebACL${var.env}"
-	default_action = "BLOCK"
+	
+	default_action {
+		type = "BLOCK"
+	}
 
 	rules {
 		action {

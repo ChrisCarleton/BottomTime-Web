@@ -59,8 +59,6 @@ resource "aws_cloudfront_distribution" "main" {
 		}
 
 		viewer_protocol_policy = "redirect-to-https"
-
-		web_acl_id = "${aws_waf_web_acl.acl.id}"
 	}
 
 	ordered_cache_behavior {
@@ -106,4 +104,6 @@ resource "aws_cloudfront_distribution" "main" {
 		ssl_support_method = "sni-only"
 		minimum_protocol_version = "TLSv1"
 	}
+
+	web_acl_id = "${aws_waf_web_acl.acl.id}"
 }
