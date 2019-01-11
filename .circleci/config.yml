@@ -3,8 +3,6 @@ jobs:
   build:
     docker:
       - image: node:10.11.0
-        environment:
-          CHROMEDRIVER_FORCE_DOWNLOAD: true
     steps:
       - checkout
       - restore_cache:
@@ -23,11 +21,6 @@ jobs:
           paths:
             - node_modules/
       - run:
-          name: Validate
-          command: |
-            gulp lint
-            gulp test
-      - run:
           name: Package
           command: |
             gulp package-dev
@@ -38,6 +31,26 @@ jobs:
           paths:
             - dev/
             - prod/
+
+  test:
+    docker:
+      - image: circleci/node:jessie-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Dependencies
+          keys:
+            - bottomtime_{{ checksum "package.json" }}
+      - run:
+          name: Setup
+          command: |
+            npm install -g gulp-cli
+            npm install
+      - run:
+          name: Validate
+          command: |
+            gulp lint
+            gulp test
 
   terraform-dev:
     docker:
@@ -124,9 +137,12 @@ workflows:
   build_and_deploy:
     jobs:
       - build
-      - terraform-dev:
+      - test:
           requires:
             - build
+      - terraform-dev:
+          requires:
+            - test
           filters:
             branches:
               only:
@@ -140,7 +156,7 @@ workflows:
                 - master
       - terraform-prod:
           requires:
-            - build
+            - test
           filters:
             branches:
               only:
