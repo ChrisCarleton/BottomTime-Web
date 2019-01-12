@@ -4,6 +4,7 @@ var path = require('path');
 
 module.exports = {
 	entry: {
+		polyfill: '@babel/polyfill',
 		main: './web/app.js'
 	},
 	module: {

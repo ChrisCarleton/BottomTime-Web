@@ -36,29 +36,29 @@ class SignUpPage extends React.Component {
 		this.setState(CurrentUserStore.getState());
 	}
 
-	handleSubmit(model, resetForm, invalidateForm) {
-		agent
-			.put(`/api/users/${ model.username }`)
-			.send({
-				email: model.email,
-				password: model.password,
-				role: 'user'
-			})
-			.then(res => {
-				resetForm();
-				CurrentUserActions.loginSucceeded(res);
-			})
-			.catch(err => {
-				if (err.response.status === 409) {
-					if (err.response.body.fieldName === 'username') {
-						invalidateForm({ username: 'Username is already taken.' });
-					} else {
-						invalidateForm({ email: 'Email address is already registered to another user.' });
-					}
-				}
+	async handleSubmit(model, resetForm, invalidateForm) {
+		try {
+			const result = await agent
+				.put(`/api/users/${ model.username }`)
+				.send({
+					email: model.email,
+					password: model.password,
+					role: 'user'
+				});
 
-				ErrorActions.showError(err);
-			});
+			resetForm();
+			CurrentUserActions.loginSucceeded(result);
+		} catch (err) {
+			if (err.response.status === 409) {
+				if (err.response.body.fieldName === 'username') {
+					invalidateForm({ username: 'Username is already taken.' });
+				} else {
+					invalidateForm({ email: 'Email address is already registered to another user.' });
+				}
+			}
+
+			ErrorActions.showError(err);
+		}
 	}
 
 	handleInvalidSubmit() {

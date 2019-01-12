@@ -46,11 +46,12 @@ describe('Login page', () => {
 	});
 
 	it('succeeds if username and password are correct', async () => {
+		await driver.findElement(By.id('username')).sendKeys(user.username);
+		await driver.findElement(By.id('password')).sendKeys(user.password);
+
 		stub = sinon.stub(mockApis, 'getAuthMe');
 		stub.callsFake((req, res) => res.json(user));
 
-		await driver.findElement(By.id('username')).sendKeys(user.username);
-		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-login')).click();
 		await driver.wait(until.urlIs('http://localhost:8081/'));
 		await driver.wait(until.elementLocated(By.id('user-nav-dropdown')));
