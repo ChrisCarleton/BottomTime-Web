@@ -34,7 +34,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:jessie-browsers
+      - image: mattlewis92/docker-nodejs-chrome
     steps:
       - checkout
       - restore_cache:
