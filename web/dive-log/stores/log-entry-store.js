@@ -3,6 +3,7 @@ import logEntryActions from '../actions/log-entry-actions';
 
 class LogEntryStore {
 	constructor() {
+		this.listEntries = [];
 		this.currentEntry = {};
 
 		this.bindListeners({

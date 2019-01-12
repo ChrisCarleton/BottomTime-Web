@@ -25,8 +25,8 @@ class ErrorBox extends React.Component {
 
 		return (
 			<Alert id="error-alert" bsStyle={ bsStyle }>
-				<h4 id="error-alert-message">{ this.state.message }</h4>
-				<p id="error-alert-details">{ this.state.details }</p>
+				<h4 id="error-alert-message">{ this.props.message }</h4>
+				<p id="error-alert-details">{ this.props.details }</p>
 			</Alert>
 		);
 	}

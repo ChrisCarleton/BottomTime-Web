@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
+import LogEntryStore from '../stores/log-entry-store';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,26 +15,26 @@ import {
 
 require('../../img/diver-icon.png');
 
-const records = [
-	{
-		entryId: 'abcd1234',
-		entryTime: moment().utc().toISOString()
-	}
-];
-
 const DateFormat = 'MMMM Do YYYY - h:mma';
 
 class LogsList extends React.Component {
 	static getStores() {
-		return [ CurrentUserStore ];
+		return [ CurrentUserStore, LogEntryStore ];
 	}
 
 	static getPropsFromStores() {
-		return CurrentUserStore.getState();
+		return {
+			currentUser: CurrentUserStore.getState().currentUser,
+			logsList: LogEntryStore.getState().logsList
+		};
 	}
 
 	renderDiveList() {
-		return _.map(records, r => (
+		if (this.props.logsList.length === 0) {
+			return <span><em>Nothing</em></span>;
+		}
+
+		return _.map(this.props.logsList, r => (
 			<Media key={ r.entryId }>
 				<Media.Left>
 					<img src="/img/diver-icon.png" />
@@ -69,7 +70,8 @@ class LogsList extends React.Component {
 }
 
 LogsList.propTypes = {
-	currentUser: PropTypes.object.isRequired
+	currentUser: PropTypes.object.isRequired,
+	logsList: PropTypes.array.isRequired
 };
 
 export default connectToStores(LogsList);

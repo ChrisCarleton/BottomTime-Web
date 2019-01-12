@@ -1,3 +1,18 @@
+import faker from 'faker';
+import fakeMongoId from '../utils/fake-mongo-id';
+
+export const logEntries = new Array(250);
+for (let i = 0; i < logEntries.length; i++) {
+	logEntries[i] = {
+		entryId: fakeMongoId(),
+		entryTime: faker.date.past(3).toISOString(),
+		bottomTime: faker.random.number({ min: 10, max: 70 }),
+		location: faker.fake('{{address.city}}{{address.citySuffix}}, {{address.stateAbbr}}'),
+		site: faker.fake('{{address.cityPrefix}} {{name.lastName}}'),
+		maxDepth: faker.random.number({ min: 15, max: 100 })
+	};
+}
+
 const mockApis = {
 	getAuthMe: (req, res) =>
 		res.status(200).json({
@@ -19,7 +34,9 @@ const mockApis = {
 			role: 'user',
 			isAnonymous: false,
 			isLockedOut: false
-		})
+		}),
+
+	getUsersUsernameLogs: (req, res) => res.json(logEntries)
 };
 
 export default mockApis;
