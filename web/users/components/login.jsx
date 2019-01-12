@@ -67,7 +67,7 @@ class Login extends React.Component {
 					</Row>
 					<Row>
 						<Col smOffset={ 3 }>
-							<Button bsStyle="primary" type="submit">Login</Button>
+							<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
 						</Col>
 					</Row>
 				</Formsy>

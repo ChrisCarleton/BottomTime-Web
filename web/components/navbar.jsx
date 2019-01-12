@@ -37,10 +37,10 @@ class AppNavBar extends React.Component {
 
 		return (
 			<Nav pullRight>
-				<LinkContainer to="/signup" exact>
+				<LinkContainer id="nav-signup" to="/signup" exact>
 					<NavItem>Sign Up</NavItem>
 				</LinkContainer>
-				<LinkContainer to="/login" exact>
+				<LinkContainer id="nav-login" to="/login" exact>
 					<NavItem>Login</NavItem>
 				</LinkContainer>
 			</Nav>

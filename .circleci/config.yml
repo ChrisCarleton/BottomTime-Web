@@ -1,36 +1,36 @@
 version: 2.1
 jobs:
-  build:
+  test:
     docker:
-      - image: node:10.11.0
+      - image: circleci/node:jessie-browsers
     steps:
       - checkout
       - restore_cache:
           name: Restore Dependencies
           keys:
-            - bottomtime_{{ checksum "package.json" }}
-            - bottomtime_
+            - bottomtime_test_{{ checksum "package.json" }}
+            - bottomtime_test_
       - run:
           name: Setup
           command: |
-            npm install -g gulp-cli
+            sudo npm install -g gulp-cli
             npm install
       - save_cache:
           name: Cache Dependencies
-          key: bottomtime_{{ checksum "package.json" }}
+          key: bottomtime_test_{{ checksum "package.json" }}
           paths:
             - node_modules/
-      - run:
-          name: Validate
-          command: |
-            gulp lint
-            gulp test
       - run:
           name: Package
           command: |
             gulp package-dev
             export NODE_ENV=production
             gulp package-prod
+      - run:
+          name: Validate
+          command: |
+            gulp lint
+            gulp test
       - persist_to_workspace:
           root: dist/
           paths:
@@ -121,10 +121,10 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build
+      - test
       - terraform-dev:
           requires:
-            - build
+            - test
           filters:
             branches:
               only:
@@ -138,7 +138,7 @@ workflows:
                 - master
       - terraform-prod:
           requires:
-            - build
+            - test
           filters:
             branches:
               only:

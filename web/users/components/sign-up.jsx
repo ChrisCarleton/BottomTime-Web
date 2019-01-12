@@ -30,29 +30,37 @@ class SignUpPage extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleSubmit(model, resetForm, invalidateForm) {
-		agent
-			.put(`/api/users/${ model.username }`)
-			.send({
-				email: model.email,
-				password: model.password,
-				role: 'user'
-			})
-			.then(res => {
-				resetForm();
-				CurrentUserActions.loginSucceeded(res);
-			})
-			.catch(err => {
-				if (err.response.status === 409) {
-					if (err.response.body.fieldName === 'username') {
-						invalidateForm({ username: 'Username is already taken.' });
-					} else {
-						invalidateForm({ email: 'Email address is already registered to another user.' });
-					}
+	async handleSubmit(model, resetForm, invalidateForm) {
+		try {
+			const result = await agent
+				.put(`/api/users/${ model.username }`)
+				.send({
+					email: model.email,
+					password: model.password,
+					role: 'user'
+				});
+
+			resetForm();
+			CurrentUserActions.loginSucceeded(result);
+		} catch (err) {
+			if (err.response.status === 409) {
+				if (err.response.body.fieldName === 'username') {
+					invalidateForm({ username: 'Username is already taken.' });
 				} else {
-					ErrorActions.showError(err);
+					invalidateForm({ email: 'Email address is already registered to another user.' });
 				}
-			});
+			}
+
+			ErrorActions.showError(err);
+		}
+	}
+
+	handleInvalidSubmit() {
+		ErrorActions.showError(
+			'Invalid Information Entered',
+			'There was a problem with some of the information that was entered. '
+				+ 'See below for more details.'
+		);
 	}
 
 	render() {
@@ -83,7 +91,7 @@ class SignUpPage extends React.Component {
 
 				<ErrorBox />
 
-				<Formsy onValidSubmit={ this.handleSubmit }>
+				<Formsy onValidSubmit={ this.handleSubmit } onInvalidSubmit={ this.handleInvalidSubmit }>
 					<Row>
 						<Col sm={ 12 }>
 							<TextBox
@@ -150,6 +158,7 @@ class SignUpPage extends React.Component {
 					<Row>
 						<Col smOffset={ 3 }>
 							<Button
+								id="btn-sign-up"
 								bsStyle="primary"
 								type="submit"
 							>
