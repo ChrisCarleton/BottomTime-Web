@@ -4,28 +4,28 @@ import ErrorActions from '../../actions/error-actions';
 
 class CurrentUserActions {
 	login(model) {
-		return dispatch => {
+		return async dispatch => {
 			dispatch();
-			agent
-				.post('/api/auth/login')
-				.send(model)
-				.then(() => agent.get('/api/auth/me'))
-				.then(result => {
-					this.loginSucceeded(result);
-				})
-				.catch(ErrorActions.showError);
+			try {
+				await agent.post('/api/auth/login').send(model);
+
+				const result = await agent.get('/api/auth/me');
+				this.loginSucceeded(result);
+			} catch (err) {
+				ErrorActions.showError(err);
+			}
 		};
 	}
 
 	logout() {
-		return dispatch => {
+		return async dispatch => {
 			dispatch();
-			agent
-				.post('/api/auth/logout')
-				.then(() => {
-					this.fetchCurrentUser();
-				})
-				.catch(ErrorActions.showError);
+			try {
+				await agent.post('/api/auth/logout');
+				this.fetchCurrentUser();
+			} catch (err) {
+				ErrorActions.showError(err);
+			}
 		};
 	}
 

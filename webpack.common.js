@@ -4,6 +4,7 @@ var path = require('path');
 
 module.exports = {
 	entry: {
+		polyfill: '@babel/polyfill',
 		main: './web/app.js'
 	},
 	module: {
@@ -11,7 +12,18 @@ module.exports = {
 			{
 				test: /\.jsx?$/,
 				use: {
-					loader: 'babel-loader'
+					loader: 'babel-loader',
+					options: {
+						presets: [
+							[
+								"@babel/preset-env",
+								{
+									"targets": "> 0.25%, not dead"
+								}
+							],
+							"@babel/preset-react"
+						]
+					}
 				}
 			},
 			{

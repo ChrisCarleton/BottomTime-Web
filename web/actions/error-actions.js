@@ -1,13 +1,25 @@
 import alt from '../alt';
 
 class ErrorActions {
+	constructor() {
+		this.timeout = null;
+	}
+
 	showSuccess(message) {
-		setTimeout(this.clearError, 10000);
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+		}
+
+		this.timeout = setTimeout(this.clearError, 10000);
 		return message;
 	}
 
-	showError(error) {
-		setTimeout(this.clearError, 10000);
+	showError(error, details) {
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+		}
+
+		this.timeout = setTimeout(this.clearError, 10000);
 
 		if (error.response && error.response.body) {
 			if (error.response.body.message) {
@@ -18,6 +30,13 @@ class ErrorActions {
 			}
 		}
 
+		if (typeof (error) === 'string') {
+			return {
+				message: error,
+				details
+			};
+		}
+
 		return {
 			message: 'An unexpected error occured',
 			details: 'Something went wrong and the specified action could not be completed.'
@@ -25,6 +44,7 @@ class ErrorActions {
 	}
 
 	clearError() {
+		this.timeout = null;
 		return true;
 	}
 }
