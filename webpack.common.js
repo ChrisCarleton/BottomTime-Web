@@ -11,7 +11,18 @@ module.exports = {
 			{
 				test: /\.jsx?$/,
 				use: {
-					loader: 'babel-loader'
+					loader: 'babel-loader',
+					options: {
+						presets: [
+							[
+								"@babel/preset-env",
+								{
+									"targets": "> 0.25%, not dead"
+								}
+							],
+							"@babel/preset-react"
+						]
+					}
 				}
 			},
 			{
