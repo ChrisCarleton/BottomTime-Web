@@ -8,8 +8,8 @@ jobs:
       - restore_cache:
           name: Restore Dependencies
           keys:
-            - bottomtime_{{ checksum "package.json" }}
-            - bottomtime_
+            - bottomtime_build_{{ checksum "package.json" }}
+            - bottomtime_build_
       - run:
           name: Setup
           command: |
@@ -40,7 +40,8 @@ jobs:
       - restore_cache:
           name: Restore Dependencies
           keys:
-            - bottomtime_{{ checksum "package.json" }}
+            - bottomtime_test_{{ checksum "package.json" }}
+            - bottomtime_test_
       - run:
           name: Setup
           command: |
