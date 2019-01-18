@@ -9,6 +9,7 @@ import LogEntry from '../dive-log/components/log-entry';
 import NotFound from './not-found';
 import SignUpPage from '../users/components/sign-up';
 import Login from '../users/components/login';
+import Profile from '../users/components/profile';
 
 class App extends React.Component {
 	render() {
@@ -21,8 +22,11 @@ class App extends React.Component {
 							<Route path="/" exact component={ Home } />
 							<Route path="/signup" exact component={ SignUpPage } />
 							<Route path="/login" exact component={ Login } />
-							<Route path="/logs" exact component={ LogsList } />
-							<Route path="/logs/new" exact component={ LogEntry } />
+							<Route path="/profile" exact component={ Profile } />
+							<Route path="/profile/:username" exact component={ Profile } />
+							<Route path="/logs/:username" exact component={ LogsList } />
+							<Route path="/logs/:username/new" exact component={ LogEntry } />
+							<Route path="/logs/:username/:logId" exact component={ LogEntry } />
 							<Route path="*" component={ NotFound } />
 						</Switch>
 						<hr />
