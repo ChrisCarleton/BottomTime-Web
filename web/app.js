@@ -9,6 +9,8 @@ import App from './components/app';
 
 require('./validators');
 require('./styles/main.less');
+require('./img/loading-spinner.gif');
+require('./img/reef-background.jpg');
 
 agent.get('/api/auth/me')
 	.then(result => {
