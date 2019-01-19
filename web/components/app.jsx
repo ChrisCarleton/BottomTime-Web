@@ -21,6 +21,7 @@ class App extends React.Component {
 							<Route path="/" exact component={ Home } />
 							<Route path="/signup" exact component={ SignUpPage } />
 							<Route path="/login" exact component={ Login } />
+							<Route path="/logs" exact component={ LogsList } />
 							<Route path="/logs/:username" exact component={ LogsList } />
 							<Route path="/logs/:username/new" exact component={ LogEntry } />
 							<Route path="/logs/:username/:logId" exact component={ LogEntry } />

@@ -28,12 +28,15 @@ const mockApis = {
 
 	putUsersUsername: (req, res) =>
 		res.status(201).json({
-			username: req.params.username,
-			email: `${ req.params.username }@gmail.com`,
-			createdAt: (new Date()).toISOString(),
-			role: 'user',
-			isAnonymous: false,
-			isLockedOut: false
+			user: {
+				username: req.params.username,
+				email: `${ req.params.username }@gmail.com`,
+				createdAt: (new Date()).toISOString(),
+				role: 'user',
+				isAnonymous: false,
+				isLockedOut: false
+			},
+			token: 'la.di.da'
 		}),
 
 	getUsersUsernameLogs: (req, res) => res.json(logEntries)

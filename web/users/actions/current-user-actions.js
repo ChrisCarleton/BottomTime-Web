@@ -7,12 +7,30 @@ class CurrentUserActions {
 		return async dispatch => {
 			dispatch();
 			try {
-				await agent.post('/api/auth/login').send(model);
-
-				const result = await agent.get('/api/auth/me');
+				const result = await agent.post('/api/auth/login').send(model);
 				this.loginSucceeded(result);
 			} catch (err) {
 				ErrorActions.showError(err);
+			}
+		};
+	}
+
+	trySignup(model, done) {
+		return async dispatch => {
+			dispatch();
+			try {
+				const result = await agent
+					.put(`/api/users/${ model.username }`)
+					.send({
+						email: model.email,
+						password: model.password,
+						role: 'user'
+					});
+
+				done();
+				return this.loginSucceeded(result);
+			} catch (err) {
+				return done(err);
 			}
 		};
 	}
@@ -22,15 +40,18 @@ class CurrentUserActions {
 			dispatch();
 			try {
 				await agent.post('/api/auth/logout');
-				this.fetchCurrentUser();
 			} catch (err) {
 				ErrorActions.showError(err);
 			}
+
+			agent.clearAuthToken();
+			this.fetchCurrentUser();
 		};
 	}
 
 	loginSucceeded(result) {
-		return result.body;
+		agent.setAuthToken(result.body.token);
+		return result.body.user;
 	}
 
 	fetchCurrentUser() {

@@ -1,4 +1,3 @@
-import agent from '../../agent';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
@@ -30,20 +29,13 @@ class SignUpPage extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	async handleSubmit(model, resetForm, invalidateForm) {
-		try {
-			const result = await agent
-				.put(`/api/users/${ model.username }`)
-				.send({
-					email: model.email,
-					password: model.password,
-					role: 'user'
-				});
+	handleSubmit(model, resetForm, invalidateForm) {
+		CurrentUserActions.trySignup(model, err => {
+			if (!err) {
+				return resetForm();
+			}
 
-			resetForm();
-			CurrentUserActions.loginSucceeded(result);
-		} catch (err) {
-			if (err.response.status === 409) {
+			if (err.response && err.response.status === 409) {
 				if (err.response.body.fieldName === 'username') {
 					invalidateForm({ username: 'Username is already taken.' });
 				} else {
@@ -51,8 +43,8 @@ class SignUpPage extends React.Component {
 				}
 			}
 
-			ErrorActions.showError(err);
-		}
+			return ErrorActions.showError(err);
+		});
 	}
 
 	handleInvalidSubmit() {
