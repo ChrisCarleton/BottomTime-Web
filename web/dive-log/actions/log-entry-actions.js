@@ -9,7 +9,7 @@ class LogEntryActions {
 		return async dispatch => {
 			try {
 				dispatch();
-				const results = await agent.get(`/users/${ username }/logs`).query(params);
+				const results = await agent.get(`/api/users/${ username }/logs`).query(params);
 				this.searchLogsCompleted(results.body);
 			} catch (err) {
 				this.searchLogsFailed(err);
