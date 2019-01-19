@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
+import LogEntryActions from '../actions/log-entry-actions';
 import LogEntryStore from '../stores/log-entry-store';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -23,7 +24,7 @@ const DateFormat = 'MMMM Do YYYY - h:mma';
 class LogsList extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { isLoading: true };
+		this.state = {};
 	}
 
 	static getStores() {
@@ -33,16 +34,30 @@ class LogsList extends React.Component {
 	static getPropsFromStores() {
 		return {
 			currentUser: CurrentUserStore.getState().currentUser,
-			logsList: LogEntryStore.getState().logsList
+			...LogEntryStore.getState()
 		};
 	}
 
 	componentDidMount() {
+		const username = this.props.match.params.username;
+		if (username) {
+			if (
+				username.charAt(username.length - 1) === 's'
+				|| username.charAt(username.length - 1) === 'S'
+			) {
+				this.setState({ ...this.state, possessive: `${ username }'` })
+			} else {
+				this.setState({ ...this.state, possessive: `${ username }'s` })
+			}
+		} else {
+			this.setState({ ...this.state, possessive: 'My' });
+		}
 
+		LogEntryActions.searchLogs(username || this.props.currentUser.username);
 	}
 
 	renderDiveList() {
-		if (this.state.isLoading) {
+		if (this.props.isSearching) {
 			return (
 				<Media>
 					<Media.Left align="middle">
@@ -87,10 +102,10 @@ class LogsList extends React.Component {
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
 					</LinkContainer>
-					<Breadcrumb.Item active>My Logs</Breadcrumb.Item>
+					<Breadcrumb.Item active>Log Book</Breadcrumb.Item>
 				</Breadcrumb>
 
-				<h1>Logs List!</h1>
+				<h1>{ `${ this.state.possessive } Log Book` }</h1>
 
 				<LinkContainer to={ `/logs/${ this.props.currentUser.username }/new` }>
 					<Button bsStyle="primary">Create New</Button>
@@ -106,6 +121,7 @@ class LogsList extends React.Component {
 LogsList.propTypes = {
 	currentUser: PropTypes.object.isRequired,
 	logsList: PropTypes.array,
+	isSearching: PropTypes.bool,
 	match: PropTypes.object.isRequired
 };
 

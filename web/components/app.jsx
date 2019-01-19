@@ -28,7 +28,7 @@ class App extends React.Component {
 							<Route path="*" component={ NotFound } />
 						</Switch>
 						<hr />
-						<p><small><em>Copyright &copy; Chris Carleton, 2018</em></small></p>
+						<p><small><em>Copyright &copy; Chris Carleton, 2019</em></small></p>
 					</div>
 				</div>
 			</Router>);
