@@ -13,6 +13,7 @@ import {
 	Alert,
 	Breadcrumb,
 	Button,
+	ButtonToolbar,
 	Clearfix,
 	Col,
 	Grid,
@@ -20,6 +21,8 @@ import {
 	Label,
 	Media,
 	Row,
+	ToggleButton,
+	ToggleButtonGroup,
 	Well
 } from 'react-bootstrap';
 
@@ -30,7 +33,13 @@ const DateFormat = 'MMMM Do YYYY - h:mma';
 class LogsList extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			sortBy: 'entryTime',
+			sortOrder: 'desc'
+		};
+
+		this.handleSortByChanged = this.handleSortByChanged.bind(this);
+		this.handleSortOrderChanged = this.handleSortOrderChanged.bind(this);
 	}
 
 	static getStores() {
@@ -65,7 +74,29 @@ class LogsList extends React.Component {
 		}
 
 		this.setState({ ...this.state, possessive });
-		LogEntryActions.searchLogs(username || this.props.currentUser.username);
+		this.searchLogs();
+	}
+
+	searchLogs() {
+		const username = this.getUsernameForRoute();
+		LogEntryActions.searchLogs(
+			username,
+			{
+				sortBy: this.state.sortBy,
+				sortOrder: this.state.sortOrder
+			}
+		);
+	}
+
+	handleSortByChanged(value) {
+		this.state.sortBy = value;
+		this.state.sortOrder = 'desc';
+		this.searchLogs();
+	}
+
+	handleSortOrderChanged(value) {
+		this.state.sortOrder = value[0] === 'asc' ? 'asc' : 'desc';
+		this.searchLogs();
 	}
 
 	renderDiveList() {
@@ -139,6 +170,21 @@ class LogsList extends React.Component {
 	}
 
 	render() {
+		let reverseOrderText = null;
+		switch (this.state.sortBy) {
+			case 'entryTime':
+				reverseOrderText = 'Oldest first';
+				break;
+
+			case 'maxDepth':
+				reverseOrderText = 'Shallowest first';
+				break;
+
+			case 'bottomTime':
+				reverseOrderText = 'Shortest first';
+				break;
+		}
+
 		return (
 			<div>
 				<Breadcrumb>
@@ -150,14 +196,43 @@ class LogsList extends React.Component {
 
 				<h1>{ `${ this.state.possessive } Log Book` }</h1>
 
-				<LinkContainer to={ `/logs/${ this.props.currentUser.username }/new` }>
-					<Button bsStyle="primary">Create New</Button>
-				</LinkContainer>
+				<ButtonToolbar>
+					<LinkContainer to={ `/logs/${ this.props.currentUser.username }/new` }>
+						<Button bsStyle="primary">Create New</Button>
+					</LinkContainer>
+
+					<ToggleButtonGroup
+						name="sortBy"
+						value={ this.state.sortBy }
+						onChange={ this.handleSortByChanged }
+					>
+						<ToggleButton value="entryTime">
+							By Date
+						</ToggleButton>
+						<ToggleButton value="maxDepth">
+							By Depth
+						</ToggleButton>
+						<ToggleButton value="bottomTime">
+							By Duration
+						</ToggleButton>
+					</ToggleButtonGroup>
+
+					<ToggleButtonGroup
+						type="checkbox"
+						value={ this.state.sortOrder === 'asc' ? [ 'asc' ] : [] }
+						onChange={ this.handleSortOrderChanged }
+					>
+						<ToggleButton value="asc">
+							{ reverseOrderText }
+						</ToggleButton>
+					</ToggleButtonGroup>
+					
+				</ButtonToolbar>
 
 				<div id="logs-list">
 					{
 						this.props.listEntries && this.props.listEntries.length > 0
-							? <p>Showing <Label>{ this.props.listEntries.length }</Label>{ ' entries.'}</p>
+							? <p>Showing <Label>{ this.props.listEntries.length }</Label>{ ' entries.' }</p>
 							: null
 					}
 					{ this.renderDiveList() }
