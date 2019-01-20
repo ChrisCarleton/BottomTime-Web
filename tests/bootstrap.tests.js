@@ -6,6 +6,6 @@ const server = http.createServer(app);
 server.listen(8081);
 
 after(async () => {
-	await driver.quit();
-	server.close();
+	// await driver.quit();
+	// server.close();
 });
