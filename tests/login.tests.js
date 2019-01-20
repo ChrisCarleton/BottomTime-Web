@@ -49,8 +49,11 @@ describe('Login page', () => {
 		await driver.findElement(By.id('username')).sendKeys(user.username);
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 
-		stub = sinon.stub(mockApis, 'getAuthMe');
-		stub.callsFake((req, res) => res.json(user));
+		stub = sinon.stub(mockApis, 'postAuthLogin');
+		stub.callsFake((req, res) => res.json({
+			user,
+			token: 'la.di.da'
+		}));
 
 		await driver.findElement(By.id('btn-login')).click();
 		await driver.wait(until.urlIs('http://localhost:8081/'));
