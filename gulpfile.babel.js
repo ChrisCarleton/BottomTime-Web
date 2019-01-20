@@ -23,7 +23,7 @@ function test() {
 		.src([ 'tests/**/*.tests.js' ])
 		.pipe(mocha({
 			require: '@babel/register',
-			timeout: 10000
+			timeout: 30000
 		}));
 }
 
