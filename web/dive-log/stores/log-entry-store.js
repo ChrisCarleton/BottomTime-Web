@@ -6,15 +6,16 @@ class LogEntryStore {
 		this.isSearching = false;
 		this.listEntries = [];
 		this.currentEntry = {};
+		this.sortBy = 'entryTime';
+		this.sortOrder = 'desc';
 
 		this.bindListeners({
 			handleStartSearch: logEntryActions.SEARCH_LOGS,
 			handleSearchFailed: logEntryActions.SEARCH_LOGS_FAILED,
 			handleUpdateEntry: logEntryActions.UPDATE_CURRENT_ENTRY,
-			handleSearchCompleted: logEntryActions.SEARCH_LOGS_COMPLETED
+			handleSearchCompleted: logEntryActions.SEARCH_LOGS_COMPLETED,
+			handleChangeSortOrder: logEntryActions.CHANGE_SORT_ORDER
 		});
-
-		this.handleUpdateEntry = this.handleUpdateEntry.bind(this);
 	}
 
 	handleStartSearch() {
@@ -28,6 +29,11 @@ class LogEntryStore {
 
 	handleSearchFailed() {
 		this.isSearching = false;
+	}
+
+	handleChangeSortOrder(sortParams) {
+		this.sortBy = sortParams.sortBy;
+		this.sortOrder = sortParams.sortOrder;
 	}
 
 	handleUpdateEntry(newEntry) {

@@ -28,6 +28,10 @@ class LogEntryActions {
 		return true;
 	}
 
+	changeSortOrder(sortBy, sortOrder) {
+		return { sortBy, sortOrder };
+	}
+
 	updateCurrentEntry(entry) {
 		return entry;
 	}

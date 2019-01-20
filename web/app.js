@@ -21,7 +21,6 @@ agent.get('/api/auth/me')
 		}));
 	})
 	.catch(err => {
-		// TODO: Err status???
 		agent.clearAuthToken();
 		alt.bootstrap(JSON.stringify({
 			CurrentUserStore: {
