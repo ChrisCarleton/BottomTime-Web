@@ -6,15 +6,21 @@ import LogEntryStore from '../stores/log-entry-store';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { LinkContainer } from 'react-router-bootstrap';
 import {
 	Alert,
 	Breadcrumb,
 	Button,
+	Clearfix,
+	Col,
+	Grid,
 	Image,
-	Media
+	Label,
+	Media,
+	Row,
+	Well
 } from 'react-bootstrap';
 
 require('../../img/diver-icon.png');
@@ -38,21 +44,27 @@ class LogsList extends React.Component {
 		};
 	}
 
+	getUsernameForRoute() {
+		return this.props.match.params.username || this.props.currentUser.username;
+	}
+
 	componentDidMount() {
-		const username = this.props.match.params.username;
-		if (username) {
+		const username = this.getUsernameForRoute();
+		let possessive = null;
+		if (username === this.props.currentUser.username) {
+			possessive = 'My';
+		} else {
 			if (
 				username.charAt(username.length - 1) === 's'
 				|| username.charAt(username.length - 1) === 'S'
 			) {
-				this.setState({ ...this.state, possessive: `${ username }'` })
+				possessive = `${ username }'`;
 			} else {
-				this.setState({ ...this.state, possessive: `${ username }'s` })
+				possessive = `${ username }'s`;
 			}
-		} else {
-			this.setState({ ...this.state, possessive: 'My' });
 		}
 
+		this.setState({ ...this.state, possessive });
 		LogEntryActions.searchLogs(username || this.props.currentUser.username);
 	}
 
@@ -71,7 +83,7 @@ class LogsList extends React.Component {
 			);
 		}
 
-		if (!this.props.logsList || this.props.logsList.length === 0) {
+		if (!this.props.listEntries || this.props.listEntries.length === 0) {
 			return (
 				<Alert bsStyle="info">
 					<p>
@@ -81,18 +93,49 @@ class LogsList extends React.Component {
 			);
 		}
 
-		return _.map(this.props.logsList, r => (
-			<Media key={ r.entryId }>
-				<Media.Left>
-					<img src="/img/diver-icon.png" />
-				</Media.Left>
-				<Media.Body>
-					<LinkContainer to={ `/logs/${ this.props.currentUser.username }/${ r.entryId }` }>
-						<Media.Heading>{ moment(r.entryTime).local().format(DateFormat) }</Media.Heading>
-					</LinkContainer>
-				</Media.Body>
-			</Media>
-		));
+		const elements = [];
+		const usernameForRoute = this.getUsernameForRoute();
+		for (let i = 0; i < this.props.listEntries.length; i++) {
+			const entry = this.props.listEntries[i];
+			elements.push(
+				<Clearfix 
+					key={ `clfx_${ entry.entryId }` }
+					visibleSmBlock
+					visibleMdBlock={ i % 2 === 0 }
+					visibleLgBlock={ i % 3 === 0 }
+				/>
+			);
+			elements.push(
+				<Col key={ entry.entryId } sm={ 12 } md={ 6 } lg={ 4 }>
+					<Well bsSize="sm">
+						<h4>
+							<Link to={ `/logs/${ usernameForRoute }/${ entry.entryId }` }>
+								{ moment(entry.entryTime).local().format(DateFormat) }
+							</Link>
+						</h4>
+						<dl className="dl-horizontal">
+							<dt>Location:</dt>
+							<dd>{ entry.location }</dd>
+
+							<dt>Site:</dt>
+							<dd>{ entry.site }</dd>
+
+							<dt>Max depth:</dt>
+							<dd>{ entry.maxDepth }ft</dd>
+
+							<dt>Bottom time:</dt>
+							<dd>{ entry.bottomTime }min</dd>
+						</dl>
+					</Well>
+				</Col>
+			);
+		}
+
+		return (
+			<Grid>
+				<Row>{ elements }</Row>
+			</Grid>
+		);
 	}
 
 	render() {
@@ -112,6 +155,11 @@ class LogsList extends React.Component {
 				</LinkContainer>
 
 				<div id="logs-list">
+					{
+						this.props.listEntries && this.props.listEntries.length > 0
+							? <p>Showing <Label>{ this.props.listEntries.length }</Label>{ ' entries.'}</p>
+							: null
+					}
 					{ this.renderDiveList() }
 				</div>
 			</div>);
@@ -120,7 +168,7 @@ class LogsList extends React.Component {
 
 LogsList.propTypes = {
 	currentUser: PropTypes.object.isRequired,
-	logsList: PropTypes.array,
+	listEntries: PropTypes.array,
 	isSearching: PropTypes.bool,
 	match: PropTypes.object.isRequired
 };

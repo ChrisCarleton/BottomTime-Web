@@ -10,7 +10,8 @@ class LogEntryStore {
 		this.bindListeners({
 			handleStartSearch: logEntryActions.SEARCH_LOGS,
 			handleSearchFailed: logEntryActions.SEARCH_LOGS_FAILED,
-			handleUpdateEntry: logEntryActions.UPDATE_CURRENT_ENTRY
+			handleUpdateEntry: logEntryActions.UPDATE_CURRENT_ENTRY,
+			handleSearchCompleted: logEntryActions.SEARCH_LOGS_COMPLETED
 		});
 
 		this.handleUpdateEntry = this.handleUpdateEntry.bind(this);
