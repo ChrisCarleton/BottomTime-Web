@@ -28,9 +28,9 @@ class LogsListGrid extends React.Component {
 			);
 		}
 
-		if (this.props.listEntries.length === 0) {
+		if (!this.props.listEntries || this.props.listEntries.length === 0) {
 			return (
-				<Alert bsStyle="info">
+				<Alert id="no-entries-message" bsStyle="info">
 					<p>
 						You have no logs to show. Click <strong>Create New</strong> above to add logs entries.
 					</p>
@@ -60,7 +60,7 @@ class LogsListGrid extends React.Component {
 		}
 
 		return (
-			<Grid>
+			<Grid id="log-entries-grid">
 				<Row>{ elements }</Row>
 			</Grid>
 		);
@@ -68,7 +68,7 @@ class LogsListGrid extends React.Component {
 }
 
 LogsListGrid.propTypes = {
-	listEntries: PropTypes.array.isRequired,
+	listEntries: PropTypes.array,
 	isSearching: PropTypes.bool.isRequired,
 	username: PropTypes.string.isRequired
 };

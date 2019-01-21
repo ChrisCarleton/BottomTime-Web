@@ -126,13 +126,13 @@ class LogsList extends React.Component {
 						value={ this.props.sortBy }
 						onChange={ this.handleSortByChanged }
 					>
-						<ToggleButton value="entryTime">
+						<ToggleButton id="sortBy_entryTime" value="entryTime">
 							By Date
 						</ToggleButton>
-						<ToggleButton value="maxDepth">
+						<ToggleButton id="sortBy_maxDepth" value="maxDepth">
 							By Depth
 						</ToggleButton>
-						<ToggleButton value="bottomTime">
+						<ToggleButton id="sortBy_bottomTime" value="bottomTime">
 							By Duration
 						</ToggleButton>
 					</ToggleButtonGroup>
@@ -142,7 +142,7 @@ class LogsList extends React.Component {
 						value={ this.props.sortOrder === 'asc' ? [ 'asc' ] : [] }
 						onChange={ this.handleSortOrderChanged }
 					>
-						<ToggleButton value="asc">
+						<ToggleButton id="sortOrder" value="asc">
 							{ reverseOrderText }
 						</ToggleButton>
 					</ToggleButtonGroup>

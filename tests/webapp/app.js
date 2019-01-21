@@ -9,7 +9,7 @@ app.get('/api/auth/me', (req, res) => mockApis.getAuthMe(req, res));
 app.post('/api/auth/login', (req, res) => mockApis.postAuthLogin(req, res));
 app.put('/api/users/:username', (req, res) => mockApis.putUsersUsername(req, res));
 
-app.get('/users/:username/logs', (req, res) => mockApis.getUsersUsernameLogs(req, res));
+app.get('/api/users/:username/logs', (req, res) => mockApis.getUsersUsernameLogs(req, res));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../../dist/dev/index.html')));
 
