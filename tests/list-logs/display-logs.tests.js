@@ -1,3 +1,5 @@
+/* eslint no-unused-expressions: 0 */
+
 import { By, until } from 'selenium-webdriver';
 import driver from '../web-driver';
 import { expect } from 'chai';
@@ -28,7 +30,7 @@ describe('Displaying Logs', () => {
 			await driver.navigate().to('http://localhost:8081/logs/');
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
 
-			const query = spy.getCall(0).args[0].query;
+			const [ { query } ] = spy.getCall(0).args;
 			expect(query).to.exist;
 			expect(query.sortBy).to.equal('entryTime');
 			expect(query.sortOrder).to.equal('desc');
@@ -42,7 +44,7 @@ describe('Displaying Logs', () => {
 			await driver.findElement(By.id('sortBy_maxDepth')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
 
-			const query = spy.getCall(1).args[0].query;
+			const [ { query } ] = spy.getCall(1).args;
 			expect(query).to.exist;
 			expect(query.sortBy).to.equal('maxDepth');
 			expect(query.sortOrder).to.equal('desc');
@@ -56,7 +58,7 @@ describe('Displaying Logs', () => {
 			await driver.findElement(By.id('sortBy_bottomTime')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
 
-			const query = spy.getCall(1).args[0].query;
+			const [ { query } ] = spy.getCall(1).args;
 			expect(query).to.exist;
 			expect(query.sortBy).to.equal('bottomTime');
 			expect(query.sortOrder).to.equal('desc');
@@ -71,12 +73,12 @@ describe('Displaying Logs', () => {
 			await driver.findElement(By.id('sortBy_entryTime')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
 
-			let query = spy.getCall(1).args[0].query;
+			let [ { query } ] = spy.getCall(1).args;
 			expect(query).to.exist;
 			expect(query.sortBy).to.equal('maxDepth');
 			expect(query.sortOrder).to.equal('desc');
 
-			query = spy.getCall(2).args[0].query;
+			[ { query } ] = spy.getCall(2).args;
 			expect(query).to.exist;
 			expect(query.sortBy).to.equal('entryTime');
 			expect(query.sortOrder).to.equal('desc');
@@ -90,7 +92,7 @@ describe('Displaying Logs', () => {
 			await driver.findElement(By.id('sortOrder')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
 
-			const query = spy.getCall(1).args[0].query;
+			const [ { query } ] = spy.getCall(1).args;
 			expect(query).to.exist;
 			expect(query.sortBy).to.equal('entryTime');
 			expect(query.sortOrder).to.equal('asc');
@@ -98,13 +100,15 @@ describe('Displaying Logs', () => {
 	});
 
 	describe('Load more', () => {
-
+		// TODO: Implement load more.
 	});
 
 	describe('Showing no logs', () => {
 		it('Will show a helpful message if no logs are returned.', async () => {
 			stub = sinon.stub(mockApis, 'getUsersUsernameLogs');
-			stub.callsFake((req, res) => { res.json([]); });
+			stub.callsFake((req, res) => {
+				res.json([]);
+			});
 
 			await driver.navigate().to('http://localhost:8081/logs/');
 			await driver.wait(until.elementLocated(By.id('no-entries-message')));

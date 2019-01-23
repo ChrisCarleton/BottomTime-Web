@@ -31,6 +31,7 @@ module.exports = {
 		"indent": [2, "tab"],
 		"no-console": 1,
 		"no-tabs": 0,
+		"no-warning-comments": 1,
 		"operator-linebreak": [2, "before"],
 		"react/forbid-component-props": [2, {
 			"forbid": [ "style" ]

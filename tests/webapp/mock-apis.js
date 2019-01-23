@@ -14,7 +14,7 @@ for (let i = 0; i < logEntries.length; i++) {
 }
 
 const mockApis = {
-	getAuthMe: function (req, res) {
+	getAuthMe(req, res) {
 		res.status(200).json({
 			username: 'Anonymous',
 			email: '',
@@ -25,11 +25,11 @@ const mockApis = {
 		});
 	},
 
-	postAuthLogin: function (req, res) {
+	postAuthLogin(req, res) {
 		return res.sendStatus(204);
 	},
 
-	putUsersUsername: function (req, res) {
+	putUsersUsername(req, res) {
 		res.status(201).json({
 			user: {
 				username: req.params.username,
@@ -40,10 +40,10 @@ const mockApis = {
 				isLockedOut: false
 			},
 			token: 'la.di.da'
-		})
+		});
 	},
 
-	getUsersUsernameLogs: function (req, res) {
+	getUsersUsernameLogs(req, res) {
 		return res.json(logEntries);
 	}
 };
