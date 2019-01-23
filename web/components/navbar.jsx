@@ -48,7 +48,6 @@ class AppNavBar extends React.Component {
 	}
 
 	render() {
-		const username = this.props.currentUser ? this.props.currentUser.username : 'Anonymous';
 		return (
 			<Navbar fixedTop inverse>
 				<Navbar.Header>
@@ -65,7 +64,7 @@ class AppNavBar extends React.Component {
 						<LinkContainer to="/" exact>
 							<NavItem>Home</NavItem>
 						</LinkContainer>
-						<LinkContainer to={ `/logs/${ username }` }>
+						<LinkContainer to={ '/logs' }>
 							<NavItem>My Logs</NavItem>
 						</LinkContainer>
 					</Nav>
