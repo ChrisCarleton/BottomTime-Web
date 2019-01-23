@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 import agent from './agent';
 import alt from './alt';
 import App from './components/app';
@@ -6,37 +8,33 @@ import ReactDOM from 'react-dom';
 
 require('./validators');
 require('./styles/main.less');
+require('./img/loading-spinner.gif');
+require('./img/reef-background.jpg');
 
-let currentUser = {
-	username: 'Anonymous_User',
-	email: '',
-	createdAt: null,
-	role: 'user',
-	isAnonymous: true,
-	isLockedOut: false
-};
-
-(async () => {
-	try {
-		const result = await agent.withCredentials().get('/api/auth/me');
-		currentUser = result.body;
-	} catch(err) {
-		console.error(err);
-	}
-})();
-
-console.log(JSON.stringify({
-	CurrentUserStore: {
-		currentUser
-	}
-})
-);
-
-alt.bootstrap(
-	JSON.stringify({
-		CurrentUserStore: {
-			currentUser
-		}
+agent.get('/api/auth/me')
+	.then(result => {
+		alt.bootstrap(JSON.stringify({
+			CurrentUserStore: {
+				currentUser: result.body
+			}
+		}));
 	})
-);
-ReactDOM.render(<App />, document.getElementById('app'));
+	.catch(err => {
+		agent.clearAuthToken();
+		alt.bootstrap(JSON.stringify({
+			CurrentUserStore: {
+				currentUser: {
+					username: 'Anonymous',
+					email: '',
+					createdAt: null,
+					role: 'user',
+					isAnonymous: true,
+					isLockedOut: false
+				}
+			}
+		}));
+		console.error(err);
+	})
+	.finally(() => {
+		ReactDOM.render(<App />, document.getElementById('app'));
+	});

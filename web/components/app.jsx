@@ -24,13 +24,14 @@ class App extends React.Component {
 							<Route path="/login" exact component={ Login } />
 							<Route path="/profile" exact component={ Profile } />
 							<Route path="/profile/:username" exact component={ Profile } />
+							<Route path="/logs" exact component={ LogsList } />
 							<Route path="/logs/:username" exact component={ LogsList } />
 							<Route path="/logs/:username/new" exact component={ LogEntry } />
 							<Route path="/logs/:username/:logId" exact component={ LogEntry } />
 							<Route path="*" component={ NotFound } />
 						</Switch>
 						<hr />
-						<p><small><em>Copyright &copy; Chris Carleton, 2018</em></small></p>
+						<p><small><em>Copyright &copy; Chris Carleton, 2019</em></small></p>
 					</div>
 				</div>
 			</Router>);

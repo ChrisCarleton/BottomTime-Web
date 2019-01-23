@@ -31,6 +31,7 @@ module.exports = {
 		"indent": [2, "tab"],
 		"no-console": 1,
 		"no-tabs": 0,
+		"no-warning-comments": 1,
 		"operator-linebreak": [2, "before"],
 		"react/forbid-component-props": [2, {
 			"forbid": [ "style" ]
@@ -43,6 +44,7 @@ module.exports = {
 		}],
 		"react/jsx-indent": [2, "tab"],
 		"react/jsx-indent-props": [2, "tab"],
+		"react/jsx-max-props-per-line": 0,
 		"react/jsx-no-bind": [2, {
 			"ignoreDOMComponents": false,
 			"ignoreRefs": false,

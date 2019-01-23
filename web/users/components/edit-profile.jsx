@@ -20,7 +20,7 @@ class EditProfile extends React.Component {
 					</Col>
 				</Row>
 			</Formsy>
-		);	
+		);
 	}
 }
 

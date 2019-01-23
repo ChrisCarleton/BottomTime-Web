@@ -37,7 +37,6 @@ class CurrentUserActions {
 
 	logout() {
 		return async dispatch => {
-			dispatch();
 			try {
 				await agent.post('/api/auth/logout');
 			} catch (err) {
@@ -45,7 +44,7 @@ class CurrentUserActions {
 			}
 
 			agent.clearAuthToken();
-			this.fetchCurrentUser();
+			dispatch();
 		};
 	}
 
