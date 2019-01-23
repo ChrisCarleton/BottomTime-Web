@@ -1,8 +1,10 @@
+import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
 import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import TextBox from '../../components/text-box';
@@ -14,25 +16,17 @@ import {
 } from 'react-bootstrap';
 
 class SignUpPage extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return CurrentUserStore.getState();
+	}
+
 	constructor(props) {
 		super(props);
-
-		this.state = CurrentUserStore.getState();
-
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleStoreChange = this.handleStoreChange.bind(this);
-	}
-
-	componentDidMount() {
-		CurrentUserStore.listen(this.handleStoreChange);
-	}
-
-	componentWillUnmount() {
-		CurrentUserStore.unlisten(this.handleStoreChange);
-	}
-
-	handleStoreChange() {
-		this.setState(CurrentUserStore.getState());
 	}
 
 	handleSubmit(model, resetForm, invalidateForm) {
@@ -62,7 +56,7 @@ class SignUpPage extends React.Component {
 	}
 
 	render() {
-		if (this.state.currentUser && !this.state.currentUser.isAnonymous) {
+		if (!this.props.currentUser.isAnonymous) {
 			return <Redirect to="/" />;
 		}
 
@@ -170,4 +164,8 @@ class SignUpPage extends React.Component {
 	}
 }
 
-export default SignUpPage;
+SignUpPage.propTypes = {
+	currentUser: PropTypes.object.isRequired
+};
+
+export default connectToStores(SignUpPage);

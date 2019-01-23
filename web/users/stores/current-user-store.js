@@ -8,7 +8,8 @@ class CurrentUserStore {
 
 		this.bindListeners({
 			onLoginSucceeded: CurrentUserActions.LOGIN_SUCCEEDED,
-			onFetchCurrentUser: CurrentUserActions.FETCH_CURRENT_USER
+			onFetchCurrentUser: CurrentUserActions.FETCH_CURRENT_USER,
+			onLogout: CurrentUserActions.LOGOUT
 		});
 
 		this.registerAsync(CurrentUserSource);
@@ -25,6 +26,17 @@ class CurrentUserStore {
 
 	onLoginSucceeded(user) {
 		this.currentUser = user;
+	}
+
+	onLogout() {
+		this.currentUser = {
+			username: 'Anonymous',
+			email: '',
+			createdAt: null,
+			role: 'user',
+			isAnonymous: true,
+			isLockedOut: false
+		};
 	}
 
 }

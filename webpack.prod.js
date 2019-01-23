@@ -10,6 +10,7 @@ module.exports = merge(common, {
 	devtool: 'cheap-module-eval-source-map',
 	output: {
 		filename: '[name].js',
+		chunkFilename: '[name].[chunkhash].bundle.js',
 		path: path.resolve(__dirname, 'dist/prod'),
 		publicPath: '/'
 	},
