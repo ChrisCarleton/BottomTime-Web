@@ -8,7 +8,9 @@ class StaticField extends React.Component {
 	render() {
 		return (
 			<FormGroup label={ this.props.label } controlId={ this.props.controlId }>
-				<FormControl.Static>{ this.props.getValue() }</FormControl.Static>
+				<FormControl.Static>
+					{ this.props.getValue() || <em>{ this.props.default }</em> || '' }
+				</FormControl.Static>
 			</FormGroup>
 		);
 	}
@@ -16,6 +18,7 @@ class StaticField extends React.Component {
 
 StaticField.propTypes = {
 	controlId: PropTypes.string.isRequired,
+	default: PropTypes.string,
 	label: PropTypes.string.isRequired,
 	...propTypes
 };

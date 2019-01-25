@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import UserProfileActions from '../actions/user-profile-actions';
 import UserProfileStore from '../stores/user-profile-store';
-// import ViewProfile from './view-profile';
+import ViewProfile from './view-profile';
 import { withRouter } from 'react-router-dom';
 
 class Profile extends React.Component {
@@ -32,7 +32,11 @@ class Profile extends React.Component {
 			<div>
 				<h1>{ 'Profile' }</h1>
 				<ErrorBox />
-				<EditProfile profile={ this.props.currentProfile } />
+				{
+					this.props.currentProfile.readOnly
+						? <ViewProfile profile={ this.props.currentProfile } />
+						: <EditProfile profile={ this.props.currentProfile } />
+				}
 			</div>
 		);
 	}
