@@ -5,13 +5,13 @@ class ErrorActions {
 		this.timeout = null;
 	}
 
-	showSuccess(message) {
+	showSuccess(message, details) {
 		if (this.timeout) {
 			clearTimeout(this.timeout);
 		}
 
 		this.timeout = setTimeout(this.clearError, 10000);
-		return message;
+		return { message, details };
 	}
 
 	showError(error, details) {
@@ -44,7 +44,11 @@ class ErrorActions {
 	}
 
 	clearError() {
-		this.timeout = null;
+		if (this.timeout) {
+			clearTimeout(this.timeout);
+			this.timeout = null;
+		}
+
 		return true;
 	}
 }

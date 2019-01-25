@@ -1,5 +1,4 @@
 import connectToStores from 'alt-utils/lib/connectToStores';
-import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -44,8 +43,6 @@ class Login extends React.Component {
 				<p>
 					Sign in with your username and password. <em>Coming soon: Sign in with Google, Twitter, etc.</em>
 				</p>
-
-				<ErrorBox />
 
 				<Formsy onValidSubmit={ this.handleSubmit }>
 					<Row>

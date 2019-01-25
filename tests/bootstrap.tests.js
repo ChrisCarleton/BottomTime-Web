@@ -6,6 +6,12 @@ const server = http.createServer(app);
 server.listen(8081);
 
 after(async () => {
-	await driver.quit();
+	try {
+		await driver.quit();
+	} catch (err) {
+		/* eslint-disable no-console */
+		console.error(err);
+		/* eslint-enable no-console */
+	}
 	server.close();
 });

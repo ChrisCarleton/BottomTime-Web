@@ -2,6 +2,7 @@
 
 import agent from './agent';
 import alt from './alt';
+import initialState from './initial-state';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -15,6 +16,7 @@ require('./img/reef-background.jpg');
 agent.get('/api/auth/me')
 	.then(result => {
 		alt.bootstrap(JSON.stringify({
+			...initialState,
 			CurrentUserStore: {
 				currentUser: result.body
 			}
@@ -22,18 +24,7 @@ agent.get('/api/auth/me')
 	})
 	.catch(err => {
 		agent.clearAuthToken();
-		alt.bootstrap(JSON.stringify({
-			CurrentUserStore: {
-				currentUser: {
-					username: 'Anonymous',
-					email: '',
-					createdAt: null,
-					role: 'user',
-					isAnonymous: true,
-					isLockedOut: false
-				}
-			}
-		}));
+		alt.bootstrap(JSON.stringify(initialState));
 		console.error(err);
 	})
 	.finally(() => {

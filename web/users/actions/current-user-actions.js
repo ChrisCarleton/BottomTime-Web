@@ -27,6 +27,8 @@ class CurrentUserActions {
 						role: 'user'
 					});
 
+
+				ErrorActions.showSuccess('Success!', 'Your new account has been created.');
 				done();
 				return this.loginSucceeded(result);
 			} catch (err) {

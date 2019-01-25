@@ -77,7 +77,7 @@ describe('Login page', () => {
 		await driver.findElement(By.id('username')).sendKeys(user.username);
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-login')).click();
-		await driver.wait(until.elementLocated(By.id('error-alert-message')));
+		await driver.wait(until.elementLocated(By.id('global-error-bar')));
 	});
 
 	it('fails if there is a general server error', async () => {
@@ -87,7 +87,7 @@ describe('Login page', () => {
 		await driver.findElement(By.id('username')).sendKeys(user.username);
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-login')).click();
-		await driver.wait(until.elementLocated(By.id('error-alert-message')));
+		await driver.wait(until.elementLocated(By.id('global-error-bar')));
 	});
 
 });

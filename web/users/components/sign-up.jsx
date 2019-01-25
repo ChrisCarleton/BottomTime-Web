@@ -2,7 +2,6 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
-import ErrorBox from '../../components/error-box';
 import Formsy from 'formsy-react';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -38,9 +37,11 @@ class SignUpPage extends React.Component {
 			if (err.response && err.response.status === 409) {
 				if (err.response.body.fieldName === 'username') {
 					invalidateForm({ username: 'Username is already taken.' });
-				} else {
-					invalidateForm({ email: 'Email address is already registered to another user.' });
+					return ErrorActions.showError('Unable to create account:', 'Username is already taken.');
 				}
+
+				invalidateForm({ email: 'Email address is already registered to another user.' });
+				return ErrorActions.showError('Unable to create account:', 'Email is already taken.');
 			}
 
 			return ErrorActions.showError(err);
@@ -80,8 +81,6 @@ class SignUpPage extends React.Component {
 					<li>Contain at least one number.</li>
 					<li>Contain at least one special character. One of <code>!@#$%^&*.</code></li>
 				</ul>
-
-				<ErrorBox />
 
 				<Formsy onValidSubmit={ this.handleSubmit } onInvalidSubmit={ this.handleInvalidSubmit }>
 					<Row>
