@@ -23,9 +23,11 @@ agent.get('/api/auth/me')
 		}));
 	})
 	.catch(err => {
-		agent.clearAuthToken();
+		if (err.response && err.response.status === 401) {
+			agent.clearAuthToken();
+		}
 		alt.bootstrap(JSON.stringify(initialState));
-		console.error(err);
+		console.error(JSON.stringify(err.response));
 	})
 	.finally(() => {
 		ReactDOM.render(<App />, document.getElementById('app'));

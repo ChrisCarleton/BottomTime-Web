@@ -1,9 +1,11 @@
 import React from 'react';
 
+import PageTitle from './page-title';
+
 class Home extends React.Component {
 	render() {
 		return (
-			<h1>Hi!</h1>);
+			<PageTitle title="Welcome to Bottom Time" />);
 	}
 }
 

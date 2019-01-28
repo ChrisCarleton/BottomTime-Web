@@ -3,13 +3,19 @@
 import { By, until } from 'selenium-webdriver';
 import driver from '../web-driver';
 import { expect } from 'chai';
-import mockApis from '../webapp/mock-apis';
+import mockApis, { exampleUser } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
 describe('Displaying Logs', () => {
 
+	let authStub = null;
 	let stub = null;
 	let spy = null;
+
+	before(() => {
+		authStub = sinon.stub(mockApis, 'getAuthMe');
+		authStub.callsFake((req, res) => res.json(exampleUser));
+	});
 
 	afterEach(() => {
 		if (spy) {
@@ -21,6 +27,10 @@ describe('Displaying Logs', () => {
 			stub.restore();
 			stub = null;
 		}
+	});
+
+	after(() => {
+		authStub.restore();
 	});
 
 	describe('Sort orders', () => {

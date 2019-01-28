@@ -3,6 +3,7 @@ import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
+import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
@@ -63,7 +64,7 @@ class SignUpPage extends React.Component {
 
 		return (
 			<div>
-				<h1>Sign Up</h1>
+				<PageTitle title="Sign Up" />
 
 				<p>Sign up to start logging your dives, meeting new dive buddies, and comparing logs!</p>
 

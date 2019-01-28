@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom';
 
 import { LinkContainer } from 'react-router-bootstrap';
 import LogsListGrid from './logs-list-grid';
+import PageTitle from '../../components/page-title';
+import RequireUser from '../../components/require-user';
 import {
 	Breadcrumb,
 	Button,
@@ -36,7 +38,7 @@ class LogsList extends React.Component {
 
 		const username = this.getUsernameForRoute();
 		let possessive = null;
-		if (username === props.currentUser.username) {
+		if (!username || username === props.currentUser.username) {
 			possessive = 'My';
 		} else if (
 			username.charAt(username.length - 1) === 's'
@@ -58,11 +60,23 @@ class LogsList extends React.Component {
 	}
 
 	getUsernameForRoute() {
-		return this.props.match.params.username || this.props.currentUser.username;
+		if (this.props.match.params.username) {
+			return this.props.match.params.username;
+		}
+
+		if (!this.props.currentUser.isAnonymous) {
+			return this.props.currentUser.username;
+		}
+
+		return null;
 	}
 
 	searchLogs(params) {
 		const username = this.getUsernameForRoute();
+		if (!username) {
+			return;
+		}
+
 		params = params || {
 			sortBy: this.props.sortBy,
 			sortOrder: this.props.sortOrder
@@ -107,6 +121,7 @@ class LogsList extends React.Component {
 
 		return (
 			<div>
+				{ this.props.match.username ? null : <RequireUser /> }
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -114,7 +129,7 @@ class LogsList extends React.Component {
 					<Breadcrumb.Item active>Log Book</Breadcrumb.Item>
 				</Breadcrumb>
 
-				<h1>{ `${ this.state.possessive } Log Book` }</h1>
+				<PageTitle title={ `${ this.state.possessive } Log Book` } />
 
 				<ButtonToolbar>
 					<LinkContainer to={ `/logs/${ this.props.currentUser.username }/new` }>
@@ -157,7 +172,7 @@ class LogsList extends React.Component {
 					<LogsListGrid
 						isSearching={ this.props.isSearching }
 						listEntries={ this.props.listEntries }
-						username={ this.getUsernameForRoute() }
+						username={ this.getUsernameForRoute() || 'Anonymous' }
 					/>
 				</div>
 			</div>);

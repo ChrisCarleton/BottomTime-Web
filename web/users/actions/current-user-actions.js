@@ -1,6 +1,7 @@
 import agent from '../../agent';
 import alt from '../../alt';
 import ErrorActions from '../../actions/error-actions';
+import handleError from '../../handle-error';
 
 class CurrentUserActions {
 	login(model) {
@@ -10,7 +11,7 @@ class CurrentUserActions {
 				const result = await agent.post('/api/auth/login').send(model);
 				this.loginSucceeded(result);
 			} catch (err) {
-				ErrorActions.showError(err);
+				handleError(err);
 			}
 		};
 	}
@@ -39,14 +40,15 @@ class CurrentUserActions {
 
 	logout() {
 		return async dispatch => {
+			dispatch();
+
 			try {
 				await agent.post('/api/auth/logout');
 			} catch (err) {
-				ErrorActions.showError(err);
+				// handleError(err);
 			}
 
 			agent.clearAuthToken();
-			dispatch();
 		};
 	}
 

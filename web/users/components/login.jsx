@@ -1,5 +1,6 @@
 import connectToStores from 'alt-utils/lib/connectToStores';
 import Formsy from 'formsy-react';
+import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
@@ -38,7 +39,7 @@ class Login extends React.Component {
 
 		return (
 			<div>
-				<h1>Login</h1>
+				<PageTitle title="Login" />
 
 				<p>
 					Sign in with your username and password. <em>Coming soon: Sign in with Google, Twitter, etc.</em>

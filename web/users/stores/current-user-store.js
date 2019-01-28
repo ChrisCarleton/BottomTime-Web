@@ -1,6 +1,5 @@
 import alt from '../../alt';
 import CurrentUserActions from '../actions/current-user-actions';
-import CurrentUserSource from '../sources/current-user-source';
 
 class CurrentUserStore {
 	constructor() {
@@ -11,8 +10,6 @@ class CurrentUserStore {
 			onFetchCurrentUser: CurrentUserActions.FETCH_CURRENT_USER,
 			onLogout: CurrentUserActions.LOGOUT
 		});
-
-		this.registerAsync(CurrentUserSource);
 
 		this.onLoginSucceeded = this.onLoginSucceeded.bind(this);
 		this.onFetchCurrentUser = this.onFetchCurrentUser.bind(this);
