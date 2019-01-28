@@ -1,6 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
 	entry: {
@@ -77,17 +78,22 @@ module.exports = {
 		}),
 		new MiniCssExtractPlugin({
 			filename: '[name].css'
-		})
+		}),
+		new webpack.HashedModuleIdsPlugin()
 	],
 	optimization: {
+		runtimeChunk: 'single',
 		splitChunks: {
+			chunks: 'all',
+			maxInitialRequests: Infinity,
+			minSize: 0,
 			cacheGroups: {
-				vendors: {
+				vendor: {
 					test: /\/node_modules\//,
-					chunks: 'initial',
-					name: 'vendor',
-					priority: 5,
-					enforce: true
+					name(currentModule) {
+						var packageName = currentModule.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+						return `npm.${ packageName.replace('@', '') }`;
+					}
 				},
 				default: {
 					minChunks: 2,
