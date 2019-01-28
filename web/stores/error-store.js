@@ -24,9 +24,9 @@ class ErrorStore {
 		this.display = 'error';
 	}
 
-	handleShowSuccess(message) {
-		this.message = message;
-		this.details = '';
+	handleShowSuccess(success) {
+		this.message = success.message;
+		this.details = success.details;
 		this.display = 'success';
 	}
 

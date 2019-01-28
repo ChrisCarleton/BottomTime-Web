@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChrisCarleton/BottomTime.git"
+    "url": "git+https://github.com/ChrisCarleton/BottomTime-Web.git"
   },
   "keywords": [
     "scuba",
@@ -23,9 +23,9 @@
   "author": "Chris Carleton",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ChrisCarleton/BottomTime/issues"
+    "url": "https://github.com/ChrisCarleton/BottomTime-Web/issues"
   },
-  "homepage": "https://github.com/ChrisCarleton/BottomTime#readme",
+  "homepage": "https://github.com/ChrisCarleton/BottomTime-Web#readme",
   "devDependencies": {
     "@babel/polyfill": "^7.2.5",
     "babel-loader": "^8.0.2",

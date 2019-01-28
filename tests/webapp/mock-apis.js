@@ -1,5 +1,15 @@
 import faker from 'faker';
 import fakeMongoId from '../utils/fake-mongo-id';
+import moment from 'moment';
+
+export const exampleUser = {
+	username: 'Lindsay.Irvine',
+	email: 'lindsey3331@gmail.com',
+	createdAt: moment().toDate(),
+	role: 'user',
+	isAnonymous: false,
+	isLockedOut: false
+};
 
 export const logEntries = new Array(250);
 for (let i = 0; i < logEntries.length; i++) {
@@ -34,7 +44,7 @@ const mockApis = {
 			user: {
 				username: req.params.username,
 				email: `${ req.params.username }@gmail.com`,
-				createdAt: (new Date()).toISOString(),
+				createdAt: moment().toISOString(),
 				role: 'user',
 				isAnonymous: false,
 				isLockedOut: false
@@ -45,6 +55,15 @@ const mockApis = {
 
 	getUsersUsernameLogs(req, res) {
 		return res.json(logEntries);
+	},
+
+	getUsersUsernameProfile(req, res) {
+		res.json({
+			createdAt: moment().toISOString(),
+			divesLogged: 0,
+			totalBottomTime: 0,
+			readOnly: true
+		});
 	}
 };
 
