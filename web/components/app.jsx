@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ErrorBar from './error-bar';
 import NavBar from './navbar';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ class App extends React.Component {
 			<Router>
 				<div>
 					<NavBar />
+					<ErrorBar />
 					<div id="main-section" className="container">
 						<Switch>
 							<Route path="/" exact component={ Home } />

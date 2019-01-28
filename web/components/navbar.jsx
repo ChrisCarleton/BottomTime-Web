@@ -64,9 +64,13 @@ class AppNavBar extends React.Component {
 						<LinkContainer to="/" exact>
 							<NavItem>Home</NavItem>
 						</LinkContainer>
-						<LinkContainer to={ '/logs' }>
-							<NavItem>My Logs</NavItem>
-						</LinkContainer>
+						{
+							this.props.currentUser.isAnonymous
+								? null
+								: <LinkContainer to={ '/logs' }>
+									<NavItem>My Logs</NavItem>
+								</LinkContainer>
+						}
 					</Nav>
 					{ this.renderRightNav() }
 				</Navbar.Collapse>

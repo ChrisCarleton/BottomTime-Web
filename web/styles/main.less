@@ -26,6 +26,54 @@ body {
 	padding-right: 4px;
 }
 
+@global-error-bar-height: @navbar-height - 5;
+
+#global-error-bar {
+	position: fixed;
+	top: @navbar-height;
+	height: @global-error-bar-height;
+	width: 100%;
+	z-index: 1;
+}
+
+#global-error-message {
+	height: @global-error-bar-height;
+	float: left;
+}
+
+#global-error-header {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#global-error-close {
+	height: @global-error-bar-height;
+	float: right;
+	padding-right: 7px;
+}
+
+#global-error-close a {
+	color: black;
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#global-error-shim {
+	height: @global-error-bar-height;
+}
+
+.global-error-error {
+	background-color: @state-danger-bg;
+}
+
+.global-error-success {
+	background-color: @state-info-bg;
+}
+
 div#logs-list {
 	padding-top: 12px;
 }

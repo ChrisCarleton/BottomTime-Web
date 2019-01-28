@@ -1,6 +1,6 @@
 import agent from '../../agent';
 import alt from '../../alt';
-import ErrorActions from '../../actions/error-actions';
+import handleError from '../../handle-error';
 
 class LogEntryActions {
 	searchLogs(username, params) {
@@ -24,7 +24,7 @@ class LogEntryActions {
 	}
 
 	searchLogsFailed(err) {
-		ErrorActions.showError(err);
+		handleError(err);
 		return true;
 	}
 

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
+import PageTitle from './page-title';
 import React from 'react';
 
 require('../img/lost-underwater.jpg');
@@ -8,6 +9,7 @@ class NotFound extends React.Component {
 	render() {
 		return (
 			<div>
+				<PageTitle title="404 - Page Not Found!" hidden />
 				<h1>Uh Oh!<small> (Page not found)</small></h1>
 
 				<p>

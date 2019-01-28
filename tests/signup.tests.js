@@ -170,10 +170,7 @@ describe('Sign up page', () => {
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.elementLocated(By.id('error-alert-message')));
-
-		const text = await driver.findElement(By.id('error-alert-message')).getText();
-		expect(text).to.equal(message);
+		await driver.wait(until.elementLocated(By.id('global-error-bar')));
 	});
 
 	it('reports error when there is a conflict in email address', async () => {
@@ -196,10 +193,7 @@ describe('Sign up page', () => {
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.elementLocated(By.id('error-alert-message')));
-
-		const text = await driver.findElement(By.id('error-alert-message')).getText();
-		expect(text).to.equal(message);
+		await driver.wait(until.elementLocated(By.id('global-error-bar')));
 	});
 
 	it('reports general error if there is a problem reaching the server', async () => {
@@ -211,6 +205,6 @@ describe('Sign up page', () => {
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.elementLocated(By.id('error-alert-message')));
+		await driver.wait(until.elementLocated(By.id('global-error-bar')));
 	});
 });

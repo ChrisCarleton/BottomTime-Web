@@ -5,7 +5,8 @@ Component | Status
 -|-
 Master Build | [![CircleCI](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/master.svg?style=svg&circle-token=0da34d6d5ac574445b77bfbb8904220521684aa4)](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/master)
 Production Build | [![CircleCI](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/prod.svg?style=svg&circle-token=0da34d6d5ac574445b77bfbb8904220521684aa4)](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/prod)
-Dependencies | [![Dependencies](https://david-dm.org/ChrisCarleton/BottomTime-Web.svg)](https://david-dm.org/ChrisCarleton/BottomTime-Web)
+Dependencies | [![dependencies Status](https://david-dm.org/ChrisCarleton/BottomTime-Web/status.svg)](https://david-dm.org/ChrisCarleton/BottomTime-Web)
+Dev Dependencies | [![devDependencies Status](https://david-dm.org/ChrisCarleton/BottomTime-Web/dev-status.svg)](https://david-dm.org/ChrisCarleton/BottomTime-Web?type=dev)
 
 ## Building and Running Locally
 ### Prerequisites
