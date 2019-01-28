@@ -5,7 +5,7 @@ import moment from 'moment';
 export const exampleUser = {
 	username: 'Lindsay.Irvine',
 	email: 'lindsey3331@gmail.com',
-	createdAt: Date.now(),
+	createdAt: moment().toDate(),
 	role: 'user',
 	isAnonymous: false,
 	isLockedOut: false

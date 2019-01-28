@@ -5,11 +5,12 @@ import sinon from 'sinon';
 
 describe('Handle Error utility', () => {
 
-	const authStub = sinon.stub(mockApis, 'getAuthMe');
+	let authStub = null;
 	let stub = null;
 	let spy = null;
 
 	before(() => {
+		authStub = sinon.stub(mockApis, 'getAuthMe');
 		authStub.callsFake((req, res) => {
 			res.json(exampleUser);
 		});

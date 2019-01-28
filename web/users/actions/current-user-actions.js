@@ -45,7 +45,7 @@ class CurrentUserActions {
 			try {
 				await agent.post('/api/auth/logout');
 			} catch (err) {
-				// handleError(err);
+				// TODO: Figure out what to do about this.
 			}
 
 			agent.clearAuthToken();
