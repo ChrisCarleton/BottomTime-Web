@@ -49,6 +49,7 @@ class TextBox extends React.Component {
 				type={ this.props.password ? 'password' : 'text' }
 				value={ this.props.getValue() || '' }
 				onChange={ this.handleTextChanged }
+				maxLength={ this.props.maxLength }
 			/>
 		);
 
@@ -67,15 +68,14 @@ class TextBox extends React.Component {
 						<InputGroup.Addon>{ this.props.units }</InputGroup.Addon>
 					</InputGroup>
 					: formControl }
-
 			</FormGroup>);
 	}
 }
 
 TextBox.propTypes = {
 	controlId: PropTypes.string.isRequired,
-	// horizontal: PropTypes.bool,
 	label: PropTypes.string.isRequired,
+	maxLength: PropTypes.number,
 	onChange: PropTypes.func,
 	password: PropTypes.bool,
 	required: PropTypes.bool,

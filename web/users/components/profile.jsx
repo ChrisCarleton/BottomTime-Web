@@ -1,9 +1,10 @@
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../stores/current-user-store';
 import EditProfile from './edit-profile';
-import ErrorBox from '../../components/error-box';
+import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RequireUser from '../../components/require-user';
 import UserProfileActions from '../actions/user-profile-actions';
 import UserProfileStore from '../stores/user-profile-store';
 import ViewProfile from './view-profile';
@@ -22,16 +23,23 @@ class Profile extends React.Component {
 	}
 
 	componentDidMount() {
+		if (!this.props.match.username && this.props.currentUser.isAnonymous) {
+			return;
+		}
+
 		const username = this.props.match.params.username
 			|| this.props.currentUser.username;
-		UserProfileActions.getProfile(username);
+		return UserProfileActions.getProfile(username);
 	}
 
 	render() {
+		if (!this.props.match.username && this.props.currentUser.isAnonymous) {
+			return <RequireUser />;
+		}
+
 		return (
 			<div>
-				<h1>{ 'Profile' }</h1>
-				<ErrorBox />
+				<PageTitle title="Profile" />
 				{
 					this.props.currentProfile.readOnly
 						? <ViewProfile profile={ this.props.currentProfile } />

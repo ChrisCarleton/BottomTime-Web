@@ -1,19 +1,15 @@
+import { Button } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
+import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import TextBox from '../../components/text-box';
-
-import {
-	Button,
-	Col,
-	Row
-} from 'react-bootstrap';
 
 class SignUpPage extends React.Component {
 	static getStores() {
@@ -83,81 +79,83 @@ class SignUpPage extends React.Component {
 					<li>Contain at least one special character. One of <code>!@#$%^&*.</code></li>
 				</ul>
 
-				<Formsy onValidSubmit={ this.handleSubmit } onInvalidSubmit={ this.handleInvalidSubmit }>
-					<Row>
-						<Col sm={ 12 }>
-							<TextBox
-								controlId="username"
-								label="User name"
-								name="username"
-								validations={ {
-									matchRegexp: /^[a-z0-9_.-]+$/i,
-									minLength: 5,
-									maxLength: 50
-								} }
-								validationErrors={ {
-									matchRegexp: 'User names can only contain letters, numbers, '
-										+ 'underscores, periods, and dashes',
-									minLength: 'User names must be at least 5 characters long.',
-									maxLength: 'User names can be no more than 50 characters long.'
-								} }
-								required
-							/>
-							<TextBox
-								controlId="email"
-								label="Email"
-								name="email"
-								validations={ {
-									isEmail: true
-								} }
-								validationErrors={ {
-									isEmail: 'Not a valid e-mail address.'
-								} }
-								required
-							/>
-							<TextBox
-								controlId="password"
-								label="Password"
-								name="password"
-								validations={ {
-									matchRegexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).*$/,
-									minLength: 7,
-									maxLength: 50
-								} }
-								validationErrors={ {
-									matchRegexp: 'Password did not meet strength requirements. (See above!)',
-									minLength: 'Password must be at least 7 characters long.',
-									maxLength: 'Passwords can be no more than 50 characters long.'
-								} }
-								password
-								required
-							/>
-							<TextBox
-								controlId="confirmPassword"
-								label="Confirm password"
-								name="confirmPassword"
-								validations={ {
-									equalsField: 'password'
-								} }
-								validationErrors={ {
-									equalsField: 'Passwords do not match.'
-								} }
-								password
-								required
-							/>
-						</Col>
-					</Row>
-					<Row>
-						<Col smOffset={ 3 }>
-							<Button
-								id="btn-sign-up"
-								bsStyle="primary"
-								type="submit"
-							>
-								Sign Me Up!
-							</Button>
-						</Col>
-					</Row>
+				<Formsy
+					onValidSubmit={ this.handleSubmit }
+					onInvalidSubmit={ this.handleInvalidSubmit }
+					className="form-horizontal"
+				>
+					<TextBox
+						controlId="username"
+						label="User name"
+						name="username"
+						validations={ {
+							matchRegexp: /^[a-z0-9_.-]+$/i,
+							minLength: 5,
+							maxLength: 50
+						} }
+						validationErrors={ {
+							matchRegexp: 'User names can only contain letters, numbers, '
+								+ 'underscores, periods, and dashes',
+							minLength: 'User names must be at least 5 characters long.',
+							maxLength: 'User names can be no more than 50 characters long.'
+						} }
+						maxLength={ 50 }
+						required
+					/>
+					<TextBox
+						controlId="email"
+						label="Email"
+						name="email"
+						validations={ {
+							isEmail: true
+						} }
+						validationErrors={ {
+							isEmail: 'Not a valid e-mail address.'
+						} }
+						maxLength={ 70 }
+						required
+					/>
+					<TextBox
+						controlId="password"
+						label="Password"
+						name="password"
+						validations={ {
+							matchRegexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).*$/,
+							minLength: 7,
+							maxLength: 50
+						} }
+						validationErrors={ {
+							matchRegexp: 'Password did not meet strength requirements. (See above!)',
+							minLength: 'Password must be at least 7 characters long.',
+							maxLength: 'Passwords can be no more than 50 characters long.'
+						} }
+						maxLength={ 50 }
+						password
+						required
+					/>
+					<TextBox
+						controlId="confirmPassword"
+						label="Confirm password"
+						name="confirmPassword"
+						validations={ {
+							equalsField: 'password'
+						} }
+						validationErrors={ {
+							equalsField: 'Passwords do not match.'
+						} }
+						maxLength={ 50 }
+						password
+						required
+					/>
+					<FormButtonGroup>
+						<Button
+							id="btn-sign-up"
+							bsStyle="primary"
+							type="submit"
+						>
+							Sign Me Up!
+						</Button>
+					</FormButtonGroup>
 				</Formsy>
 			</div>
 		);

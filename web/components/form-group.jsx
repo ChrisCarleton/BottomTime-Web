@@ -19,10 +19,12 @@ class CustomFormGroup extends React.Component {
 				controlId={ this.props.controlId }
 				validationState={ this.props.validationState }
 			>
-				<ControlLabel bsClass="col-sm-3 col-form-label text-right">
-					{ label }{ this.props.required ? <span className="text-danger">*</span> : null }{ ':' }
-				</ControlLabel>
-				<Col sm={ 9 }>
+				<Col xs={ 12 } sm={ 3 } md={ 2 } mdOffset={ 1 }>
+					<ControlLabel>
+						{ label }{ this.props.required ? <span className="text-danger">*</span> : null }{ ':' }
+					</ControlLabel>
+				</Col>
+				<Col xs={ 12 } sm={ 9 } md={ 6 }>
 					{ this.props.children }
 					{ this.props.errorMessage
 						? <p id={ `err-${ this.props.controlId }` } className="text-danger">
