@@ -33,7 +33,7 @@ class App extends React.Component {
 							<Route path="*" component={ NotFound } />
 						</Switch>
 						<hr />
-						<p><small><em>Copyright &copy; Chris Carleton, 2019</em></small></p>
+						<p className="text-right"><small><em>Copyright &copy; Chris Carleton, 2019</em></small></p>
 					</div>
 				</div>
 			</Router>);

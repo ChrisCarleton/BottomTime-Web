@@ -50,6 +50,7 @@ class TextBox extends React.Component {
 				value={ this.props.getValue() || '' }
 				onChange={ this.handleTextChanged }
 				maxLength={ this.props.maxLength }
+				placeholder={ this.props.placeholder }
 			/>
 		);
 
@@ -78,6 +79,7 @@ TextBox.propTypes = {
 	maxLength: PropTypes.number,
 	onChange: PropTypes.func,
 	password: PropTypes.bool,
+	placeholder: PropTypes.string,
 	required: PropTypes.bool,
 	smallLabel: PropTypes.bool,
 	units: PropTypes.string,

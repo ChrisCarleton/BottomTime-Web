@@ -14,6 +14,10 @@ class RadioList extends React.Component {
 
 	handleChecked(e) {
 		this.props.setValue(e.currentTarget.value);
+
+		if (this.props.onChange) {
+			this.props.onChange(e.currentTarget.value);
+		}
 	}
 
 	render() {
@@ -76,6 +80,7 @@ RadioList.propTypes = {
 	inline: PropTypes.bool,
 	label: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
+	onChange: PropTypes.func,
 	...formsyProps
 };
 

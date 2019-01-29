@@ -14,15 +14,11 @@ const TIME_FORMAT = 'hh:mmA';
 class DatePicker extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			value: moment(this.props.getValue())
-		};
-
 		this.handleValueChanged = this.handleValueChanged.bind(this);
 	}
 
 	handleValueChanged(v) {
-		this.setState({ value: v });
+		this.props.setValue(v);
 
 		if (this.props.onChange) {
 			this.props.onChange(v);
@@ -64,11 +60,11 @@ class DatePicker extends React.Component {
 				required={ this.props.required }
 			>
 				<DateTime
-					value={ this.state.value }
-					dateFormat={ DATE_FORMAT }
-					timeFormat={ TIME_FORMAT }
+					value={ this.props.getValue() }
+					dateFormat={ this.props.hideDate ? null : this.props.dateFormat || DATE_FORMAT }
+					timeFormat={ this.props.hideTime ? null : this.props.timeFormat || TIME_FORMAT }
+					defaultValue={ this.props.defaultValue }
 					inputProps={ {
-						placeholder: 'dd/mm/yyyy hh:ss(AM/PM)',
 						required: this.props.required
 					} }
 					onChange={ this.handleValueChanged }
@@ -79,10 +75,14 @@ class DatePicker extends React.Component {
 
 DatePicker.propTypes = {
 	controlId: PropTypes.string.isRequired,
+	dateFormat: PropTypes.string,
+	defaultValue: PropTypes.oneOfType([ Date ]),
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
-	// value: PropTypes.string,
+	hideDate: PropTypes.bool,
+	hideTime: PropTypes.bool,
+	timeFormat: PropTypes.string,
 	...propTypes
 };
 
