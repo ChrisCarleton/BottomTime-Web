@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Formsy from 'formsy-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -6,8 +7,23 @@ import StaticField from '../../components/static-field';
 
 class ViewProfile extends React.Component {
 	render() {
+		const firstName = this.props.profile.firstName;
+		const lastName = this.props.profile.lastName;
+		let fullName = null;
+
+		if (firstName && lastName) {
+			fullName = `${ firstName } ${ lastName }`;
+		} else if (firstName) {
+			fullName = firstName;
+		} else if (lastName) {
+			fullName = lastName;
+		} else {
+			fullName = this.props.username;
+		}
+
 		return (
 			<Formsy className="form-horizontal">
+				<h4>Personal Info</h4>
 				<StaticField
 					controlId="memberSince"
 					label="Member since"
@@ -16,32 +32,11 @@ class ViewProfile extends React.Component {
 					value={ moment(this.props.profile.memberSince).fromNow() }
 				/>
 				<StaticField
-					controlId="divesLogged"
-					label="Dives logged"
-					name="divesLogged"
+					controlId="name"
+					label="Name"
+					name="name"
 					default="unspecified"
-					value={ this.props.profile.divesLogged || '0' }
-				/>
-				<StaticField
-					controlId="bottomTimeLogged"
-					label="Total bottom time"
-					name="bottomTimeLogged"
-					default="unspecified"
-					value={ `${ this.props.profile.bottomTimeLogged } minutes` }
-				/>
-				<StaticField
-					controlId="firstName"
-					label="First name"
-					name="firstName"
-					default="unspecified"
-					value={ this.props.profile.firstName }
-				/>
-				<StaticField
-					controlId="lastName"
-					label="Last name"
-					name="lastName"
-					default="unspecified"
-					value={ this.props.profile.lastName }
+					value={ fullName }
 				/>
 				<StaticField
 					controlId="location"
@@ -61,7 +56,7 @@ class ViewProfile extends React.Component {
 					controlId="gender"
 					label="Gender"
 					name="gender"
-					value={ this.props.profile.gender }
+					value={ _.capitalize(this.props.profile.gender) }
 					default="unspecified"
 				/>
 				<StaticField
@@ -76,6 +71,29 @@ class ViewProfile extends React.Component {
 								.format('MMMM D, YYYY')
 							: null
 					}
+				/>
+				<StaticField
+					controlId="about"
+					label="General info"
+					name="about"
+					default="unspecified"
+					value={ this.props.profile.about }
+				/>
+
+				<h4>Diving Background</h4>
+				<StaticField
+					controlId="divesLogged"
+					label="Dives logged"
+					name="divesLogged"
+					default="unspecified"
+					value={ this.props.profile.divesLogged || '0' }
+				/>
+				<StaticField
+					controlId="bottomTimeLogged"
+					label="Total bottom time"
+					name="bottomTimeLogged"
+					default="unspecified"
+					value={ `${ this.props.profile.bottomTimeLogged } minutes` }
 				/>
 				<StaticField
 					controlId="typeOfDiver"
@@ -112,20 +130,14 @@ class ViewProfile extends React.Component {
 					default="unspecified"
 					value={ this.props.profile.specialties }
 				/>
-				<StaticField
-					controlId="about"
-					label="About me"
-					name="about"
-					default="unspecified"
-					value={ this.props.profile.about }
-				/>
 			</Formsy>
 		);
 	}
 }
 
 ViewProfile.propTypes = {
-	profile: PropTypes.object.isRequired
+	profile: PropTypes.object.isRequired,
+	username: PropTypes.string.isRequired
 };
 
 export default ViewProfile;

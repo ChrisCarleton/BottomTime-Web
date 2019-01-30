@@ -63,44 +63,19 @@ class EditProfile extends React.Component {
 						<p>Are you sure you want to reset the changes you have made?</p>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button bsStyle="primary" onClick={ this.confirmDiscardChanges }>Yes</Button>
+						<Button id="btn-confirm-discard" bsStyle="primary" onClick={ this.confirmDiscardChanges }>Yes</Button>
 						{ ' ' }
-						<Button onClick={ this.cancelDiscardChanges }>No</Button>
+						<Button id="btn-cancel-discard" onClick={ this.cancelDiscardChanges }>No</Button>
 					</Modal.Footer>
 				</Modal>
+
+				<h4>Personal Info</h4>
 				<StaticField
 					controlId="memberSince"
 					label="Member since"
 					name="memberSince"
 					value={ moment(this.props.profile.memberSince).fromNow() }
 				/>
-				<StaticField
-					controlId="divesLogged"
-					label="Dives logged"
-					name="divesLogged"
-					value={ this.props.profile.divesLogged || '0' }
-				/>
-				<StaticField
-					controlId="bottomTimeLogged"
-					label="Total bottom time"
-					name="bottomTimeLogged"
-					default="unspecified"
-					value={ `${ this.props.profile.bottomTimeLogged } minutes` }
-				/>
-				<RadioList
-					controlId="logsVisibility"
-					name="logsVisibility"
-					label="Profile visible to"
-					value={ this.props.profile.logsVisibility }
-					inline
-					required
-				>
-					{ [
-						{ text: 'Everyone', value: 'public', title: 'Anyone can view your profile and log book' },
-						{ text: 'My friends', value: 'friends-only', title: 'Only people you have friended can view your profile and log book' },
-						{ text: 'Just me', value: 'private', title: 'Only you can view your profile and log book' }
-					] }
-				</RadioList>
 				<TextBox
 					controlId="firstName"
 					label="First name"
@@ -174,6 +149,35 @@ class EditProfile extends React.Component {
 					value={ this.props.profile.birthdate }
 					hideTime
 				/>
+				<TextArea
+					controlId="about"
+					label="General info"
+					name="about"
+					value={ this.props.profile.about }
+					validations={ {
+						maxLength: 1000
+					} }
+					validationErrors={ {
+						maxLength: 'About me cannot be more than 1000 characters.'
+					} }
+					maxLength={ 1000 }
+					placeholder="Write a little about yourself."
+				/>
+
+				<h4>Diving Background</h4>
+				<StaticField
+					controlId="divesLogged"
+					label="Dives logged"
+					name="divesLogged"
+					value={ this.props.profile.divesLogged || '0' }
+				/>
+				<StaticField
+					controlId="bottomTimeLogged"
+					label="Total bottom time"
+					name="bottomTimeLogged"
+					default="unspecified"
+					value={ `${ this.props.profile.bottomTimeLogged } minutes` }
+				/>
 				<SelectBox
 					controlId="typeOfDiver"
 					label="Type of diver"
@@ -246,19 +250,23 @@ class EditProfile extends React.Component {
 					} }
 					maxLength={ 200 }
 				/>
-				<TextArea
-					controlId="about"
-					label="About me"
-					name="about"
-					value={ this.props.profile.about }
-					validations={ {
-						maxLength: 1000
-					} }
-					validationErrors={ {
-						maxLength: 'About me cannot be more than 1000 characters.'
-					} }
-					maxLength={ 1000 }
-				/>
+
+				<h4>User Settings</h4>
+				<RadioList
+					controlId="logsVisibility"
+					name="logsVisibility"
+					label="Profile visible to"
+					value={ this.props.profile.logsVisibility }
+					inline
+					required
+				>
+					{ [
+						{ text: 'Everyone', value: 'public', title: 'Anyone can view your profile and log book' },
+						{ text: 'My friends', value: 'friends-only', title: 'Only people you have friended can view your profile and log book' },
+						{ text: 'Just me', value: 'private', title: 'Only you can view your profile and log book' }
+					] }
+				</RadioList>
+
 				<FormButtonGroup>
 					<Button id="btn-save" bsStyle="primary" type="submit">Save Changes</Button>
 					{ ' ' }

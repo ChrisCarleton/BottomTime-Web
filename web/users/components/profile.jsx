@@ -40,16 +40,20 @@ class Profile extends React.Component {
 			return <RequireUser />;
 		}
 
+		const username = this.props.match.username || this.props.currentUser.username;
 		let element = null;
 		if (this.props.isLoading) {
 			element = <LoadingSpinner message="Loading profile information..." />;
 		} else if (this.props.currentProfile.readOnly) {
-			element = <ViewProfile profile={ this.props.currentProfile } />;
+			element = <ViewProfile
+				profile={ this.props.currentProfile }
+				username={ username }
+			/>;
 		} else {
 			element = <EditProfile
 				profile={ this.props.currentProfile }
-				username={ this.props.match.username || this.props.currentUser.username }
-			/>
+				username={ username }
+			/>;
 		}
 
 		return (
