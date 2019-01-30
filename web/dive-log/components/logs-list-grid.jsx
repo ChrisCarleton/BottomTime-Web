@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import LoadingSpinner from '../../components/loading-spinner';
 import LogsListItem from './logs-list-item';
 
 import {
@@ -15,17 +16,7 @@ import {
 class LogsListGrid extends React.Component {
 	render() {
 		if (this.props.isSearching) {
-			return (
-				<Media>
-					<Media.Left align="middle">
-						<Image src="/img/loading-spinner.gif" />
-					</Media.Left>
-					<Media.Body>
-						<h4>Loading</h4>
-						<p><em>Retrieving log records...</em></p>
-					</Media.Body>
-				</Media>
-			);
+			return <LoadingSpinner message="Retrieving log records..." />;
 		}
 
 		if (!this.props.listEntries || this.props.listEntries.length === 0) {

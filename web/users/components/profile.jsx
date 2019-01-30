@@ -1,6 +1,7 @@
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../stores/current-user-store';
 import EditProfile from './edit-profile';
+import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -16,8 +17,10 @@ class Profile extends React.Component {
 	}
 
 	static getPropsFromStores() {
+		const { currentProfile, isLoading } = UserProfileStore.getState();
 		return {
-			currentProfile: UserProfileStore.getState().currentProfile,
+			currentProfile,
+			isLoading,
 			currentUser: CurrentUserStore.getState().currentUser
 		};
 	}
@@ -37,14 +40,22 @@ class Profile extends React.Component {
 			return <RequireUser />;
 		}
 
+		let element = null;
+		if (this.props.isLoading) {
+			element = <LoadingSpinner message="Loading profile information..." />;
+		} else if (this.props.currentProfile.readOnly) {
+			element = <ViewProfile profile={ this.props.currentProfile } />;
+		} else {
+			element = <EditProfile
+				profile={ this.props.currentProfile }
+				username={ this.props.match.username || this.props.currentUser.username }
+			/>
+		}
+
 		return (
 			<div>
 				<PageTitle title="Profile" />
-				{
-					this.props.currentProfile.readOnly
-						? <ViewProfile profile={ this.props.currentProfile } />
-						: <EditProfile profile={ this.props.currentProfile } />
-				}
+				{ element }
 			</div>
 		);
 	}

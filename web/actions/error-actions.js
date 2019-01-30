@@ -25,7 +25,7 @@ class ErrorActions {
 			if (error.response.body.message) {
 				return {
 					message: error.response.body.message,
-					details: error.response.body.details
+					details: JSON.stringify(error.response.body.details)
 				};
 			}
 		}

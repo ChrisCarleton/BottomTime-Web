@@ -64,6 +64,7 @@ class DatePicker extends React.Component {
 					dateFormat={ this.props.hideDate ? null : this.props.dateFormat || DATE_FORMAT }
 					timeFormat={ this.props.hideTime ? null : this.props.timeFormat || TIME_FORMAT }
 					defaultValue={ this.props.defaultValue }
+					viewDate={ this.props.viewDate }
 					inputProps={ {
 						required: this.props.required
 					} }
@@ -76,13 +77,14 @@ class DatePicker extends React.Component {
 DatePicker.propTypes = {
 	controlId: PropTypes.string.isRequired,
 	dateFormat: PropTypes.string,
-	defaultValue: PropTypes.oneOfType([ Date ]),
+	defaultValue: PropTypes.string,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
 	hideDate: PropTypes.bool,
 	hideTime: PropTypes.bool,
 	timeFormat: PropTypes.string,
+	viewDate: PropTypes.string,
 	...propTypes
 };
 
