@@ -9,7 +9,7 @@ class TextArea extends React.Component {
 		super(props);
 		this.handleChanged = this.handleChanged.bind(this);
 	}
-	
+
 	handleChanged(e) {
 		this.props.setValue(e.currentTarget.value);
 
@@ -17,7 +17,7 @@ class TextArea extends React.Component {
 			this.props.onChange(e.currentTarget.value);
 		}
 	}
-	
+
 	render() {
 		let errorMessage = null;
 		let validationState = null;

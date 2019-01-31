@@ -45,7 +45,7 @@ class SelectBox extends React.Component {
 				label={ this.props.label }
 				errorMessage={ errorMessage }
 				validationState={ validationState }
-				required={this.props.required }
+				required={ this.props.required }
 			>
 				<FormControl
 					componentClass="select"
@@ -63,7 +63,6 @@ SelectBox.propTypes = {
 	children: PropTypes.node.isRequired,
 	controlId: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	...formsyProps
 };

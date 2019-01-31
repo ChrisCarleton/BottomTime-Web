@@ -29,6 +29,7 @@
   "devDependencies": {
     "@babel/polyfill": "^7.2.5",
     "babel-loader": "^8.0.2",
+    "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chromedriver": "^2.40.0",
     "clean-webpack-plugin": "^1.0.0",

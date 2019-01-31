@@ -52,7 +52,8 @@ class RadioList extends React.Component {
 			>
 				{ _.map(
 					this.props.children,
-					c => <Radio
+					c => (
+						<Radio
 							key={ c.value }
 							name={ this.props.name }
 							inline={ this.props.inline }
@@ -63,6 +64,7 @@ class RadioList extends React.Component {
 						>
 							{ c.text || c.value }
 						</Radio>
+					)
 				) }
 			</FormGroup>
 		);

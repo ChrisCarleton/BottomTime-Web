@@ -1,9 +1,11 @@
+import bodyParser from 'body-parser';
 import express from 'express';
 import mockApis from './mock-apis';
 import path from 'path';
 
 const app = express();
 app.use(express.static(path.join(__dirname, '../../dist/dev/')));
+app.use(bodyParser.json());
 
 app.get('/api/auth/me', (req, res) => mockApis.getAuthMe(req, res));
 app.post('/api/auth/login', (req, res) => mockApis.postAuthLogin(req, res));

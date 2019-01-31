@@ -8,8 +8,6 @@ import {
 	Clearfix,
 	Col,
 	Grid,
-	Image,
-	Media,
 	Row
 } from 'react-bootstrap';
 

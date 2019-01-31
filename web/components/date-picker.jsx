@@ -1,5 +1,4 @@
 import { propTypes, withFormsy } from 'formsy-react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 

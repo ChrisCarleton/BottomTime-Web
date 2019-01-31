@@ -26,13 +26,11 @@ class Profile extends React.Component {
 	}
 
 	componentDidMount() {
-		if (!this.props.match.username && this.props.currentUser.isAnonymous) {
-			return;
+		if (this.props.match.username || !this.props.currentUser.isAnonymous) {
+			const username = this.props.match.params.username
+				|| this.props.currentUser.username;
+			UserProfileActions.getProfile(username);
 		}
-
-		const username = this.props.match.params.username
-			|| this.props.currentUser.username;
-		return UserProfileActions.getProfile(username);
 	}
 
 	render() {
@@ -45,15 +43,19 @@ class Profile extends React.Component {
 		if (this.props.isLoading) {
 			element = <LoadingSpinner message="Loading profile information..." />;
 		} else if (this.props.currentProfile.readOnly) {
-			element = <ViewProfile
-				profile={ this.props.currentProfile }
-				username={ username }
-			/>;
+			element = (
+				<ViewProfile
+					profile={ this.props.currentProfile }
+					username={ username }
+				/>
+			);
 		} else {
-			element = <EditProfile
-				profile={ this.props.currentProfile }
-				username={ username }
-			/>;
+			element = (
+				<EditProfile
+					profile={ this.props.currentProfile }
+					username={ username }
+				/>
+			);
 		}
 
 		return (
@@ -68,6 +70,7 @@ class Profile extends React.Component {
 Profile.propTypes = {
 	currentProfile: PropTypes.object.isRequired,
 	currentUser: PropTypes.object.isRequired,
+	isLoading: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired
 };
 

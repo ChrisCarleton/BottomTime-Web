@@ -21,8 +21,8 @@ class EditProfile extends React.Component {
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleDiscardChanges = this.handleDiscardChanges.bind(this);
-		this.confirmDiscardChanges = this.confirmDiscardChanges.bind(this);
-		this.cancelDiscardChanges = this.cancelDiscardChanges.bind(this);
+		this.handleConfirmDiscardChanges = this.handleConfirmDiscardChanges.bind(this);
+		this.handleCancelDiscardChanges = this.handleCancelDiscardChanges.bind(this);
 	}
 
 	handleSubmit(model) {
@@ -43,12 +43,12 @@ class EditProfile extends React.Component {
 		this.setState(Object.assign({}, this.state, { showConfirmReset: true }));
 	}
 
-	confirmDiscardChanges() {
+	handleConfirmDiscardChanges() {
 		this.setState(Object.assign({}, this.state, { showConfirmReset: false }));
 		UserProfileActions.getProfile(this.props.username);
 	}
 
-	cancelDiscardChanges() {
+	handleCancelDiscardChanges() {
 		this.setState(Object.assign({}, this.state, { showConfirmReset: false }));
 	}
 
@@ -63,9 +63,15 @@ class EditProfile extends React.Component {
 						<p>Are you sure you want to reset the changes you have made?</p>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button id="btn-confirm-discard" bsStyle="primary" onClick={ this.confirmDiscardChanges }>Yes</Button>
+						<Button
+							id="btn-confirm-discard"
+							bsStyle="primary"
+							onClick={ this.handleConfirmDiscardChanges }
+						>
+							Yes
+						</Button>
 						{ ' ' }
-						<Button id="btn-cancel-discard" onClick={ this.cancelDiscardChanges }>No</Button>
+						<Button id="btn-cancel-discard" onClick={ this.handleCancelDiscardChanges }>No</Button>
 					</Modal.Footer>
 				</Modal>
 
@@ -137,10 +143,7 @@ class EditProfile extends React.Component {
 					value={ this.props.profile.gender }
 					inline
 				>
-					{ [
-						{ text: 'Male', value: 'male' },
-						{ text: 'Female', value: 'female' }
-					] }
+					{ [ { text: 'Male', value: 'male' }, { text: 'Female', value: 'female' } ] }
 				</RadioList>
 				<DatePicker
 					controlId="birthdate"
@@ -184,7 +187,7 @@ class EditProfile extends React.Component {
 					name="typeOfDiver"
 					value={ this.props.profile.typeOfDiver }
 				>
-					<option></option>
+					<option />
 					<option>New to diving</option>
 					<option>Casual/vacation diver</option>
 					<option>Typical diver</option>
@@ -213,7 +216,7 @@ class EditProfile extends React.Component {
 					name="certificationLevel"
 					value={ this.props.profile.certificationLevel }
 				>
-					<option></option>
+					<option />
 					<option>Open Water</option>
 					<option>Advanced Open Water</option>
 					<option>Rescue Diver</option>
@@ -261,9 +264,21 @@ class EditProfile extends React.Component {
 					required
 				>
 					{ [
-						{ text: 'Everyone', value: 'public', title: 'Anyone can view your profile and log book' },
-						{ text: 'My friends', value: 'friends-only', title: 'Only people you have friended can view your profile and log book' },
-						{ text: 'Just me', value: 'private', title: 'Only you can view your profile and log book' }
+						{
+							text: 'Everyone',
+							value: 'public',
+							title: 'Anyone can view your profile and log book'
+						},
+						{
+							text: 'My friends',
+							value: 'friends-only',
+							title: 'Only people you have friended can view your profile and log book'
+						},
+						{
+							text: 'Just me',
+							value: 'private',
+							title: 'Only you can view your profile and log book'
+						}
 					] }
 				</RadioList>
 

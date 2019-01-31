@@ -28,7 +28,7 @@ class UserProfileActions {
 			} catch (err) {
 				handleError(err);
 			}
-		}
+		};
 	}
 
 	profileSaved(profile) {

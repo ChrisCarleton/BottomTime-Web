@@ -7,8 +7,7 @@ import StaticField from '../../components/static-field';
 
 class ViewProfile extends React.Component {
 	render() {
-		const firstName = this.props.profile.firstName;
-		const lastName = this.props.profile.lastName;
+		const { firstName, lastName } = this.props.profile;
 		let fullName = null;
 
 		if (firstName && lastName) {
