@@ -3,7 +3,7 @@ import { Image } from 'react-bootstrap';
 import PageTitle from './page-title';
 import React from 'react';
 
-require('../img/lost-underwater.jpg');
+require('../img/forbidden-sign.jpg');
 
 class Forbidden extends React.Component {
 	render() {
@@ -17,10 +17,10 @@ class Forbidden extends React.Component {
 					<Link to="/">here</Link>
 					{ ' to return home. If you think you should have access try clicking ' }
 					<Link to="/login">here</Link>
-					{ 'to login.' }
+					{ ' to login.' }
 				</p>
 
-				<Image src="/img/lost-underwater.jpg" rounded />
+				<Image src="/img/forbidden-sign.jpg" rounded />
 			</div>);
 	}
 }
