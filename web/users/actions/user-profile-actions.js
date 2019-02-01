@@ -9,9 +9,12 @@ class UserProfileActions {
 			dispatch();
 			try {
 				const result = await agent.get(`/api/users/${ username }/profile`);
-				this.profileRetrieved(result.body);
+				return this.profileRetrieved(result.body);
 			} catch (err) {
-				handleError(err);
+				if (err.response && err.response.status === 403) {
+					return this.accessDenied();
+				}
+				return handleError(err);
 			}
 		};
 	}
@@ -35,6 +38,10 @@ class UserProfileActions {
 
 	profileSaved(profile) {
 		return profile;
+	}
+
+	accessDenied() {
+		return true;
 	}
 }
 

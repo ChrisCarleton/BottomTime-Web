@@ -1,6 +1,7 @@
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../stores/current-user-store';
 import EditProfile from './edit-profile';
+import Forbidden from '../../components/forbidden';
 import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
@@ -17,9 +18,10 @@ class Profile extends React.Component {
 	}
 
 	static getPropsFromStores() {
-		const { currentProfile, isLoading } = UserProfileStore.getState();
+		const { currentProfile, isForbidden, isLoading } = UserProfileStore.getState();
 		return {
 			currentProfile,
+			isForbidden,
 			isLoading,
 			currentUser: CurrentUserStore.getState().currentUser
 		};
@@ -34,8 +36,14 @@ class Profile extends React.Component {
 	}
 
 	render() {
-		if (!this.props.match.params.username && this.props.currentUser.isAnonymous) {
-			return <RequireUser />;
+		if (this.props.currentUser.isAnonymous) {
+			if (!this.props.match.params.username || this.props.isForbidden) {
+				return <RequireUser />;
+			}
+		}
+
+		if (this.props.isForbidden) {
+			return <Forbidden />;
 		}
 
 		const username = this.props.match.params.username || this.props.currentUser.username;
@@ -70,6 +78,7 @@ class Profile extends React.Component {
 Profile.propTypes = {
 	currentProfile: PropTypes.object.isRequired,
 	currentUser: PropTypes.object.isRequired,
+	isForbidden: PropTypes.bool.isRequired,
 	isLoading: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired
 };

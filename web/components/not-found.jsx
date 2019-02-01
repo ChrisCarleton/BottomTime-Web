@@ -8,7 +8,7 @@ require('../img/lost-underwater.jpg');
 class NotFound extends React.Component {
 	render() {
 		return (
-			<div>
+			<div id="not-found-page">
 				<PageTitle title="404 - Page Not Found!" hidden />
 				<h1>Uh Oh!<small> (Page not found)</small></h1>
 

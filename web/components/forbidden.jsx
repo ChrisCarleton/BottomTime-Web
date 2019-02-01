@@ -8,7 +8,7 @@ require('../img/forbidden-sign.jpg');
 class Forbidden extends React.Component {
 	render() {
 		return (
-			<div>
+			<div id="forbidden-page">
 				<PageTitle title="403 - Forbidden!" hidden />
 				<h1>{ 'Sorry, but you don\'t have access to this page' }</h1>
 

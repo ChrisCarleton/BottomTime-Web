@@ -29,6 +29,7 @@ module.exports = {
 			"functions": "never"
 		}],
 		"id-length": 0,
+		"id-match": ["error", "^[a-zA-Z_][a-zA-Z0-9_]*$"],
 		"indent": [2, "tab"],
 		"no-console": 1,
 		"no-tabs": 0,
