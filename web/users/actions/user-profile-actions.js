@@ -1,5 +1,6 @@
 import agent from '../../agent';
 import alt from '../../alt';
+import ErrorActions from '../../actions/error-actions';
 import handleError from '../../handle-error';
 
 class UserProfileActions {
@@ -24,6 +25,7 @@ class UserProfileActions {
 			dispatch();
 			try {
 				await agent.patch(`/api/users/${ username }/profile`).send(profile);
+				ErrorActions.showSuccess('Profile info saved');
 				this.profileSaved(profile);
 			} catch (err) {
 				handleError(err);

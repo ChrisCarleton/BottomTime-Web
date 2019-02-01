@@ -14,6 +14,7 @@ app.put('/api/users/:username', (req, res) => mockApis.putUsersUsername(req, res
 app.get('/api/users/:username/logs', (req, res) => mockApis.getUsersUsernameLogs(req, res));
 
 app.get('/api/users/:username/profile', (req, res) => mockApis.getUsersUsernameProfile(req, res));
+app.patch('/api/users/:username/profile', (req, res) => mockApis.patchUsersUsernameProfile(req, res));
 
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../../dist/dev/index.html')));
 

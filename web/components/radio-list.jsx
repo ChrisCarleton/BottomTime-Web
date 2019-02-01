@@ -54,6 +54,7 @@ class RadioList extends React.Component {
 					this.props.children,
 					c => (
 						<Radio
+							id={ `${ this.props.name }_${ c.value }` }
 							key={ c.value }
 							name={ this.props.name }
 							inline={ this.props.inline }

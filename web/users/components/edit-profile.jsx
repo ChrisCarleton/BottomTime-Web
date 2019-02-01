@@ -1,5 +1,6 @@
 import { Button, Modal } from 'react-bootstrap';
 import DatePicker from '../../components/date-picker';
+import ErrorActions from '../../actions/error-actions';
 import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import moment from 'moment';
@@ -39,6 +40,12 @@ class EditProfile extends React.Component {
 		);
 	}
 
+	handleInvalidSubmit() {
+		ErrorActions.showError(
+			'Unable to save profile',
+			'There were validation errors. Check your inputs and try again.');
+	}
+
 	handleDiscardChanges() {
 		this.setState(Object.assign({}, this.state, { showConfirmReset: true }));
 	}
@@ -53,8 +60,17 @@ class EditProfile extends React.Component {
 	}
 
 	render() {
+		const { bottomTimeLogged } = this.props.profile;
+		const bottomTime = bottomTimeLogged > 59
+			? `${ moment.duration(bottomTimeLogged, 'minutes').humanize() } (${ bottomTimeLogged } minutes)`
+			: `${ bottomTimeLogged } minutes`;
+
 		return (
-			<Formsy className="form-horizontal" onValidSubmit={ this.handleSubmit }>
+			<Formsy
+				className="form-horizontal"
+				onValidSubmit={ this.handleSubmit }
+				onInvalidSubmit={ this.handleInvalidSubmit }
+			>
 				<Modal show={ this.state.showConfirmReset }>
 					<Modal.Header>
 						<Modal.Title>Confirm Reset</Modal.Title>
@@ -150,6 +166,13 @@ class EditProfile extends React.Component {
 					label="Birthdate"
 					name="birthdate"
 					value={ this.props.profile.birthdate }
+					viewMode="years"
+					validations={ {
+						maxDate: { format: 'YYYY-MM-DD', max: moment().subtract(10, 'y') }
+					} }
+					validationErrors={ {
+						maxDate: `Birthdate must be valid and cannot be a date later than ${ moment().year() - 5 }.`
+					} }
 					hideTime
 				/>
 				<TextArea
@@ -179,7 +202,7 @@ class EditProfile extends React.Component {
 					label="Total bottom time"
 					name="bottomTimeLogged"
 					default="unspecified"
-					value={ `${ this.props.profile.bottomTimeLogged } minutes` }
+					value={ bottomTime }
 				/>
 				<SelectBox
 					controlId="typeOfDiver"
@@ -188,25 +211,32 @@ class EditProfile extends React.Component {
 					value={ this.props.profile.typeOfDiver }
 				>
 					<option />
-					<option>New to diving</option>
-					<option>Casual/vacation diver</option>
-					<option>Typical diver</option>
-					<option>Experienced diver</option>
-					<option>Tech diver</option>
-					<option>Commercial diver</option>
-					<option>Divemaster</option>
-					<option>Instructor</option>
-					<option>Professional diver</option>
+					<option value="New to diving">New to diving</option>
+					<option value="Casual/vacation diver">Casual/vacation diver</option>
+					<option value="Typical diver">Typical diver</option>
+					<option value="Experienced diver">Experienced diver</option>
+					<option value="Tech diver">Tech diver</option>
+					<option value="Commercial diver">Commercial diver</option>
+					<option value="Divemaster">Divemaster</option>
+					<option value="Instructor">Instructor</option>
+					<option value="Professional diver">Professional diver</option>
 				</SelectBox>
 				<DatePicker
 					controlId="startedDiving"
 					label="Started diving"
 					name="startedDiving"
+					viewMode="years"
 					value={
 						this.props.profile.startedDiving
 							? moment(this.props.profile.startedDiving, 'YYYY')
 							: null
 					}
+					validations={ {
+						maxDate: { format: 'YYYY', max: moment() }
+					} }
+					validationErrors={ {
+						maxDate: 'Started diving must be a valid year and not in the future.'
+					} }
 					hideTime
 					dateFormat="YYYY"
 				/>
@@ -217,13 +247,13 @@ class EditProfile extends React.Component {
 					value={ this.props.profile.certificationLevel }
 				>
 					<option />
-					<option>Open Water</option>
-					<option>Advanced Open Water</option>
-					<option>Rescue Diver</option>
-					<option>Divemaster</option>
-					<option>Assistant Instructor</option>
-					<option>Instructor</option>
-					<option>Course Director</option>
+					<option value="Open Water">Open Water</option>
+					<option value="Advanced Open Water">Advanced Open Water</option>
+					<option value="Rescue Diver">Rescue Diver</option>
+					<option value="Divemaster">Divemaster</option>
+					<option value="Assistant Instructor">Assistant Instructor</option>
+					<option value="Instructor">Instructor</option>
+					<option value="Course Director">Course Director</option>
 				</SelectBox>
 				<TextBox
 					controlId="certificationAgencies"

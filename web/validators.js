@@ -1,10 +1,44 @@
 import { addValidationRule } from 'formsy-react';
 import moment from 'moment';
 
-const DATE_FORMAT = 'DD/MM/YYYY';
-const TIME_FORMAT = 'hh:mmA';
+addValidationRule('isDateTime', (values, value, format = 'YYYY-MM-DD hh:mmA') => {
+	if (!value) {
+		return true;
+	}
 
-addValidationRule(
-	'isDateTime',
-	(values, value) => moment(value, `${ DATE_FORMAT } ${ TIME_FORMAT }`).isValid()
-);
+	const date = typeof (value) === 'string'
+		? moment(value, format)
+		: moment(value);
+
+	return date.isValid();
+});
+
+addValidationRule('maxDate', (values, value, params) => {
+	if (!value) {
+		return true;
+	}
+
+	params = params || {};
+	params.format = params.format || 'YYYY-MM-DD hh:mmA';
+
+	const date = typeof (value) === 'string'
+		? moment(value, params.format, false)
+		: moment(value);
+
+	return date.isValid() && date.isSameOrBefore(params.max);
+});
+
+addValidationRule('minDate', (values, value, min, params) => {
+	if (!value) {
+		return true;
+	}
+
+	params = params || {};
+	params.format = params.format || 'YYYY-MM-DD hh:mmA';
+
+	const date = typeof (value) === 'string'
+		? moment(value, params.format, false)
+		: moment(value);
+
+	return date.isValid() && date.isSameOrAfter(params.min);
+});

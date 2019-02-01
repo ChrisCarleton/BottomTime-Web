@@ -26,7 +26,7 @@ class Profile extends React.Component {
 	}
 
 	componentDidMount() {
-		if (this.props.match.username || !this.props.currentUser.isAnonymous) {
+		if (this.props.match.params.username || !this.props.currentUser.isAnonymous) {
 			const username = this.props.match.params.username
 				|| this.props.currentUser.username;
 			UserProfileActions.getProfile(username);
@@ -34,11 +34,11 @@ class Profile extends React.Component {
 	}
 
 	render() {
-		if (!this.props.match.username && this.props.currentUser.isAnonymous) {
+		if (!this.props.match.params.username && this.props.currentUser.isAnonymous) {
 			return <RequireUser />;
 		}
 
-		const username = this.props.match.username || this.props.currentUser.username;
+		const username = this.props.match.params.username || this.props.currentUser.username;
 		let element = null;
 		if (this.props.isLoading) {
 			element = <LoadingSpinner message="Loading profile information..." />;

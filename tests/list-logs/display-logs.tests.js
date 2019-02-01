@@ -1,5 +1,3 @@
-/* eslint no-unused-expressions: 0 */
-
 import { By, until } from 'selenium-webdriver';
 import driver from '../web-driver';
 import { expect } from 'chai';

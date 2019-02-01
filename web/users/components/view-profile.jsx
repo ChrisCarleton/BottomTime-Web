@@ -5,9 +5,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import StaticField from '../../components/static-field';
 
+const Unspecified = 'unspecified';
+
 class ViewProfile extends React.Component {
 	render() {
-		const { firstName, lastName } = this.props.profile;
+		const { firstName, lastName, bottomTimeLogged } = this.props.profile;
+		const bottomTime = bottomTimeLogged > 59
+			? `${ moment.duration(bottomTimeLogged, 'minutes').humanize() } (${ bottomTimeLogged } minutes)`
+			: `${ bottomTimeLogged } minutes`;
 		let fullName = null;
 
 		if (firstName && lastName) {
@@ -16,8 +21,6 @@ class ViewProfile extends React.Component {
 			fullName = firstName;
 		} else if (lastName) {
 			fullName = lastName;
-		} else {
-			fullName = this.props.username;
 		}
 
 		return (
@@ -27,20 +30,20 @@ class ViewProfile extends React.Component {
 					controlId="memberSince"
 					label="Member since"
 					name="memberSince"
-					default="unspecified"
+					default={ Unspecified }
 					value={ moment(this.props.profile.memberSince).fromNow() }
 				/>
 				<StaticField
 					controlId="name"
 					label="Name"
 					name="name"
-					default="unspecified"
+					default={ Unspecified }
 					value={ fullName }
 				/>
 				<StaticField
 					controlId="location"
 					label="Location"
-					default="unspecified"
+					default={ Unspecified }
 					name="location"
 					value={ this.props.profile.location }
 				/>
@@ -48,7 +51,7 @@ class ViewProfile extends React.Component {
 					controlId="occupation"
 					label="Occupation"
 					name="occupation"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.occupation }
 				/>
 				<StaticField
@@ -56,26 +59,26 @@ class ViewProfile extends React.Component {
 					label="Gender"
 					name="gender"
 					value={ _.capitalize(this.props.profile.gender) }
-					default="unspecified"
+					default={ Unspecified }
 				/>
 				<StaticField
 					controlId="birthdate"
 					label="Birthdate"
 					name="birthdate"
-					defualt="unspecified"
+					defualt={ Unspecified }
 					value={
 						this.props.profile.birthdate
 							? moment(this.props.profile.birthdate, 'YYYY-MM-DD')
 								.local()
 								.format('MMMM D, YYYY')
-							: null
+							: Unspecified
 					}
 				/>
 				<StaticField
 					controlId="about"
 					label="General info"
 					name="about"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.about }
 				/>
 
@@ -84,49 +87,49 @@ class ViewProfile extends React.Component {
 					controlId="divesLogged"
 					label="Dives logged"
 					name="divesLogged"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.divesLogged || '0' }
 				/>
 				<StaticField
 					controlId="bottomTimeLogged"
 					label="Total bottom time"
 					name="bottomTimeLogged"
-					default="unspecified"
-					value={ `${ this.props.profile.bottomTimeLogged } minutes` }
+					default={ Unspecified }
+					value={ bottomTime }
 				/>
 				<StaticField
 					controlId="typeOfDiver"
 					label="Type of diver"
 					name="typeOfDiver"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.typeOfDiver }
 				/>
 				<StaticField
 					controlId="startedDiving"
 					label="Started diving"
 					name="startedDiving"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.startedDiving }
 				/>
 				<StaticField
 					controlId="certificationLevel"
 					label="Certification level"
 					name="certificationLevel"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.certificationLevel }
 				/>
 				<StaticField
 					controlId="certificationAgencies"
 					label="Certification agencies"
 					name="certificationAgencies"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.certificationAgencies }
 				/>
 				<StaticField
 					controlId="specialties"
 					label="Specialty certifications"
 					name="specialties"
-					default="unspecified"
+					default={ Unspecified }
 					value={ this.props.profile.specialties }
 				/>
 			</Formsy>
@@ -135,8 +138,7 @@ class ViewProfile extends React.Component {
 }
 
 ViewProfile.propTypes = {
-	profile: PropTypes.object.isRequired,
-	username: PropTypes.string.isRequired
+	profile: PropTypes.object.isRequired
 };
 
 export default ViewProfile;

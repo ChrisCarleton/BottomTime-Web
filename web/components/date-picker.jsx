@@ -7,13 +7,14 @@ import FormGroup from './form-group';
 
 require('./date-picker.css');
 
-const DATE_FORMAT = 'DD/MM/YYYY';
+const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'hh:mmA';
 
 class DatePicker extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleValueChanged = this.handleValueChanged.bind(this);
+		this.getPlaceholder = this.getPlaceholder.bind(this);
 	}
 
 	handleValueChanged(v) {
@@ -22,6 +23,19 @@ class DatePicker extends React.Component {
 		if (this.props.onChange) {
 			this.props.onChange(v);
 		}
+	}
+
+	getPlaceholder() {
+		let placeholder = '';
+		if (!this.props.hideDate) {
+			placeholder += `${ this.props.dateFormat || DATE_FORMAT } `;
+		}
+
+		if (!this.props.hideTime) {
+			placeholder += this.props.timeFormat || TIME_FORMAT;
+		}
+
+		return placeholder;
 	}
 
 	render() {
@@ -64,9 +78,14 @@ class DatePicker extends React.Component {
 					timeFormat={ this.props.hideTime ? null : this.props.timeFormat || TIME_FORMAT }
 					defaultValue={ this.props.defaultValue }
 					viewDate={ this.props.viewDate }
+					viewMode={ this.props.viewMode }
 					inputProps={ {
-						required: this.props.required
+						id: this.props.controlId,
+						required: this.props.required,
+						placeholder: this.getPlaceholder()
 					} }
+					timeConstraints={ this.props.timeConstraints }
+					strictParsing={ false }
 					onChange={ this.handleValueChanged }
 				/>
 			</FormGroup>);
@@ -82,8 +101,10 @@ DatePicker.propTypes = {
 	required: PropTypes.bool,
 	hideDate: PropTypes.bool,
 	hideTime: PropTypes.bool,
+	timeConstraints: PropTypes.object,
 	timeFormat: PropTypes.string,
 	viewDate: PropTypes.string,
+	viewMode: PropTypes.string,
 	...propTypes
 };
 

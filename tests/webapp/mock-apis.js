@@ -64,6 +64,10 @@ const mockApis = {
 			totalBottomTime: 0,
 			readOnly: true
 		});
+	},
+
+	patchUsersUsernameProfile(req, res) {
+		res.sendStatus(204);
 	}
 };
 

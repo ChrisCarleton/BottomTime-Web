@@ -18,6 +18,7 @@ module.exports = {
 		"mocha": true
 	},
 	"rules": {
+		"array-element-newline": [2, "consistent"],
 		"arrow-parens": [2, "as-needed"],
 		"class-methods-use-this": 0,
 		"comma-dangle": [2, {
@@ -31,6 +32,7 @@ module.exports = {
 		"indent": [2, "tab"],
 		"no-console": 1,
 		"no-tabs": 0,
+		"no-unused-expressions" : 0,
 		"no-warning-comments": 1,
 		"operator-linebreak": [2, "before"],
 		"react/forbid-component-props": [2, {
