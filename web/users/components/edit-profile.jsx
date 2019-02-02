@@ -171,7 +171,7 @@ class EditProfile extends React.Component {
 						maxDate: { format: 'YYYY-MM-DD', max: moment().subtract(10, 'y') }
 					} }
 					validationErrors={ {
-						maxDate: `Birthdate must be valid and cannot be a date later than ${ moment().year() - 5 }.`
+						maxDate: `Birthdate must be valid and cannot be a date later than ${ moment().year() - 10 }.`
 					} }
 					hideTime
 				/>

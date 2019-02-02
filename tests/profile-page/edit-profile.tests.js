@@ -2,7 +2,7 @@ import { By, until } from 'selenium-webdriver';
 import driver from '../web-driver';
 import { expect } from 'chai';
 import faker from 'faker';
-import mockApis, { exampleUser } from '../webapp/mock-apis';
+import mockApis, { exampleProfile, exampleUser } from '../webapp/mock-apis';
 import moment from 'moment';
 import sinon from 'sinon';
 
@@ -29,25 +29,7 @@ describe('Editing Profiles', () => {
 	});
 
 	beforeEach(() => {
-		testProfile = {
-			memberSince: moment().add(-2, 'y').add(-7, 'months').toISOString(),
-			logsVisibility: 'public',
-			firstName: 'Jerard',
-			lastName: 'Lapain',
-			location: 'Paris, France',
-			occupation: 'Painter',
-			gender: 'male',
-			birthdate: '1985-04-12',
-			typeOfDiver: 'Casual/vacation diver',
-			startedDiving: 2013,
-			certificationLevel: 'Advanced Open Water',
-			certificationAgencies: 'SSI',
-			specialties: 'Nitrox, Night Diver',
-			about: 'J\'aime beaucoup la plange! C\'est magnifique!',
-			divesLogged: 47,
-			bottomTimeLogged: 1748,
-			readOnly: false
-		};
+		testProfile = { ...exampleProfile };
 	});
 
 	afterEach(() => {

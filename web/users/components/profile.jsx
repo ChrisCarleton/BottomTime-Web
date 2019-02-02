@@ -52,10 +52,7 @@ class Profile extends React.Component {
 			element = <LoadingSpinner message="Loading profile information..." />;
 		} else if (this.props.currentProfile.readOnly) {
 			element = (
-				<ViewProfile
-					profile={ this.props.currentProfile }
-					username={ username }
-				/>
+				<ViewProfile profile={ this.props.currentProfile } />
 			);
 		} else {
 			element = (

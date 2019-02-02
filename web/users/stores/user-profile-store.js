@@ -38,6 +38,8 @@ class UserProfileStore {
 
 	onAccessDenied() {
 		this.isForbidden = true;
+		this.isLoading = false;
+		this.currentProfile = {};
 	}
 }
 
