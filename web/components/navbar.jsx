@@ -29,6 +29,9 @@ class AppNavBar extends React.Component {
 			return (
 				<Nav pullRight>
 					<NavDropdown title={ title } id="user-nav-dropdown">
+						<LinkContainer to="/profile">
+							<NavItem>My Profile</NavItem>
+						</LinkContainer>
 						<MenuItem onClick={ this.handleLogoutClick }>Logout</MenuItem>
 					</NavDropdown>
 				</Nav>

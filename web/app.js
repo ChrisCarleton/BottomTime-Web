@@ -2,11 +2,10 @@
 
 import agent from './agent';
 import alt from './alt';
+import App from './components/app';
 import initialState from './initial-state';
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import App from './components/app';
 
 require('./validators');
 require('./styles/main.less');

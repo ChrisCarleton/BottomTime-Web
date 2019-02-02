@@ -11,6 +11,26 @@ export const exampleUser = {
 	isLockedOut: false
 };
 
+export const exampleProfile = {
+	memberSince: moment().add(-2, 'y').add(-7, 'months').toISOString(),
+	logsVisibility: 'public',
+	firstName: 'Jerard',
+	lastName: 'Lapain',
+	location: 'Paris, France',
+	occupation: 'Painter',
+	gender: 'male',
+	birthdate: '1985-04-12',
+	typeOfDiver: 'Casual/vacation diver',
+	startedDiving: 2013,
+	certificationLevel: 'Advanced Open Water',
+	certificationAgencies: 'SSI',
+	specialties: 'Nitrox, Night Diver',
+	about: 'J\'aime beaucoup la plange! C\'est magnifique!',
+	divesLogged: 47,
+	bottomTimeLogged: 1748,
+	readOnly: false
+};
+
 export const logEntries = new Array(250);
 for (let i = 0; i < logEntries.length; i++) {
 	logEntries[i] = {
@@ -58,12 +78,11 @@ const mockApis = {
 	},
 
 	getUsersUsernameProfile(req, res) {
-		res.json({
-			createdAt: moment().toISOString(),
-			divesLogged: 0,
-			totalBottomTime: 0,
-			readOnly: true
-		});
+		res.json(exampleProfile);
+	},
+
+	patchUsersUsernameProfile(req, res) {
+		res.sendStatus(204);
 	}
 };
 

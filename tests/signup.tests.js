@@ -48,14 +48,18 @@ describe('Sign up page', () => {
 	});
 
 	it('catches usernames that are too long', async () => {
-		await driver.findElement(By.id('username'))
-			.sendKeys('This.Username.May.Technically.Be.Valid.However.It.Is.Certainly.Far.Too.Long');
+		stub = sinon.spy(mockApis, 'putUsersUsername');
 
+		const element = await driver.findElement(By.id('username'));
+		await element.sendKeys('This.Username.May.Technically.Be.Valid.However.It.Is.Certainly.Far.Too.Long');
 		await driver.findElement(By.id('email')).sendKeys(user.email);
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.elementLocated(By.id('err-username')));
+		await driver.wait(until.urlIs('http://localhost:8081/'));
+
+		const [ { params } ] = stub.getCall(0).args;
+		expect(params.username).to.have.length(50);
 	});
 
 	it('catches missing usernames', async () => {
@@ -110,14 +114,18 @@ describe('Sign up page', () => {
 	});
 
 	it('catches password that is too long', async () => {
+		const password = 'R3@lly.G00d.P@zzw3rdz--But__G0nn@Bee!2!L0000ng! Seri0slee! T00long$';
+		stub = sinon.spy(mockApis, 'putUsersUsername');
+
 		await driver.findElement(By.id('username')).sendKeys(user.username);
 		await driver.findElement(By.id('email')).sendKeys(user.email);
-		await driver.findElement(By.id('password'))
-			.sendKeys('R3@lly.G00d.P@zzw3rdz--But__G0nn@Bee!2!L0000ng! Seri0slee! T00long$');
-
-		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
+		await driver.findElement(By.id('password')).sendKeys(password);
+		await driver.findElement(By.id('confirmPassword')).sendKeys(password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.elementLocated(By.id('err-password')));
+		await driver.wait(until.urlIs('http://localhost:8081/'));
+
+		const [ { body } ] = stub.getCall(0).args;
+		expect(body.password).to.have.length(50);
 	});
 
 	it('catches missing confirm password', async () => {

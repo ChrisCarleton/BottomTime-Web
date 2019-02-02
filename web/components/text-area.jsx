@@ -1,20 +1,20 @@
+import { FormControl } from 'react-bootstrap';
 import FormGroup from './form-group';
+import { propTypes as formsyProps, withFormsy } from 'formsy-react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { propTypes, withFormsy } from 'formsy-react';
 
-import { FormControl, InputGroup } from 'react-bootstrap';
-
-class TextBox extends React.Component {
+class TextArea extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleTextChanged = this.handleTextChanged.bind(this);
+		this.handleChanged = this.handleChanged.bind(this);
 	}
 
-	handleTextChanged(e) {
-		this.props.setValue(e.target.value);
+	handleChanged(e) {
+		this.props.setValue(e.currentTarget.value);
+
 		if (this.props.onChange) {
-			this.props.onChange(e.target.value);
+			this.props.onChange(e.currentTarget.value);
 		}
 	}
 
@@ -44,46 +44,33 @@ class TextBox extends React.Component {
 
 		}
 
-		const formControl = (
-			<FormControl
-				type={ this.props.password ? 'password' : 'text' }
-				value={ this.props.getValue() || '' }
-				onChange={ this.handleTextChanged }
-				maxLength={ this.props.maxLength }
-				placeholder={ this.props.placeholder }
-			/>
-		);
-
 		return (
 			<FormGroup
 				label={ this.props.label }
 				controlId={ this.props.controlId }
+				required={ this.props.required }
 				errorMessage={ errorMessage }
 				validationState={ validationState }
-				smallLabel={ this.props.smallLabel }
-				required={ this.props.required }
 			>
-				{ this.props.units
-					? <InputGroup>
-						{ formControl }
-						<InputGroup.Addon>{ this.props.units }</InputGroup.Addon>
-					</InputGroup>
-					: formControl }
-			</FormGroup>);
+				<FormControl
+					componentClass="textarea"
+					placeholder={ this.props.placeholder }
+					maxLength={ this.props.maxLength }
+					onChange={ this.handleChanged }
+					value={ this.props.getValue() }
+				/>
+			</FormGroup>
+		);
 	}
 }
 
-TextBox.propTypes = {
+TextArea.propTypes = {
 	controlId: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
 	maxLength: PropTypes.number,
 	onChange: PropTypes.func,
-	password: PropTypes.bool,
 	placeholder: PropTypes.string,
-	required: PropTypes.bool,
-	smallLabel: PropTypes.bool,
-	units: PropTypes.string,
-	...propTypes
+	...formsyProps
 };
 
-export default withFormsy(TextBox);
+export default withFormsy(TextArea);

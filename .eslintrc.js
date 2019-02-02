@@ -18,6 +18,7 @@ module.exports = {
 		"mocha": true
 	},
 	"rules": {
+		"array-element-newline": [2, "consistent"],
 		"arrow-parens": [2, "as-needed"],
 		"class-methods-use-this": 0,
 		"comma-dangle": [2, {
@@ -28,15 +29,19 @@ module.exports = {
 			"functions": "never"
 		}],
 		"id-length": 0,
+		"id-match": ["error", "^[a-zA-Z_][a-zA-Z0-9_]*$"],
 		"indent": [2, "tab"],
 		"no-console": 1,
 		"no-tabs": 0,
+		"no-unused-expressions" : 0,
 		"no-warning-comments": 1,
 		"operator-linebreak": [2, "before"],
 		"react/forbid-component-props": [2, {
 			"forbid": [ "style" ]
 		}],
-		"react/forbid-prop-types": 0,
+		"react/forbid-prop-types": [2, {
+			"forbid": ["any"]
+		}],
 		"react/jsx-curly-spacing": [2, {
 			"when": "always"
 		}],

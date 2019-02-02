@@ -1,5 +1,4 @@
 import { propTypes, withFormsy } from 'formsy-react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -8,25 +7,35 @@ import FormGroup from './form-group';
 
 require('./date-picker.css');
 
-const DATE_FORMAT = 'DD/MM/YYYY';
+const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'hh:mmA';
 
 class DatePicker extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			value: moment(this.props.getValue())
-		};
-
 		this.handleValueChanged = this.handleValueChanged.bind(this);
+		this.getPlaceholder = this.getPlaceholder.bind(this);
 	}
 
 	handleValueChanged(v) {
-		this.setState({ value: v });
+		this.props.setValue(v);
 
 		if (this.props.onChange) {
 			this.props.onChange(v);
 		}
+	}
+
+	getPlaceholder() {
+		let placeholder = '';
+		if (!this.props.hideDate) {
+			placeholder += `${ this.props.dateFormat || DATE_FORMAT } `;
+		}
+
+		if (!this.props.hideTime) {
+			placeholder += this.props.timeFormat || TIME_FORMAT;
+		}
+
+		return placeholder;
 	}
 
 	render() {
@@ -64,13 +73,19 @@ class DatePicker extends React.Component {
 				required={ this.props.required }
 			>
 				<DateTime
-					value={ this.state.value }
-					dateFormat={ DATE_FORMAT }
-					timeFormat={ TIME_FORMAT }
+					value={ this.props.getValue() }
+					dateFormat={ this.props.hideDate ? null : this.props.dateFormat || DATE_FORMAT }
+					timeFormat={ this.props.hideTime ? null : this.props.timeFormat || TIME_FORMAT }
+					defaultValue={ this.props.defaultValue }
+					viewDate={ this.props.viewDate }
+					viewMode={ this.props.viewMode }
 					inputProps={ {
-						placeholder: 'dd/mm/yyyy hh:ss(AM/PM)',
-						required: this.props.required
+						id: this.props.controlId,
+						required: this.props.required,
+						placeholder: this.getPlaceholder()
 					} }
+					timeConstraints={ this.props.timeConstraints }
+					strictParsing={ false }
 					onChange={ this.handleValueChanged }
 				/>
 			</FormGroup>);
@@ -79,10 +94,17 @@ class DatePicker extends React.Component {
 
 DatePicker.propTypes = {
 	controlId: PropTypes.string.isRequired,
+	dateFormat: PropTypes.string,
+	defaultValue: PropTypes.string,
 	label: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
-	// value: PropTypes.string,
+	hideDate: PropTypes.bool,
+	hideTime: PropTypes.bool,
+	timeConstraints: PropTypes.object,
+	timeFormat: PropTypes.string,
+	viewDate: PropTypes.string,
+	viewMode: PropTypes.string,
 	...propTypes
 };
 

@@ -1,4 +1,6 @@
+import { Button } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
@@ -7,12 +9,6 @@ import { Redirect } from 'react-router-dom';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import TextBox from '../../components/text-box';
-
-import {
-	Button,
-	Col,
-	Row
-} from 'react-bootstrap';
 
 class Login extends React.Component {
 	static getStores() {
@@ -33,7 +29,7 @@ class Login extends React.Component {
 	}
 
 	render() {
-		if (this.props.currentUser && !this.props.currentUser.isAnonymous) {
+		if (!this.props.currentUser.isAnonymous) {
 			return <Redirect to="/" />;
 		}
 
@@ -45,29 +41,23 @@ class Login extends React.Component {
 					Sign in with your username and password. <em>Coming soon: Sign in with Google, Twitter, etc.</em>
 				</p>
 
-				<Formsy onValidSubmit={ this.handleSubmit }>
-					<Row>
-						<Col sm={ 12 }>
-							<TextBox
-								controlId="username"
-								label="Username"
-								name="username"
-								required
-							/>
-							<TextBox
-								controlId="password"
-								label="Password"
-								name="password"
-								password
-								required
-							/>
-						</Col>
-					</Row>
-					<Row>
-						<Col smOffset={ 3 }>
-							<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
-						</Col>
-					</Row>
+				<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
+					<TextBox
+						controlId="username"
+						label="Username"
+						name="username"
+						required
+					/>
+					<TextBox
+						controlId="password"
+						label="Password"
+						name="password"
+						password
+						required
+					/>
+					<FormButtonGroup>
+						<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
+					</FormButtonGroup>
 				</Formsy>
 			</div>
 		);
