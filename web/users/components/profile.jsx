@@ -31,7 +31,7 @@ class Profile extends React.Component {
 		if (this.props.match.params.username || !this.props.currentUser.isAnonymous) {
 			const username = this.props.match.params.username
 				|| this.props.currentUser.username;
-			UserProfileActions.getProfile(username);
+			UserProfileActions.getProfile(username, this.props.history);
 		}
 	}
 
@@ -75,6 +75,7 @@ class Profile extends React.Component {
 Profile.propTypes = {
 	currentProfile: PropTypes.object.isRequired,
 	currentUser: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	isForbidden: PropTypes.bool.isRequired,
 	isLoading: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired

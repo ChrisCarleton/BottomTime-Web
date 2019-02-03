@@ -4,7 +4,7 @@ import ErrorActions from '../../actions/error-actions';
 import handleError from '../../handle-error';
 
 class UserProfileActions {
-	getProfile(username) {
+	getProfile(username, history) {
 		return async dispatch => {
 			dispatch();
 			try {
@@ -14,7 +14,7 @@ class UserProfileActions {
 				if (err.response && err.response.status === 403) {
 					return this.accessDenied();
 				}
-				return handleError(err);
+				return handleError(err, history);
 			}
 		};
 	}
@@ -23,7 +23,7 @@ class UserProfileActions {
 		return profile;
 	}
 
-	saveProfile(username, profile) {
+	saveProfile(username, profile, history) {
 		return async dispatch => {
 			dispatch();
 			try {
@@ -31,7 +31,7 @@ class UserProfileActions {
 				ErrorActions.showSuccess('Profile info saved');
 				this.profileSaved(profile);
 			} catch (err) {
-				handleError(err);
+				handleError(err, history);
 			}
 		};
 	}

@@ -1,16 +1,23 @@
 import CurrentUserActions from './users/actions/current-user-actions';
+import CurrentUserStore from './users/stores/current-user-store';
 import ErrorActions from './actions/error-actions';
 
-export default function (err) {
+export default function (err, history) {
 	if (err.response) {
-		if (err.response.status === 401
-			&& (
-				!err.response.body
-				|| !err.response.body.errorId
-			)
-		) {
+		if (err.response.status === 401) {
 			// Auth token is expired or invalid. Remove it and send the user to the login page.
-			return CurrentUserActions.logout();
+			CurrentUserActions.logout();
+			history.push('/login');
+		}
+
+		if (err.response.status === 403) {
+			// Not authorized to view the current resource.
+			const { isAnonymous } = CurrentUserStore.getState().currentUser;
+			history.push(isAnonymous ? '/login' : '/forbidden');
+		}
+
+		if (err.response.status === 404) {
+			history.push('/notFound');
 		}
 	}
 

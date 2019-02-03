@@ -4,14 +4,20 @@ import ErrorActions from '../../actions/error-actions';
 import handleError from '../../handle-error';
 
 class CurrentUserActions {
-	login(model) {
+	login(model, history) {
 		return async dispatch => {
 			dispatch();
 			try {
 				const result = await agent.post('/api/auth/login').send(model);
 				this.loginSucceeded(result);
 			} catch (err) {
-				handleError(err);
+				if (err.response && err.response.status === 401) {
+					ErrorActions.showError(
+						'Login Failed',
+						'Check your username and password and try again.');
+				} else {
+					handleError(err, history);
+				}
 			}
 		};
 	}

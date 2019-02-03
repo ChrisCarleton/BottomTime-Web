@@ -3,7 +3,7 @@ import alt from '../../alt';
 import handleError from '../../handle-error';
 
 class LogEntryActions {
-	searchLogs(username, params) {
+	searchLogs(username, params, history) {
 		params = params || {};
 
 		return async dispatch => {
@@ -14,7 +14,11 @@ class LogEntryActions {
 					.query(params);
 				this.searchLogsCompleted(results.body);
 			} catch (err) {
-				this.searchLogsFailed(err);
+				if (err.response && err.response.status === 403) {
+					this.accessDenied();
+				} else {
+					this.searchLogsFailed(err, history);
+				}
 			}
 		};
 	}
@@ -23,8 +27,12 @@ class LogEntryActions {
 		return results;
 	}
 
-	searchLogsFailed(err) {
-		handleError(err);
+	searchLogsFailed(err, history) {
+		handleError(err, history);
+		return true;
+	}
+
+	accessDenied() {
 		return true;
 	}
 
