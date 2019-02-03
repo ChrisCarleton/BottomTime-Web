@@ -12,6 +12,7 @@ import StaticField from '../../components/static-field';
 import TextArea from '../../components/text-area';
 import TextBox from '../../components/text-box';
 import UserProfileActions from '../actions/user-profile-actions';
+import { withRouter } from 'react-router-dom';
 
 class EditProfile extends React.Component {
 	constructor(props) {
@@ -36,7 +37,8 @@ class EditProfile extends React.Component {
 
 		UserProfileActions.saveProfile(
 			this.props.username,
-			model
+			model,
+			this.props.history
 		);
 	}
 
@@ -52,7 +54,7 @@ class EditProfile extends React.Component {
 
 	handleConfirmDiscardChanges() {
 		this.setState(Object.assign({}, this.state, { showConfirmReset: false }));
-		UserProfileActions.getProfile(this.props.username);
+		UserProfileActions.getProfile(this.props.username, this.props.history);
 	}
 
 	handleCancelDiscardChanges() {
@@ -323,8 +325,9 @@ class EditProfile extends React.Component {
 }
 
 EditProfile.propTypes = {
+	history: PropTypes.object.isRequired,
 	profile: PropTypes.object.isRequired,
 	username: PropTypes.string.isRequired
 };
 
-export default EditProfile;
+export default withRouter(EditProfile);

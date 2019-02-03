@@ -30,6 +30,7 @@ class App extends React.Component {
 							<Route path="/logs/:username/new" exact component={ LogEntry } />
 							<Route path="/logs/:username/:logId" exact component={ LogEntry } />
 							<Route path="/forbidden" exact component={ Forbidden } />
+							<Route path="/notFound" exact component={ NotFound } />
 							<Route path="*" component={ NotFound } />
 						</Switch>
 						<hr />

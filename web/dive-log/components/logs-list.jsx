@@ -1,15 +1,3 @@
-import connectToStores from 'alt-utils/lib/connectToStores';
-import CurrentUserStore from '../../users/stores/current-user-store';
-import LogEntryActions from '../actions/log-entry-actions';
-import LogEntryStore from '../stores/log-entry-store';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-
-import { LinkContainer } from 'react-router-bootstrap';
-import LogsListGrid from './logs-list-grid';
-import PageTitle from '../../components/page-title';
-import RequireUser from '../../components/require-user';
 import {
 	Breadcrumb,
 	Button,
@@ -18,6 +6,18 @@ import {
 	ToggleButton,
 	ToggleButtonGroup
 } from 'react-bootstrap';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserStore from '../../users/stores/current-user-store';
+import Forbidden from '../../components/forbidden';
+import { LinkContainer } from 'react-router-bootstrap';
+import LogEntryActions from '../actions/log-entry-actions';
+import LogEntryStore from '../stores/log-entry-store';
+import LogsListGrid from './logs-list-grid';
+import PageTitle from '../../components/page-title';
+import PropTypes from 'prop-types';
+import React from 'react';
+import RequireUser from '../../components/require-user';
+import { withRouter } from 'react-router-dom';
 
 require('../../img/diver-icon.png');
 
@@ -36,8 +36,17 @@ class LogsList extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const username = this.getUsernameForRoute();
+		let username = null;
 		let possessive = null;
+
+		/* eslint-disable prefer-destructuring */
+		if (this.props.match.params.username) {
+			username = props.match.params.username;
+		} else if (!this.props.currentUser.isAnonymous) {
+			username = props.currentUser.username;
+		}
+		/* eslint-enable prefer-destructuring */
+
 		if (!username || username === props.currentUser.username) {
 			possessive = 'My';
 		} else if (
@@ -49,7 +58,7 @@ class LogsList extends React.Component {
 			possessive = `${ username }'s`;
 		}
 
-		this.state = { possessive };
+		this.state = { username, possessive };
 
 		this.handleSortByChanged = this.handleSortByChanged.bind(this);
 		this.handleSortOrderChanged = this.handleSortOrderChanged.bind(this);
@@ -59,20 +68,8 @@ class LogsList extends React.Component {
 		this.searchLogs();
 	}
 
-	getUsernameForRoute() {
-		if (this.props.match.params.username) {
-			return this.props.match.params.username;
-		}
-
-		if (!this.props.currentUser.isAnonymous) {
-			return this.props.currentUser.username;
-		}
-
-		return null;
-	}
-
 	searchLogs(params) {
-		const username = this.getUsernameForRoute();
+		const { username } = this.state;
 		if (!username) {
 			return;
 		}
@@ -81,9 +78,11 @@ class LogsList extends React.Component {
 			sortBy: this.props.sortBy,
 			sortOrder: this.props.sortOrder
 		};
+
 		LogEntryActions.searchLogs(
 			username,
-			params
+			params,
+			this.props.history
 		);
 	}
 
@@ -104,6 +103,16 @@ class LogsList extends React.Component {
 	}
 
 	render() {
+		if (!this.state.username) {
+			return <RequireUser />;
+		}
+
+		if (this.props.isForbidden) {
+			return this.props.currentUser.isAnonymous
+				? <RequireUser />
+				: <Forbidden />;
+		}
+
 		let reverseOrderText = null;
 		switch (this.props.sortBy) {
 		case 'maxDepth':
@@ -121,7 +130,6 @@ class LogsList extends React.Component {
 
 		return (
 			<div>
-				{ this.props.match.username ? null : <RequireUser /> }
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -172,7 +180,7 @@ class LogsList extends React.Component {
 					<LogsListGrid
 						isSearching={ this.props.isSearching }
 						listEntries={ this.props.listEntries }
-						username={ this.getUsernameForRoute() || 'Anonymous' }
+						username={ this.state.username }
 					/>
 				</div>
 			</div>);
@@ -182,7 +190,9 @@ class LogsList extends React.Component {
 LogsList.propTypes = {
 	currentUser: PropTypes.object.isRequired,
 	listEntries: PropTypes.array,
-	isSearching: PropTypes.bool,
+	history: PropTypes.object.isRequired,
+	isForbidden: PropTypes.bool.isRequired,
+	isSearching: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired,
 	sortBy: PropTypes.string.isRequired,
 	sortOrder: PropTypes.string.isRequired

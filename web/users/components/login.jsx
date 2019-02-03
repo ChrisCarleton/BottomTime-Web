@@ -5,7 +5,7 @@ import Formsy from 'formsy-react';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import TextBox from '../../components/text-box';
@@ -25,7 +25,7 @@ class Login extends React.Component {
 	}
 
 	handleSubmit(model) {
-		CurrentUserActions.login(model);
+		CurrentUserActions.login(model, this.props.history);
 	}
 
 	render() {
@@ -65,7 +65,8 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-	currentUser: PropTypes.object.isRequired
+	currentUser: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired
 };
 
-export default connectToStores(Login);
+export default withRouter(connectToStores(Login));
