@@ -30,4 +30,5 @@ agent.get('/api/auth/me')
 	})
 	.finally(() => {
 		ReactDOM.render(<App />, document.getElementById('app'));
+		document.body.style.backgroundImage = 'url("/img/reef-background.jpg")';
 	});

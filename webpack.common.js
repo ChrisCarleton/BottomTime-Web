@@ -17,12 +17,12 @@ module.exports = {
 					options: {
 						presets: [
 							[
-								"@babel/preset-env",
+								'@babel/preset-env',
 								{
-									"targets": "> 0.25%, not dead"
+									'targets': '> 0.25%, not dead'
 								}
 							],
-							"@babel/preset-react"
+							'@babel/preset-react'
 						]
 					}
 				}
@@ -64,7 +64,7 @@ module.exports = {
 			}
 		]
 	},
-	resolve : {
+	resolve: {
 		modules: [
 			'node_modules',
 			path.resolve(__dirname, 'web')
@@ -99,7 +99,7 @@ module.exports = {
 					minChunks: 2,
 					priority: 10,
 					chunks: 'all'
-			  	}
+				}
 			}
 		}
 	}

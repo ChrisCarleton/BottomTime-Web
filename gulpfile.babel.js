@@ -45,9 +45,9 @@ function packageProd() {
 		.pipe(gulp.dest('dist/prod'));
 }
 
-function serve(done) {
+function serve(mode, done) {
 	new WebpackDevServer(
-		webpack(webpackDevConfig),
+		webpack(mode === 'prod' ? webpackProdConfig : webpackDevConfig),
 		{
 			compress: true,
 			historyApiFallback: true,
@@ -70,6 +70,14 @@ function serve(done) {
 		});
 }
 
+function serveDev(done) {
+	serve('dev', done);
+}
+
+function serveProd(done) {
+	serve('prod', done);
+}
+
 gulp.task('package-dev', packageDev);
 
 gulp.task('package-prod', packageProd);
@@ -82,6 +90,8 @@ gulp.task('test', test);
 
 gulp.task('build-and-test', gulp.series(packageDev, test));
 
-gulp.task('serve', serve);
+gulp.task('serve-dev', serveDev);
 
-gulp.task('default', serve);
+gulp.task('serve-prod', serveProd);
+
+gulp.task('default', serveDev);
