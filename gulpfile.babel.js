@@ -45,20 +45,20 @@ function packageProd() {
 		.pipe(gulp.dest('dist/prod'));
 }
 
-function serve(done) {
+function serve(mode, done) {
 	new WebpackDevServer(
-		webpack(webpackDevConfig),
+		webpack(mode === 'prod' ? webpackProdConfig : webpackDevConfig),
 		{
 			compress: true,
 			historyApiFallback: true,
-			hot: true,
+			hot: mode !== 'prod',
 			index: 'index.html',
 			port: 8080,
 			proxy: {
 				'/api': process.env.BT_API_URL || 'http://localhost:29201/'
 			},
 			publicPath: '/',
-			watchContentBase: true
+			watchContentBase: mode !== 'prod'
 		})
 		.listen(8080, 'localhost', err => {
 			if (err) {
@@ -68,6 +68,14 @@ function serve(done) {
 			log('Dev server started on port 8080.');
 			return done();
 		});
+}
+
+function serveDev(done) {
+	serve('dev', done);
+}
+
+function serveProd(done) {
+	serve('prod', done);
 }
 
 gulp.task('package-dev', packageDev);
@@ -82,6 +90,8 @@ gulp.task('test', test);
 
 gulp.task('build-and-test', gulp.series(packageDev, test));
 
-gulp.task('serve', serve);
+gulp.task('serve-dev', serveDev);
 
-gulp.task('default', serve);
+gulp.task('serve-prod', serveProd);
+
+gulp.task('default', serveDev);

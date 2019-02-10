@@ -61,7 +61,7 @@ gulp package
 To run the application locally run
 
 ```
-gulp serve
+gulp serve-dev
 ```
 
 This will run the application using Webpack Dev Server with hot reloading, which makes development a lot
@@ -71,4 +71,11 @@ For example,
 
 ```
 export BT_API_URL="https://api.my-site.com/"
+```
+
+### Serving the Production Build Locally
+One can also run the production build of the application on the Webpack Dev Server:
+
+```
+gulp serve-prod
 ```
