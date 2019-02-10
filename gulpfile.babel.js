@@ -51,14 +51,14 @@ function serve(mode, done) {
 		{
 			compress: true,
 			historyApiFallback: true,
-			hot: mode !== 'prod',
+			hot: true,
 			index: 'index.html',
 			port: 8080,
 			proxy: {
 				'/api': process.env.BT_API_URL || 'http://localhost:29201/'
 			},
 			publicPath: '/',
-			watchContentBase: mode !== 'prod'
+			watchContentBase: true
 		})
 		.listen(8080, 'localhost', err => {
 			if (err) {
