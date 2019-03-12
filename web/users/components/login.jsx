@@ -1,13 +1,16 @@
+import agent from '../../agent';
 import { Button } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserActions from '../actions/current-user-actions';
+import CurrentUserStore from '../stores/current-user-store';
+import ErrorActions from '../../actions/error-actions';
 import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
+import handleError from '../../handle-error';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
-import CurrentUserActions from '../actions/current-user-actions';
-import CurrentUserStore from '../stores/current-user-store';
 import TextBox from '../../components/text-box';
 
 class Login extends React.Component {
@@ -24,8 +27,20 @@ class Login extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleSubmit(model) {
-		CurrentUserActions.login(model, this.props.history);
+	async handleSubmit(model, resetForm) {
+		try {
+			const result = await agent.post('/api/auth/login').send(model);
+			CurrentUserActions.loginSucceeded(result);
+			resetForm();
+		} catch (err) {
+			if (err.response && err.response.status === 401) {
+				ErrorActions.showError(
+					'Login Failed',
+					'Check your username and password and try again.');
+			} else {
+				handleError(err, this.props.history);
+			}
+		}
 	}
 
 	render() {
