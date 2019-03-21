@@ -1,6 +1,7 @@
 import agent from '../../agent';
 import { Button } from 'react-bootstrap';
 import config from '../../config';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
 import FormButtonGroup from '../../components/form-button-group';
@@ -14,6 +15,14 @@ import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
 
 class ChangePassword extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return CurrentUserStore.getState();
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = { isWaiting: false };
@@ -21,21 +30,21 @@ class ChangePassword extends React.Component {
 	}
 
 	async handleSubmit(model, resetForm) {
+		const { hasPassword, username } = this.props.currentUser;
+		delete model.confirmPassword;
 		this.setState({ isWaiting: true });
-		const { username } = CurrentUserStore.getState().currentUser;
+
 		try {
 			await agent
 				.post(`/api/users/${ username }/changePassword`)
-				.send({
-					oldPassword: model.oldPassword,
-					newPassword: model.newPassword
-				});
+				.send(model);
 			ErrorActions.showSuccess('Your password has been updated.');
 			resetForm();
 			this.setState({ isWaiting: false });
-			document.getElementById('oldPassword').focus();
+			document.getElementById(hasPassword ? 'oldPassword' : 'newPassword').focus();
 		} catch (err) {
-			if (err.status === 403) {
+			console.log(err.response);
+			if (err.response.status === 403) {
 				ErrorActions.showError(
 					'Unable to change password',
 					'Check your old password and try again.');
@@ -49,19 +58,27 @@ class ChangePassword extends React.Component {
 	}
 
 	render() {
+		const { hasPassword } = this.props.currentUser;
+
 		return (
 			<div>
 				<RequireUser />
 				<PageTitle title="Change Password" />
 
 				<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
-					<TextBox
-						controlId="oldPassword"
-						label="Old password"
-						name="oldPassword"
-						required
-						password
-					/>
+					{
+						hasPassword
+							? (
+								<TextBox
+									controlId="oldPassword"
+									label="Old password"
+									name="oldPassword"
+									required
+									password
+								/>
+							)
+							: null
+					}
 					<TextBox
 						controlId="newPassword"
 						label="New password"
@@ -109,7 +126,8 @@ class ChangePassword extends React.Component {
 }
 
 ChangePassword.propTypes = {
+	currentUser: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired
 };
 
-export default withRouter(ChangePassword);
+export default withRouter(connectToStores(ChangePassword));
