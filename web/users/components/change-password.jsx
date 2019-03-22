@@ -43,7 +43,6 @@ class ChangePassword extends React.Component {
 			this.setState({ isWaiting: false });
 			document.getElementById(hasPassword ? 'oldPassword' : 'newPassword').focus();
 		} catch (err) {
-			console.log(err.response);
 			if (err.response.status === 403) {
 				ErrorActions.showError(
 					'Unable to change password',
