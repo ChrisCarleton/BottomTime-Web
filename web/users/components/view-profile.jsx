@@ -7,7 +7,11 @@ import StaticField from '../../components/static-field';
 const Unspecified = 'unspecified';
 
 function capitalize(s) {
-	return s.charAt(0).toUpperCase() + s.slice(1);
+	if (s && typeof (s) === 'string') {
+		return s.charAt(0).toUpperCase() + s.slice(1);
+	}
+
+	return '';
 }
 
 class ViewProfile extends React.Component {
