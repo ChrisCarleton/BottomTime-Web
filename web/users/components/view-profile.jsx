@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Formsy from 'formsy-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -6,6 +5,14 @@ import React from 'react';
 import StaticField from '../../components/static-field';
 
 const Unspecified = 'unspecified';
+
+function capitalize(s) {
+	if (s && typeof (s) === 'string') {
+		return s.charAt(0).toUpperCase() + s.slice(1);
+	}
+
+	return '';
+}
 
 class ViewProfile extends React.Component {
 	render() {
@@ -58,7 +65,7 @@ class ViewProfile extends React.Component {
 					controlId="gender"
 					label="Gender"
 					name="gender"
-					value={ _.capitalize(this.props.profile.gender) }
+					value={ capitalize(this.props.profile.gender) }
 					default={ Unspecified }
 				/>
 				<StaticField

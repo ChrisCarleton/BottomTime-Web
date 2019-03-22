@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import FormGroup from './form-group';
 import { propTypes as formsyProps, withFormsy } from 'formsy-react';
 import PropTypes from 'prop-types';
@@ -50,23 +49,24 @@ class RadioList extends React.Component {
 				validationState={ validationState }
 				errorMessage={ errorMessage }
 			>
-				{ _.map(
-					this.props.children,
-					c => (
-						<Radio
-							id={ `${ this.props.name }_${ c.value }` }
-							key={ c.value }
-							name={ this.props.name }
-							inline={ this.props.inline }
-							value={ c.value }
-							checked={ value === c.value }
-							onChange={ this.handleChecked }
-							title={ c.title }
-						>
-							{ c.text || c.value }
-						</Radio>
+				{
+					this.props.children.map(
+						c => (
+							<Radio
+								id={ `${ this.props.name }_${ c.value }` }
+								key={ c.value }
+								name={ this.props.name }
+								inline={ this.props.inline }
+								value={ c.value }
+								checked={ value === c.value }
+								onChange={ this.handleChecked }
+								title={ c.title }
+							>
+								{ c.text || c.value }
+							</Radio>
+						)
 					)
-				) }
+				}
 			</FormGroup>
 		);
 	}
