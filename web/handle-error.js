@@ -8,6 +8,7 @@ export default function (err, history) {
 			// Auth token is expired or invalid. Remove it and send the user to the login page.
 			CurrentUserActions.logout();
 			history.push('/login');
+			return ErrorActions.showError('Your session has expired', 'Please log in again.');
 		}
 
 		if (err.response.status === 403) {

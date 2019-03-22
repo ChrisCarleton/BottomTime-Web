@@ -8,7 +8,8 @@ export const exampleUser = {
 	createdAt: moment().toDate(),
 	role: 'user',
 	isAnonymous: false,
-	isLockedOut: false
+	isLockedOut: false,
+	hasPassword: true
 };
 
 export const exampleProfile = {
@@ -51,7 +52,8 @@ const mockApis = {
 			createdAt: null,
 			role: 'user',
 			isAnonymous: true,
-			isLockedOut: false
+			isLockedOut: false,
+			hasPassword: false
 		});
 	},
 
@@ -67,7 +69,8 @@ const mockApis = {
 				createdAt: moment().toISOString(),
 				role: 'user',
 				isAnonymous: false,
-				isLockedOut: false
+				isLockedOut: false,
+				hasPassword: true
 			},
 			token: 'la.di.da'
 		});
@@ -82,6 +85,10 @@ const mockApis = {
 	},
 
 	patchUsersUsernameProfile(req, res) {
+		res.sendStatus(204);
+	},
+
+	postUsersUsernameChangePassword(req, res) {
 		res.sendStatus(204);
 	}
 };

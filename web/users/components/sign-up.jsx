@@ -1,4 +1,6 @@
+import agent from '../../agent';
 import { Button } from 'react-bootstrap';
+import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
@@ -25,12 +27,21 @@ class SignUpPage extends React.Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleSubmit(model, resetForm, invalidateForm) {
-		CurrentUserActions.trySignup(model, err => {
-			if (!err) {
-				return resetForm();
-			}
+	async handleSubmit(model, resetForm, invalidateForm) {
+		try {
+			const result = await agent
+				.put(`/api/users/${ model.username }`)
+				.send({
+					email: model.email,
+					password: model.password,
+					role: 'user'
+				});
 
+
+			ErrorActions.showSuccess('Success!', 'Your new account has been created.');
+			CurrentUserActions.loginSucceeded(result);
+			return resetForm();
+		} catch (err) {
 			if (err.response && err.response.status === 409) {
 				if (err.response.body.fieldName === 'username') {
 					invalidateForm({ username: 'Username is already taken.' });
@@ -42,7 +53,7 @@ class SignUpPage extends React.Component {
 			}
 
 			return ErrorActions.showError(err);
-		});
+		}
 	}
 
 	handleInvalidSubmit() {
@@ -120,7 +131,7 @@ class SignUpPage extends React.Component {
 						label="Password"
 						name="password"
 						validations={ {
-							matchRegexp: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*.]).*$/,
+							matchRegexp: config.passwordRegex,
 							minLength: 7,
 							maxLength: 50
 						} }

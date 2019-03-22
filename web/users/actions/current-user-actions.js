@@ -1,27 +1,8 @@
 import agent from '../../agent';
 import alt from '../../alt';
 import ErrorActions from '../../actions/error-actions';
-import handleError from '../../handle-error';
 
 class CurrentUserActions {
-	login(model, history) {
-		return async dispatch => {
-			dispatch();
-			try {
-				const result = await agent.post('/api/auth/login').send(model);
-				this.loginSucceeded(result);
-			} catch (err) {
-				if (err.response && err.response.status === 401) {
-					ErrorActions.showError(
-						'Login Failed',
-						'Check your username and password and try again.');
-				} else {
-					handleError(err, history);
-				}
-			}
-		};
-	}
-
 	trySignup(model, done) {
 		return async dispatch => {
 			dispatch();
@@ -51,10 +32,10 @@ class CurrentUserActions {
 			try {
 				await agent.post('/api/auth/logout');
 			} catch (err) {
-				// TODO: Figure out what to do about this.
+				// Not much to do here. As long as the auth token gets cleared, we're good.
+			} finally {
+				agent.clearAuthToken();
 			}
-
-			agent.clearAuthToken();
 		};
 	}
 

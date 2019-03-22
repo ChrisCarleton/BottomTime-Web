@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import ChangePassword from '../users/components/change-password';
 import ErrorBar from './error-bar';
 import Forbidden from '../components/forbidden';
 import Home from './home';
@@ -23,6 +24,7 @@ class App extends React.Component {
 							<Route path="/" exact component={ Home } />
 							<Route path="/signup" exact component={ SignUpPage } />
 							<Route path="/login" exact component={ Login } />
+							<Route path="/changePassword" exact component={ ChangePassword } />
 							<Route path="/profile" exact component={ Profile } />
 							<Route path="/profile/:username" exact component={ Profile } />
 							<Route path="/logs" exact component={ LogsList } />
