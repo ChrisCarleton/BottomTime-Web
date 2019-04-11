@@ -39,10 +39,6 @@ class LogEntryActions {
 	changeSortOrder(sortBy, sortOrder) {
 		return { sortBy, sortOrder };
 	}
-
-	updateCurrentEntry(entry) {
-		return entry;
-	}
 }
 
 export default alt.createActions(LogEntryActions);

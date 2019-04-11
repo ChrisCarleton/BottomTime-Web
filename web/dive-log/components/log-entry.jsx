@@ -1,165 +1,238 @@
-import React from 'react';
-import LogEntryActions from '../actions/log-entry-actions';
-import LogEntryStore from '../stores/log-entry-store';
-
-import DatePicker from '../../components/date-picker';
-import Formsy from 'formsy-react';
-import { LinkContainer } from 'react-router-bootstrap';
+import agent from '../../agent';
 import {
 	Breadcrumb,
 	Button,
 	Col,
-	Row,
-	Tabs,
-	Tab
+	Row
 } from 'react-bootstrap';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentLogEntryActions from '../actions/current-log-entry-actions';
+import CurrentLogEntryStore from '../stores/current-log-entry-store';
+import CurrentUserStore from '../../users/stores/current-user-store';
+import Formsy from 'formsy-react';
+import handleError from '../../handle-error';
+import { LinkContainer } from 'react-router-bootstrap';
+import LoadingSpinner from '../../components/loading-spinner';
+import moment from 'moment';
+import PageTitle from '../../components/page-title';
+import PropTypes from 'prop-types';
+import React from 'react';
 import TextBox from '../../components/text-box';
-import GpsPicker from '../../components/gps-picker';
+import { withRouter } from 'react-router-dom';
 
 class LogEntry extends React.Component {
+	static getStores() {
+		return [ CurrentLogEntryStore, CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser,
+			...CurrentLogEntryStore.getState()
+		};
+	}
+
 	constructor(props) {
 		super(props);
-		this.state = LogEntryStore.getState();
-
-		this.componentDidMount = this.componentDidMount.bind(this);
-		this.componentWillUnmount = this.componentWillUnmount.bind(this);
-		this.onEntryChanged = this.onEntryChanged.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleUpdate = this.handleUpdate.bind(this);
+		this.handleWeightUpdate = this.handleWeightUpdate.bind(this);
 	}
 
 	componentDidMount() {
-		LogEntryStore.listen(this.onEntryChanged);
+		setTimeout(async () => {
+			const { params } = this.props.match;
+
+			if (params.logId) {
+				CurrentLogEntryActions.beginLoading();
+				try {
+					const response = await agent
+						.get(`/api/users/${ params.username }/logs/${ params.logId }`);
+					CurrentLogEntryActions.setCurrentEntry(response.body);
+				} catch (err) {
+					CurrentLogEntryActions.finishLoading();
+					handleError(err, this.props.history);
+				}
+			} else {
+				CurrentLogEntryActions.finishLoading();
+			}
+		}, 0);
 	}
 
-	componentWillUnmount() {
-		LogEntryStore.unlisten(this.onEntryChanged);
+	mapModel(model) {
+		return model;
 	}
 
-	onEntryChanged() {
-		this.setState(LogEntryStore.getState());
+	handleSubmit(model) {
+		console.log(model);
 	}
 
-	onValueChanged(change) {
-		const newState = Object.assign({}, this.state.currentEntry, change);
-		LogEntryActions.updateCurrentEntry(newState);
+	handleUpdate(update) {
+		const newEntry = {
+			...this.props.currentEntry,
+			...update
+		};
+		CurrentLogEntryActions.setCurrentEntry(newEntry);
+	}
+
+	handleWeightUpdate(update) {
+		if (this.props.currentEntry.weight) {
+			const weight = {
+				...this.props.currentEntry.weight,
+				...update
+			};
+			CurrentLogEntryActions.setCurrentEntry({
+				...this.props.currentEntry,
+				weight
+			});
+		} else {
+			CurrentLogEntryActions.setCurrentEntry({
+				...this.props.currentEntry,
+				weight: update
+			});
+		}
+	}
+
+	renderForm() {
+		const weight = this.props.currentEntry.weight || {};
+
+		return (
+			<Formsy onValidSubmit={ this.handleSubmit } mapping={ this.mapModel }>
+				<Row>
+					<Col sm={ 12 } md={ 6 }>
+						<h4>Time and Location</h4>
+						<TextBox
+							name="location"
+							controlId="location"
+							label="Location"
+							placeholder="City or Area"
+							required
+							onChange={ location => this.handleUpdate({ location }) }
+							value={ this.props.currentEntry.location || '' }
+							maxLength={ 200 }
+						/>
+						<TextBox
+							name="site"
+							controlId="site"
+							label="Dive site"
+							required
+							onChange={ site => this.handleUpdate({ site }) }
+							value={ this.props.currentEntry.site || '' }
+							maxLength={ 200 }
+						/>
+						<TextBox
+							name="entryTime"
+							controlId="entryTime"
+							label="Entry time"
+							required
+							placeholder={ moment().format('YYYY-MM-DD h:mmA') }
+							onChange={ entryTime => this.handleUpdate({ entryTime }) }
+							value={ this.props.currentEntry.entryTime || '' }
+						/>
+						<TextBox
+							name="bottomTime"
+							controlId="bottomTime"
+							label="Bottom time"
+							onChange={ bottomTime => this.handleUpdate({ bottomTime }) }
+							value={ this.props.currentEntry.bottomTime || '' }
+							units="minutes"
+						/>
+						<TextBox
+							name="totalTime"
+							controlId="totalTime"
+							label="Total time"
+							onChange={ totalTime => this.handleUpdate({ totalTime }) }
+							value={ this.props.currentEntry.totalTime || '' }
+							units="minutes"
+						/>
+					</Col>
+					<Col sm={ 12 } md={ 6 }>
+						<h4>GPS</h4>
+						<TextBox
+							name="latitude"
+							controlId="latitude"
+							label="Latitude"
+						/>
+						<TextBox
+							name="longitude"
+							controlId="longitude"
+							label="Longitude"
+						/>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={ 6 } sm={ 12 }>
+						<h4>Dive Info</h4>
+						<TextBox
+							name="averageDepth"
+							controlId="averageDepth"
+							label="Average depth"
+							onChange={ averageDepth => this.handleUpdate({ averageDepth }) }
+							value={ this.props.currentEntry.averageDepth || '' }
+							units="ft"
+						/>
+						<TextBox
+							name="maxDepth"
+							controlId="maxDepth"
+							label="Max. depth"
+							onChange={ maxDepth => this.handleUpdate({ maxDepth }) }
+							value={ this.props.currentEntry.maxDepth || '' }
+							units="ft"
+						/>
+					</Col>
+					<Col md={ 6 } sm={ 12 }>
+						<h4>Weight</h4>
+						<TextBox
+							name="amount"
+							controlId="amount"
+							label="Amount worn"
+							onChange={ amount => this.handleWeightUpdate({ amount }) }
+							value={ weight.amount || '' }
+							units="lbs"
+						/>
+					</Col>
+				</Row>
+				<p>
+					<em>{ JSON.stringify(this.props.currentEntry) }</em>
+				</p>
+				<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
+				&nbsp;
+				<Button id="btn-reset">Discard Changes</Button>
+			</Formsy>
+		);
 	}
 
 	render() {
+		const logsListPage = `/logs/${ this.props.match.params.username }`;
+		const pageTitle = 'Log Entry';
+
 		return (
 			<div>
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
 					</LinkContainer>
-					<LinkContainer to="/logs">
-						<Breadcrumb.Item>My Logs</Breadcrumb.Item>
+					<LinkContainer to={ logsListPage }>
+						<Breadcrumb.Item>Log Book</Breadcrumb.Item>
 					</LinkContainer>
-					<Breadcrumb.Item active>New Log Item</Breadcrumb.Item>
+					<Breadcrumb.Item active>{ pageTitle }</Breadcrumb.Item>
 				</Breadcrumb>
-
-				<h1>New Log Entry</h1>
-
-				<Formsy className="inline">
-					<Tabs defaultActiveKey={ 0 } id="log-entry-tabs">
-						<Tab title="Basic Info" eventKey={ 0 }>
-							<Row>
-								<Col sm={ 12 } md={ 6 }>
-									<DatePicker
-										controlId="entryTime"
-										label="Entry time"
-										name="entryTime"
-										value={ this.state.currentEntry.entryTime || '' }
-										onChange={ v => this.onValueChanged({ entryTime: v }) }
-										validations={ {
-											isDateTime: true
-										} }
-										validationErrors={ {
-											isDateTime: 'Entry time should be a valid date time.'
-										} }
-										required
-									/>
-									<TextBox
-										controlId="location"
-										label="Location"
-										name="location"
-										value={ this.state.currentEntry.location || '' }
-										onChange={ v => this.onValueChanged({ location: v }) }
-										required
-									/>
-									<TextBox
-										controlId="diveSite"
-										label="Site"
-										name="diveSite"
-										value={ this.state.currentEntry.site || '' }
-										onChange={ v => this.onValueChanged({ site: v }) }
-										required
-									/>
-									<TextBox
-										controlId="bottomTime"
-										label="Bottom time"
-										name="bottomTime"
-										value={ this.state.currentEntry.bottomTime || '' }
-										onChange={ v => this.onValueChanged({ bottomTime: v }) }
-										units="min"
-										required
-									/>
-									<TextBox
-										controlId="totalTime"
-										label="Total time"
-										name="totalTime"
-										value={ this.state.currentEntry.totalTime || '' }
-										onChange={ v => this.onValueChanged({ totalTime: v }) }
-										units="min"
-									/>
-									<TextBox
-										controlId="maxDepth"
-										label="Max depth"
-										name="maxDepth"
-										value={ this.state.currentEntry.maxDepth || '' }
-										onChange={ v => this.onValueChanged({ maxDepth: v }) }
-										units="ft"
-									/>
-									<TextBox
-										controlId="avgDepth"
-										label="Average depth"
-										name="avgDepth"
-										value={ this.state.currentEntry.avgDepth || '' }
-										onChange={ v => this.onValueChanged({ avgDepth: v }) }
-										units="ft"
-									/>
-								</Col>
-								<Col sm={ 12 } md={ 6 }>
-									<GpsPicker
-										controlId="gps"
-										label="GPS Coordinates"
-										name="gps"
-										onChange={ v => this.onValueChanged({ gps: v }) }
-									/>
-								</Col>
-							</Row>
-						</Tab>
-						<Tab title="Equipment" eventKey={ 1 }>
-							<Row>
-								<Col sm={ 12 } md={ 6 }>
-									<TextBox
-										controlId="weight"
-										label="Weight"
-										name="weight"
-										value={ this.state.currentEntry.weight || '' }
-										onChange={ v => this.onValueChanged({ weight: v }) }
-										units="lbs"
-									/>
-								</Col>
-							</Row>
-						</Tab>
-					</Tabs>
-
-					<Button bsStyle="primary" type="submit">Save</Button>
-					<p>
-						<small>{ JSON.stringify(this.state.currentEntry, '&nbsp;&nbsp;') }</small>
-					</p>
-				</Formsy>
-			</div>);
+				<PageTitle title={ pageTitle } />
+				{
+					this.props.isLoading
+						? <LoadingSpinner message="Loading Log Entry..." />
+						: this.renderForm()
+				}
+			</div>
+		);
 	}
 }
 
-export default LogEntry;
+LogEntry.propTypes = {
+	currentEntry: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
+	isLoading: PropTypes.bool.isRequired,
+	match: PropTypes.object.isRequired
+};
+
+export default connectToStores(withRouter(LogEntry));

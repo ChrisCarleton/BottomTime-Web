@@ -28,7 +28,7 @@ class PageTitle extends React.Component {
 
 PageTitle.propTypes = {
 	hidden: PropTypes.bool,
-	title: PropTypes.oneOfType([ PropTypes.string, PropTypes.func ])
+	title: PropTypes.oneOfType([ PropTypes.string, PropTypes.func ]).isRequired
 };
 
 export default PageTitle;
