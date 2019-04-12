@@ -13,6 +13,24 @@ addValidationRule('isDateTime', (values, value, format = 'YYYY-MM-DD hh:mmA') =>
 	return date.isValid();
 });
 
+addValidationRule('isGreaterThan', (values, value, min) => {
+	if (typeof value === 'string' && value.length > 0) {
+		const parsed = parseFloat(value);
+		return isNaN(parsed) ? false : parsed > min;
+	}
+
+	return true;
+});
+
+addValidationRule('isGreaterThanOrEqual', (values, value, min) => {
+	if (typeof value === 'string' && value.length > 0) {
+		const parsed = parseFloat(value);
+		return isNaN(parsed) ? false : parsed >= min;
+	}
+
+	return true;
+});
+
 addValidationRule('maxDate', (values, value, params) => {
 	if (!value) {
 		return true;

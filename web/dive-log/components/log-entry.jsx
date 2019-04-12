@@ -20,6 +20,8 @@ import React from 'react';
 import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
 
+const EntryTimeFormat = 'YYYY-MM-DD h:mmA';
+
 class LogEntry extends React.Component {
 	static getStores() {
 		return [ CurrentLogEntryStore, CurrentUserStore ];
@@ -110,6 +112,12 @@ class LogEntry extends React.Component {
 							onChange={ location => this.handleUpdate({ location }) }
 							value={ this.props.currentEntry.location || '' }
 							maxLength={ 200 }
+							validations={ {
+								maxLength: 200
+							} }
+							validationErrors={ {
+								maxLength: 'Location cannot be more than 200 characters long.'
+							} }
 						/>
 						<TextBox
 							name="site"
@@ -119,15 +127,27 @@ class LogEntry extends React.Component {
 							onChange={ site => this.handleUpdate({ site }) }
 							value={ this.props.currentEntry.site || '' }
 							maxLength={ 200 }
+							validations={ {
+								maxLength: 200
+							} }
+							validationErrors={ {
+								maxLength: 'Site cannot be more than 200 characters long.'
+							} }
 						/>
 						<TextBox
 							name="entryTime"
 							controlId="entryTime"
 							label="Entry time"
 							required
-							placeholder={ moment().format('YYYY-MM-DD h:mmA') }
+							placeholder={ moment().format(EntryTimeFormat) }
 							onChange={ entryTime => this.handleUpdate({ entryTime }) }
 							value={ this.props.currentEntry.entryTime || '' }
+							validations={ {
+								isDateTime: EntryTimeFormat
+							} }
+							validationErrors={ {
+								isDateTime: 'Entry time must in the format of yyyy-mm-dd h:mm(am/pm).'
+							} }
 						/>
 						<TextBox
 							name="bottomTime"
@@ -136,6 +156,12 @@ class LogEntry extends React.Component {
 							onChange={ bottomTime => this.handleUpdate({ bottomTime }) }
 							value={ this.props.currentEntry.bottomTime || '' }
 							units="minutes"
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Bottom time must be a positive number.'
+							} }
 						/>
 						<TextBox
 							name="totalTime"
@@ -144,6 +170,12 @@ class LogEntry extends React.Component {
 							onChange={ totalTime => this.handleUpdate({ totalTime }) }
 							value={ this.props.currentEntry.totalTime || '' }
 							units="minutes"
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Total time must be a positive number.'
+							} }
 						/>
 					</Col>
 					<Col sm={ 12 } md={ 6 }>
@@ -169,7 +201,13 @@ class LogEntry extends React.Component {
 							label="Average depth"
 							onChange={ averageDepth => this.handleUpdate({ averageDepth }) }
 							value={ this.props.currentEntry.averageDepth || '' }
-							units="ft"
+							units="m"
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Average depth must be a positive number.'
+							} }
 						/>
 						<TextBox
 							name="maxDepth"
@@ -177,7 +215,13 @@ class LogEntry extends React.Component {
 							label="Max. depth"
 							onChange={ maxDepth => this.handleUpdate({ maxDepth }) }
 							value={ this.props.currentEntry.maxDepth || '' }
-							units="ft"
+							units="m"
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Maximum depth must be a positive number.'
+							} }
 						/>
 					</Col>
 					<Col md={ 6 } sm={ 12 }>
@@ -188,7 +232,13 @@ class LogEntry extends React.Component {
 							label="Amount worn"
 							onChange={ amount => this.handleWeightUpdate({ amount }) }
 							value={ weight.amount || '' }
-							units="lbs"
+							units="kg"
+							validations={ {
+								isGreaterThanOrEqual: 0
+							} }
+							validationErrors={ {
+								isGreaterThanOrEqual: 'Amount worn cannot be a negative number.'
+							} }
 						/>
 					</Col>
 				</Row>
