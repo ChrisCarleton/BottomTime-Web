@@ -62,11 +62,60 @@ class LogEntry extends React.Component {
 	}
 
 	mapModel(model) {
-		return model;
+		const mapped = {
+			location: model.location,
+			site: model.site
+		};
+
+		if (model.entryTime) {
+			mapped.entryTime = moment(model.entryTime, EntryTimeFormat).utc().toISOString();
+		}
+
+		if (model.bottomTime) {
+			mapped.bottomTime = parseFloat(model.bottomTime);
+		}
+
+		if (model.totalTime) {
+			mapped.totalTime = parseFloat(model.totalTime);
+		}
+
+		if (model.longitude) {
+			mapped.gps = {
+				longitude: model.longitude,
+				latitude: model.latitude
+			};
+		}
+
+		if (model.averageDepth) {
+			mapped.averageDepth = parseFloat(model.averageDepth);
+		}
+
+		if (model.maxDepth) {
+			mapped.maxDepth = parseFloat(model.maxDepth);
+		}
+
+		if (model.weightAmount) {
+			mapped.weight = {
+				amount: parseFloat(model.weightAmount)
+			};
+		}
+
+		return mapped;
 	}
 
-	handleSubmit(model) {
-		console.log(model);
+	async handleSubmit(model) {
+		try {
+			const username = this.props.match.params.username || this.props.currentUser.username;
+			const response = await agent
+				.post(`/api/users/${ username }/logs`)
+				.send([ model ]);
+			CurrentLogEntryActions.setCurrentEntry(response.body[0]);
+			if (!this.props.match.params.logId) {
+				this.props.history.push(`/logs/${ username }/${ response.body[0].entryId }`);
+			}
+		} catch (err) {
+			handleError(err, this.props.history);
+		}
 	}
 
 	handleUpdate(update) {
@@ -227,8 +276,8 @@ class LogEntry extends React.Component {
 					<Col md={ 6 } sm={ 12 }>
 						<h4>Weight</h4>
 						<TextBox
-							name="amount"
-							controlId="amount"
+							name="weightAmount"
+							controlId="weightAmount"
 							label="Amount worn"
 							onChange={ amount => this.handleWeightUpdate({ amount }) }
 							value={ weight.amount || '' }
@@ -280,6 +329,7 @@ class LogEntry extends React.Component {
 
 LogEntry.propTypes = {
 	currentEntry: PropTypes.object.isRequired,
+	currentUser: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	isLoading: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired
