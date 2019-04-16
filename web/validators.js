@@ -31,6 +31,15 @@ addValidationRule('isGreaterThanOrEqual', (values, value, min) => {
 	return true;
 });
 
+addValidationRule('isBetween', (values, value, { min, max }) => {
+	if (typeof value === 'string' && value.length > 0) {
+		const parsed = parseFloat(value);
+		return isNaN(parsed) ? false : min <= parsed && parsed <= max;
+	}
+
+	return true;
+});
+
 addValidationRule('maxDate', (values, value, params) => {
 	if (!value) {
 		return true;
