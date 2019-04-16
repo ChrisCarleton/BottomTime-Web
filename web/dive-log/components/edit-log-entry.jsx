@@ -23,6 +23,7 @@ class EditLogEntry extends React.Component {
 		this.handleUpdate = this.handleUpdate.bind(this);
 		this.handleWeightUpdate = this.handleWeightUpdate.bind(this);
 		this.handleGpsUpdate = this.handleGpsUpdate.bind(this);
+		this.handleDiscardChanges = this.handleDiscardChanges.bind(this);
 	}
 
 	/* eslint-disable complexity */
@@ -71,16 +72,43 @@ class EditLogEntry extends React.Component {
 	}
 	/* eslint-enable complexity */
 
+	showValidationError() {
+		ErrorActions.showError(
+			'There were validation errors',
+			'Check your input and try again.'
+		);
+	}
+
+	handleConfirmDiscardChanges() {
+
+	}
+
+	async handleDiscardChanges() {
+		CurrentLogEntryActions.beginLoading();
+		try {
+			const username = this.props.match.params.username || this.props.currentUser.username;
+			const { logId } = this.props.match.params;
+
+			if (logId) {
+				const response = await agent
+					.get(`/api/users/${ username }/logs/${ logId }`);
+				CurrentLogEntryActions.setCurrentEntry(response.body);
+			} else {
+				CurrentLogEntryActions.setCurrentEntry({});
+			}
+		} catch (err) {
+			CurrentLogEntryActions.finishLoading();
+			handleError(err);
+		}
+	}
+
 	async handleSubmit(model, resetForm, invalidateForm) {
 		if (model.gps) {
 			if (!model.gps.latitude && model.gps.longitude) {
 				invalidateForm({
 					'gps_latitude': 'Latitude is required if longitude is entered.'
 				});
-				ErrorActions.showError(
-					'There were validation errors',
-					'Check your input and try again.'
-				);
+				this.showValidationError();
 				return;
 			}
 
@@ -88,10 +116,7 @@ class EditLogEntry extends React.Component {
 				invalidateForm({
 					'gps_longitude': 'Longitude is required if latitude is entered.'
 				});
-				ErrorActions.showError(
-					'There were validation errors',
-					'Check your input and try again.'
-				);
+				this.showValidationError();
 				return;
 			}
 		}
@@ -242,10 +267,13 @@ class EditLogEntry extends React.Component {
 							value={ this.props.currentEntry.totalTime || '' }
 							units="minutes"
 							validations={ {
-								isGreaterThan: 0
+								isGreaterThan: 0,
+								isGreaterThanOrEqualToField: 'bottomTime'
 							} }
 							validationErrors={ {
-								isGreaterThan: 'Total time must be a positive number.'
+								isGreaterThan: 'Total time must be a positive number.',
+								isGreaterThanOrEqualToField:
+									'Total time cannot be less than what you recorded for bottom time.'
 							} }
 						/>
 					</Col>
@@ -306,10 +334,13 @@ class EditLogEntry extends React.Component {
 							value={ this.props.currentEntry.maxDepth || '' }
 							units="m"
 							validations={ {
-								isGreaterThan: 0
+								isGreaterThan: 0,
+								isGreaterThanOrEqualToField: 'averageDepth'
 							} }
 							validationErrors={ {
-								isGreaterThan: 'Maximum depth must be a positive number.'
+								isGreaterThan: 'Maximum depth must be a positive number.',
+								isGreaterThanOrEqualToField:
+									'Maximum depth cannot be less than the average depth of the dive.'
 							} }
 						/>
 					</Col>

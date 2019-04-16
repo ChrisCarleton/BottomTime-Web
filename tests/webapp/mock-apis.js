@@ -34,13 +34,25 @@ export const exampleProfile = {
 
 export const logEntries = new Array(250);
 for (let i = 0; i < logEntries.length; i++) {
+	const bottomTime = faker.random.number({ min: 10, max: 70 });
+	const averageDepth = faker.random.number({ min: 3, max: 35 });
+
 	logEntries[i] = {
 		entryId: fakeMongoId(),
 		entryTime: faker.date.past(3).toISOString(),
-		bottomTime: faker.random.number({ min: 10, max: 70 }),
+		bottomTime,
+		totalTime: bottomTime + faker.random.number({ min: 1, max: 5 }),
 		location: faker.fake('{{address.city}}{{address.citySuffix}}, {{address.stateAbbr}}'),
 		site: faker.fake('{{address.cityPrefix}} {{name.lastName}}'),
-		maxDepth: faker.random.number({ min: 15, max: 100 })
+		averageDepth,
+		maxDepth: averageDepth + faker.random.number({ min: 1, max: 10 }),
+		gps: {
+			latitude: faker.random.number({ min: -90, max: 90 }),
+			longitude: faker.random.number({ min: -180, max: 180 })
+		},
+		weight: {
+			amount: faker.random.number({ min: 0, max: 12 })
+		}
 	};
 }
 
@@ -78,6 +90,18 @@ const mockApis = {
 
 	getUsersUsernameLogs(req, res) {
 		return res.json(logEntries);
+	},
+
+	getUsersUsernameLogsLogId(req, res) {
+		return res.json(logEntries[0]);
+	},
+
+	postUsersUsernameLogs(req, res) {
+		return res.json(req.body.map(e => ({ ...e, entryId: fakeMongoId() })));
+	},
+
+	putUsersUsernameLogsLogId(req, res) {
+		return res.sendStatus(204);
 	},
 
 	getUsersUsernameProfile(req, res) {
