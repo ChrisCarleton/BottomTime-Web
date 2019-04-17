@@ -297,8 +297,4 @@ describe('Editing Log Entries', () => {
 			expect(weightAmountValue).to.equal('4.8');
 		});
 	});
-
-	// describe('Submission', () => {
-
-	// });
 });

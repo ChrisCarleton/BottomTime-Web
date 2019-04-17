@@ -5,6 +5,7 @@ import {
 	Modal,
 	Row
 } from 'react-bootstrap';
+import config from '../../config';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
@@ -14,8 +15,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
-
-const EntryTimeFormat = 'YYYY-MM-DD h:mmA';
 
 class EditLogEntry extends React.Component {
 	constructor(props) {
@@ -37,7 +36,7 @@ class EditLogEntry extends React.Component {
 		const mapped = {
 			location: model.location,
 			site: model.site,
-			entryTime: moment(model.entryTime, EntryTimeFormat).utc().toISOString()
+			entryTime: moment(model.entryTime, config.entryTimeFormat).utc().toISOString()
 		};
 
 		if (model.bottomTime) {
@@ -266,11 +265,11 @@ class EditLogEntry extends React.Component {
 							controlId="entryTime"
 							label="Entry time"
 							required
-							placeholder={ moment().format(EntryTimeFormat) }
+							placeholder={ moment().format(config.entryTimeFormat) }
 							onChange={ entryTime => this.handleUpdate({ entryTime }) }
 							value={ this.props.currentEntry.entryTime || '' }
 							validations={ {
-								isDateTime: EntryTimeFormat
+								isDateTime: config.entryTimeFormat
 							} }
 							validationErrors={ {
 								isDateTime: 'Entry time must in the format of yyyy-mm-dd h:mm(am/pm).'
@@ -322,7 +321,7 @@ class EditLogEntry extends React.Component {
 							validationErrors={ {
 								isBetween: 'Latitude must be between -90 and 90 degrees.'
 							} }
-							units="°"
+							units="&deg;N/S"
 						/>
 						<TextBox
 							name="gps_longitude"
@@ -336,7 +335,7 @@ class EditLogEntry extends React.Component {
 							validationErrors={ {
 								isBetween: 'Longitude must be between -180 and 180 degrees.'
 							} }
-							units="°"
+							units="&deg;E/W"
 						/>
 					</Col>
 				</Row>

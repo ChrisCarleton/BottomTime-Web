@@ -1,5 +1,6 @@
 import agent from '../../agent';
 import { Breadcrumb } from 'react-bootstrap';
+import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import CurrentLogEntryStore from '../stores/current-log-entry-store';
@@ -15,8 +16,6 @@ import React from 'react';
 import RequireUser from '../../components/require-user';
 import ViewLogEntry from './view-log-entry';
 import { withRouter } from 'react-router-dom';
-
-const EntryTimeFormat = 'YYYY-MM-DD h:mmA';
 
 class LogEntry extends React.Component {
 	static getStores() {
@@ -41,7 +40,7 @@ class LogEntry extends React.Component {
 						.get(`/api/users/${ params.username }/logs/${ params.logId }`);
 					response.body.entryTime = moment(response.body.entryTime)
 						.local()
-						.format(EntryTimeFormat);
+						.format(config.entryTimeFormat);
 					delete response.body.entryId;
 					CurrentLogEntryActions.setCurrentEntry(response.body);
 				} catch (err) {
