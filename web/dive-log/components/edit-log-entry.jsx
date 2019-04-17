@@ -2,6 +2,7 @@ import agent from '../../agent';
 import {
 	Button,
 	Col,
+	Modal,
 	Row
 } from 'react-bootstrap';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
@@ -19,11 +20,16 @@ const EntryTimeFormat = 'YYYY-MM-DD h:mmA';
 class EditLogEntry extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = { showConfirmReset: false };
+
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleUpdate = this.handleUpdate.bind(this);
 		this.handleWeightUpdate = this.handleWeightUpdate.bind(this);
 		this.handleGpsUpdate = this.handleGpsUpdate.bind(this);
 		this.handleDiscardChanges = this.handleDiscardChanges.bind(this);
+		this.handleConfirmDiscardChanges = this.handleConfirmDiscardChanges.bind(this);
+		this.handleCancelDiscardChanges = this.handleCancelDiscardChanges.bind(this);
 	}
 
 	/* eslint-disable complexity */
@@ -80,7 +86,7 @@ class EditLogEntry extends React.Component {
 	}
 
 	handleConfirmDiscardChanges() {
-
+		this.setState({ ...this.state, showConfirmReset: true });
 	}
 
 	async handleDiscardChanges() {
@@ -100,6 +106,10 @@ class EditLogEntry extends React.Component {
 			CurrentLogEntryActions.finishLoading();
 			handleError(err);
 		}
+	}
+
+	handleCancelDiscardChanges() {
+		this.setState({ ...this.state, showConfirmReset: false });
 	}
 
 	async handleSubmit(model, resetForm, invalidateForm) {
@@ -196,6 +206,27 @@ class EditLogEntry extends React.Component {
 
 		return (
 			<Formsy onValidSubmit={ this.handleSubmit } mapping={ this.mapModel }>
+				<Modal show={ this.state.showConfirmReset }>
+					<Modal.Header>
+						<Modal.Title>Confirm Reset</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<p>
+							Are you sure you want to discard all of the changes you have made?
+						</p>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button
+							id="btn-confirm-discard"
+							bsStyle="primary"
+							onClick={ this.handleDiscardChanges }
+						>
+							Yes
+						</Button>
+						&nbsp;
+						<Button id="btn-cancel-discard" onClick={ this.handleCancelDiscardChanges }>No</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row>
 					<Col sm={ 12 } md={ 6 }>
 						<h4>Time and Location</h4>
@@ -367,7 +398,7 @@ class EditLogEntry extends React.Component {
 				</p>
 				<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
 				&nbsp;
-				<Button id="btn-reset">Discard Changes</Button>
+				<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
 			</Formsy>
 		);
 	}

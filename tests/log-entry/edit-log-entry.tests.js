@@ -2,11 +2,11 @@ import { By, until } from 'selenium-webdriver';
 import driver from '../web-driver';
 import { expect } from 'chai';
 import faker from 'faker';
-import mockApis, { exampleUser } from '../webapp/mock-apis';
+import mockApis, { exampleUser, logEntries } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
 const NewEntryUrl = 'http://localhost:8081/logs/jake_smith/new';
-// const EntryUrl = `http://localhost:8081/logs/jake_smith/${ logEntries[0].entryId }`;
+const EntryUrl = `http://localhost:8081/logs/jake_smith/${ logEntries[0].entryId }`;
 
 async function refreshPage(url) {
 	await driver.navigate().to(url);
@@ -14,9 +14,9 @@ async function refreshPage(url) {
 }
 
 describe('Editing Log Entries', () => {
-	describe('Validation', () => {
-		let authStub = null;
+	let authStub = null;
 
+	describe('Validation', () => {
 		before(() => {
 			authStub = sinon.stub(mockApis, 'getAuthMe');
 			authStub.callsFake((req, res) => {
@@ -191,9 +191,112 @@ describe('Editing Log Entries', () => {
 		});
 	});
 
-	// describe('Discard changes', () => {
+	describe('Discard changes', () => {
+		before(() => {
+			authStub = sinon.stub(mockApis, 'getAuthMe');
+			authStub.callsFake((req, res) => {
+				res.json(exampleUser);
+			});
+		});
 
-	// });
+		after(() => {
+			authStub.restore();
+			authStub = null;
+		});
+
+		it('Will restore a saved entry back to its saved state', async () => {
+			await refreshPage(EntryUrl);
+			const [ location, averageDepth, weightAmount ] = await Promise.all([
+				driver.findElement(By.id('location')),
+				driver.findElement(By.id('averageDepth')),
+				driver.findElement(By.id('weight_amount'))
+			]);
+
+			await location.clear();
+			await averageDepth.clear();
+			await weightAmount.clear();
+
+			await location.sendKeys('Cozumel');
+			await averageDepth.sendKeys('17.6');
+			await weightAmount.sendKeys('4.8');
+
+			await driver.findElement(By.id('btn-reset')).click();
+			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
+			await driver.findElement(By.id('btn-confirm-discard')).click();
+
+			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
+				driver.findElement(By.id('location')).getAttribute('value'),
+				driver.findElement(By.id('averageDepth')).getAttribute('value'),
+				driver.findElement(By.id('weight_amount')).getAttribute('value')
+			]);
+
+			expect(locationValue).to.equal(logEntries[0].location);
+			expect(parseFloat(averageDepthValue)).to.equal(logEntries[0].averageDepth);
+			expect(parseFloat(weightAmountValue)).to.equal(logEntries[0].weight.amount);
+		});
+
+		it('Will restore a new entry back to a blank document', async () => {
+			await refreshPage(NewEntryUrl);
+			const [ location, averageDepth, weightAmount ] = await Promise.all([
+				driver.findElement(By.id('location')),
+				driver.findElement(By.id('averageDepth')),
+				driver.findElement(By.id('weight_amount'))
+			]);
+
+			await location.clear();
+			await averageDepth.clear();
+			await weightAmount.clear();
+
+			await location.sendKeys('Cozumel');
+			await averageDepth.sendKeys('17.6');
+			await weightAmount.sendKeys('4.8');
+
+			await driver.findElement(By.id('btn-reset')).click();
+			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
+			await driver.findElement(By.id('btn-confirm-discard')).click();
+
+			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
+				driver.findElement(By.id('location')).getAttribute('value'),
+				driver.findElement(By.id('averageDepth')).getAttribute('value'),
+				driver.findElement(By.id('weight_amount')).getAttribute('value')
+			]);
+
+			expect(locationValue).to.equal('');
+			expect(averageDepthValue).to.equal('');
+			expect(weightAmountValue).to.equal('');
+		});
+
+		it('Will do nothing if cancelled', async () => {
+			await refreshPage(NewEntryUrl);
+			const [ location, averageDepth, weightAmount ] = await Promise.all([
+				driver.findElement(By.id('location')),
+				driver.findElement(By.id('averageDepth')),
+				driver.findElement(By.id('weight_amount'))
+			]);
+
+			await location.clear();
+			await averageDepth.clear();
+			await weightAmount.clear();
+
+			await location.sendKeys('Cozumel');
+			await averageDepth.sendKeys('17.6');
+			await weightAmount.sendKeys('4.8');
+
+			await driver.findElement(By.id('btn-reset')).click();
+			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
+			await driver.findElement(By.id('btn-cancel-discard')).click();
+
+			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
+				driver.findElement(By.id('location')).getAttribute('value'),
+				driver.findElement(By.id('averageDepth')).getAttribute('value'),
+				driver.findElement(By.id('weight_amount')).getAttribute('value')
+			]);
+
+			expect(locationValue).to.equal('Cozumel');
+			expect(averageDepthValue).to.equal('17.6');
+			expect(weightAmountValue).to.equal('4.8');
+		});
+	});
 
 	// describe('Submission', () => {
 
