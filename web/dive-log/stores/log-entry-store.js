@@ -1,22 +1,20 @@
 import alt from '../../alt';
-import logEntryActions from '../actions/log-entry-actions';
+import LogEntryActions from '../actions/log-entry-actions';
 
 class LogEntryStore {
 	constructor() {
 		this.isForbidden = false;
 		this.isSearching = false;
 		this.listEntries = [];
-		this.currentEntry = {};
 		this.sortBy = 'entryTime';
 		this.sortOrder = 'desc';
 
 		this.bindListeners({
-			handleStartSearch: logEntryActions.SEARCH_LOGS,
-			handleSearchFailed: logEntryActions.SEARCH_LOGS_FAILED,
-			handleUpdateEntry: logEntryActions.UPDATE_CURRENT_ENTRY,
-			handleSearchCompleted: logEntryActions.SEARCH_LOGS_COMPLETED,
-			handleChangeSortOrder: logEntryActions.CHANGE_SORT_ORDER,
-			handleAccessDenied: logEntryActions.ACCESS_DENIED
+			handleStartSearch: LogEntryActions.SEARCH_LOGS,
+			handleSearchFailed: LogEntryActions.SEARCH_LOGS_FAILED,
+			handleSearchCompleted: LogEntryActions.SEARCH_LOGS_COMPLETED,
+			handleChangeSortOrder: LogEntryActions.CHANGE_SORT_ORDER,
+			handleAccessDenied: LogEntryActions.ACCESS_DENIED
 		});
 	}
 
@@ -45,10 +43,6 @@ class LogEntryStore {
 	handleChangeSortOrder(sortParams) {
 		this.sortBy = sortParams.sortBy;
 		this.sortOrder = sortParams.sortOrder;
-	}
-
-	handleUpdateEntry(newEntry) {
-		this.currentEntry = newEntry;
 	}
 }
 

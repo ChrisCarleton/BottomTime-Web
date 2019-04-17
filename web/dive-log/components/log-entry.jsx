@@ -1,165 +1,113 @@
-import React from 'react';
-import LogEntryActions from '../actions/log-entry-actions';
-import LogEntryStore from '../stores/log-entry-store';
-
-import DatePicker from '../../components/date-picker';
-import Formsy from 'formsy-react';
+import agent from '../../agent';
+import { Breadcrumb } from 'react-bootstrap';
+import config from '../../config';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentLogEntryActions from '../actions/current-log-entry-actions';
+import CurrentLogEntryStore from '../stores/current-log-entry-store';
+import CurrentUserStore from '../../users/stores/current-user-store';
+import EditLogEntry from './edit-log-entry';
+import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
-import {
-	Breadcrumb,
-	Button,
-	Col,
-	Row,
-	Tabs,
-	Tab
-} from 'react-bootstrap';
-import TextBox from '../../components/text-box';
-import GpsPicker from '../../components/gps-picker';
+import LoadingSpinner from '../../components/loading-spinner';
+import moment from 'moment';
+import PageTitle from '../../components/page-title';
+import PropTypes from 'prop-types';
+import React from 'react';
+import RequireUser from '../../components/require-user';
+import ViewLogEntry from './view-log-entry';
+import { withRouter } from 'react-router-dom';
 
 class LogEntry extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = LogEntryStore.getState();
+	static getStores() {
+		return [ CurrentLogEntryStore, CurrentUserStore ];
+	}
 
-		this.componentDidMount = this.componentDidMount.bind(this);
-		this.componentWillUnmount = this.componentWillUnmount.bind(this);
-		this.onEntryChanged = this.onEntryChanged.bind(this);
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser,
+			...CurrentLogEntryStore.getState()
+		};
 	}
 
 	componentDidMount() {
-		LogEntryStore.listen(this.onEntryChanged);
-	}
+		setTimeout(async () => {
+			const { params } = this.props.match;
+			CurrentLogEntryActions.beginLoading();
 
-	componentWillUnmount() {
-		LogEntryStore.unlisten(this.onEntryChanged);
-	}
-
-	onEntryChanged() {
-		this.setState(LogEntryStore.getState());
-	}
-
-	onValueChanged(change) {
-		const newState = Object.assign({}, this.state.currentEntry, change);
-		LogEntryActions.updateCurrentEntry(newState);
+			if (params.logId) {
+				try {
+					const response = await agent
+						.get(`/api/users/${ params.username }/logs/${ params.logId }`);
+					response.body.entryTime = moment(response.body.entryTime)
+						.local()
+						.format(config.entryTimeFormat);
+					delete response.body.entryId;
+					CurrentLogEntryActions.setCurrentEntry(response.body);
+				} catch (err) {
+					CurrentLogEntryActions.finishLoading();
+					handleError(err, this.props.history);
+				}
+			} else {
+				CurrentLogEntryActions.setCurrentEntry({});
+			}
+		}, 0);
 	}
 
 	render() {
+		const logsListPage = `/logs/${ this.props.match.params.username || '' }`;
+		const pageTitle = this.props.match.params.logId ? 'View/Edit Log Entry' : 'Create Log Entry';
+		let pageContent = null;
+
+		if (
+			this.props.currentUser.isAnonymous && (
+				!this.props.match.params.username
+				|| !this.props.match.params.logId
+			)
+		) {
+			return <RequireUser />;
+		}
+
+		if (this.props.isLoading) {
+			pageContent = <LoadingSpinner message="Loading Log Entry..." />;
+		} else if (this.props.currentEntry.isReadOnly) {
+			pageContent = (
+				<ViewLogEntry
+					currentEntry={ this.props.currentEntry }
+				/>
+			);
+		} else {
+			pageContent = (
+				<EditLogEntry
+					currentUser={ this.props.currentUser }
+					currentEntry={ this.props.currentEntry }
+				/>
+			);
+		}
+
 		return (
 			<div>
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
 					</LinkContainer>
-					<LinkContainer to="/logs">
-						<Breadcrumb.Item>My Logs</Breadcrumb.Item>
+					<LinkContainer to={ logsListPage }>
+						<Breadcrumb.Item>Log Book</Breadcrumb.Item>
 					</LinkContainer>
-					<Breadcrumb.Item active>New Log Item</Breadcrumb.Item>
+					<Breadcrumb.Item active>{ pageTitle }</Breadcrumb.Item>
 				</Breadcrumb>
-
-				<h1>New Log Entry</h1>
-
-				<Formsy className="inline">
-					<Tabs defaultActiveKey={ 0 } id="log-entry-tabs">
-						<Tab title="Basic Info" eventKey={ 0 }>
-							<Row>
-								<Col sm={ 12 } md={ 6 }>
-									<DatePicker
-										controlId="entryTime"
-										label="Entry time"
-										name="entryTime"
-										value={ this.state.currentEntry.entryTime || '' }
-										onChange={ v => this.onValueChanged({ entryTime: v }) }
-										validations={ {
-											isDateTime: true
-										} }
-										validationErrors={ {
-											isDateTime: 'Entry time should be a valid date time.'
-										} }
-										required
-									/>
-									<TextBox
-										controlId="location"
-										label="Location"
-										name="location"
-										value={ this.state.currentEntry.location || '' }
-										onChange={ v => this.onValueChanged({ location: v }) }
-										required
-									/>
-									<TextBox
-										controlId="diveSite"
-										label="Site"
-										name="diveSite"
-										value={ this.state.currentEntry.site || '' }
-										onChange={ v => this.onValueChanged({ site: v }) }
-										required
-									/>
-									<TextBox
-										controlId="bottomTime"
-										label="Bottom time"
-										name="bottomTime"
-										value={ this.state.currentEntry.bottomTime || '' }
-										onChange={ v => this.onValueChanged({ bottomTime: v }) }
-										units="min"
-										required
-									/>
-									<TextBox
-										controlId="totalTime"
-										label="Total time"
-										name="totalTime"
-										value={ this.state.currentEntry.totalTime || '' }
-										onChange={ v => this.onValueChanged({ totalTime: v }) }
-										units="min"
-									/>
-									<TextBox
-										controlId="maxDepth"
-										label="Max depth"
-										name="maxDepth"
-										value={ this.state.currentEntry.maxDepth || '' }
-										onChange={ v => this.onValueChanged({ maxDepth: v }) }
-										units="ft"
-									/>
-									<TextBox
-										controlId="avgDepth"
-										label="Average depth"
-										name="avgDepth"
-										value={ this.state.currentEntry.avgDepth || '' }
-										onChange={ v => this.onValueChanged({ avgDepth: v }) }
-										units="ft"
-									/>
-								</Col>
-								<Col sm={ 12 } md={ 6 }>
-									<GpsPicker
-										controlId="gps"
-										label="GPS Coordinates"
-										name="gps"
-										onChange={ v => this.onValueChanged({ gps: v }) }
-									/>
-								</Col>
-							</Row>
-						</Tab>
-						<Tab title="Equipment" eventKey={ 1 }>
-							<Row>
-								<Col sm={ 12 } md={ 6 }>
-									<TextBox
-										controlId="weight"
-										label="Weight"
-										name="weight"
-										value={ this.state.currentEntry.weight || '' }
-										onChange={ v => this.onValueChanged({ weight: v }) }
-										units="lbs"
-									/>
-								</Col>
-							</Row>
-						</Tab>
-					</Tabs>
-
-					<Button bsStyle="primary" type="submit">Save</Button>
-					<p>
-						<small>{ JSON.stringify(this.state.currentEntry, '&nbsp;&nbsp;') }</small>
-					</p>
-				</Formsy>
-			</div>);
+				<PageTitle title={ pageTitle } />
+				{ pageContent }
+			</div>
+		);
 	}
 }
 
-export default LogEntry;
+LogEntry.propTypes = {
+	currentEntry: PropTypes.object.isRequired,
+	currentUser: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
+	isLoading: PropTypes.bool.isRequired,
+	match: PropTypes.object.isRequired
+};
+
+export default connectToStores(withRouter(LogEntry));
