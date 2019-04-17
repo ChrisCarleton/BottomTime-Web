@@ -156,7 +156,6 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('averageDepth')).sendKeys('0');
 			await driver.findElement(By.id('btn-save')).click();
 			await driver.findElement(By.id('err-averageDepth'));
-
 		});
 
 		it('Max depth must be a number', async () => {
@@ -267,6 +266,10 @@ describe('Editing Log Entries', () => {
 		});
 
 		it('Will do nothing if cancelled', async () => {
+			const expectedLocation = 'Cozumel';
+			const expectedAverageDepth = '17.6';
+			const expectedWeightAmount = '4.8';
+
 			await refreshPage(NewEntryUrl);
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
@@ -278,9 +281,9 @@ describe('Editing Log Entries', () => {
 			await averageDepth.clear();
 			await weightAmount.clear();
 
-			await location.sendKeys('Cozumel');
-			await averageDepth.sendKeys('17.6');
-			await weightAmount.sendKeys('4.8');
+			await location.sendKeys(expectedLocation);
+			await averageDepth.sendKeys(expectedAverageDepth);
+			await weightAmount.sendKeys(expectedWeightAmount);
 
 			await driver.findElement(By.id('btn-reset')).click();
 			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
@@ -292,9 +295,9 @@ describe('Editing Log Entries', () => {
 				driver.findElement(By.id('weight_amount')).getAttribute('value')
 			]);
 
-			expect(locationValue).to.equal('Cozumel');
-			expect(averageDepthValue).to.equal('17.6');
-			expect(weightAmountValue).to.equal('4.8');
+			expect(locationValue).to.equal(expectedLocation);
+			expect(averageDepthValue).to.equal(expectedAverageDepth);
+			expect(weightAmountValue).to.equal(expectedWeightAmount);
 		});
 	});
 });

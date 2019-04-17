@@ -12,6 +12,10 @@ import PropTypes from 'prop-types';
 const Unspecified = 'Unspecified';
 
 class ViewLogEntry extends React.Component {
+	renderTime(value) {
+		return value ? `${ value }minutes` : null;
+	}
+
 	renderDepth(value) {
 		return value ? `${ value }m` : null;
 	}
@@ -64,22 +68,14 @@ class ViewLogEntry extends React.Component {
 								controlId="bottomTime"
 								name="bottomTime"
 								label="Bottom time"
-								value={
-									currentEntry.bottomTime
-										? `${ currentEntry.bottomTime } minutes`
-										: null
-								}
+								value={ this.renderTime(currentEntry.bottomTime) }
 								default={ Unspecified }
 							/>
 							<StaticField
 								controlId="totalTime"
 								name="totalTime"
 								label="Total time"
-								value={
-									currentEntry.totalTime
-										? `${ currentEntry.totalTime } minutes`
-										: null
-								}
+								value={ this.renderTime(currentEntry.totalTime) }
 								default={ Unspecified }
 							/>
 						</Col>
