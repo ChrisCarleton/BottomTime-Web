@@ -2,9 +2,9 @@ import {
 	Col,
 	Row
 } from 'react-bootstrap';
-import config from '../../config';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import Formsy from 'formsy-react';
-import moment from 'moment';
 import React from 'react';
 import StaticField from '../../components/static-field';
 import PropTypes from 'prop-types';
@@ -12,16 +12,26 @@ import PropTypes from 'prop-types';
 const Unspecified = 'Unspecified';
 
 class ViewLogEntry extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
 	renderTime(value) {
 		return value ? `${ value }minutes` : null;
 	}
 
 	renderDepth(value) {
-		return value ? `${ value }m` : null;
+		return value ? `${ value }${ this.props.currentUser.distanceUnit }` : null;
 	}
 
 	renderWeight(value) {
-		return value ? `${ value }kg` : null;
+		return value ? `${ value }${ this.props.currentUser.weightUnit }` : null;
 	}
 
 	render() {
@@ -30,10 +40,10 @@ class ViewLogEntry extends React.Component {
 		const weight = currentEntry.weight || {};
 
 		const latitude = gps.latitude
-			? `${ Math.abs(gps.latitude) } &deg;${ gps.latitude >= 0 ? 'N' : 'S' }`
+			? `${ Math.abs(gps.latitude) } °${ gps.latitude >= 0 ? 'N' : 'S' }`
 			: null;
-		const longitutde = gps.longitutde
-			? `${ Math.abs(gps.longitutde) } &deg;${ gps.longitutde >= 0 ? 'E' : 'W' }`
+		const longitude = gps.longitude
+			? `${ Math.abs(gps.longitude) } °${ gps.longitude >= 0 ? 'E' : 'W' }`
 			: null;
 
 		return (
@@ -58,11 +68,7 @@ class ViewLogEntry extends React.Component {
 								controlId="entryTime"
 								name="entryTime"
 								label="Entry time"
-								value={
-									moment(currentEntry.entryTime)
-										.local()
-										.format(config.entryTimeFormat)
-								}
+								value={ currentEntry.entryTime }
 							/>
 							<StaticField
 								controlId="bottomTime"
@@ -93,7 +99,7 @@ class ViewLogEntry extends React.Component {
 								name="gps_longitude"
 								label="Longitude"
 								default={ Unspecified }
-								value={ longitutde }
+								value={ longitude }
 							/>
 						</Col>
 					</Row>
@@ -133,7 +139,8 @@ class ViewLogEntry extends React.Component {
 }
 
 ViewLogEntry.propTypes = {
-	currentEntry: PropTypes.object.isRequired
+	currentEntry: PropTypes.object.isRequired,
+	currentUser: PropTypes.object.isRequired
 };
 
-export default ViewLogEntry;
+export default connectToStores(ViewLogEntry);

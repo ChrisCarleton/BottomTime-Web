@@ -6,6 +6,7 @@ import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import CurrentLogEntryStore from '../stores/current-log-entry-store';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import EditLogEntry from './edit-log-entry';
+import { ToPreferredUnits } from '../../unit-conversion';
 import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
@@ -38,11 +39,9 @@ class LogEntry extends React.Component {
 				try {
 					const response = await agent
 						.get(`/api/users/${ params.username }/logs/${ params.logId }`);
-					response.body.entryTime = moment(response.body.entryTime)
-						.local()
-						.format(config.entryTimeFormat);
-					delete response.body.entryId;
-					CurrentLogEntryActions.setCurrentEntry(response.body);
+					CurrentLogEntryActions.setCurrentEntry(
+						this.processQueryResponse(response.body)
+					);
 				} catch (err) {
 					CurrentLogEntryActions.finishLoading();
 					handleError(err, this.props.history);
@@ -51,6 +50,34 @@ class LogEntry extends React.Component {
 				CurrentLogEntryActions.setCurrentEntry({});
 			}
 		}, 0);
+	}
+
+	processQueryResponse(response) {
+		const {
+			distanceUnit,
+			// temperatureUnit,
+			weightUnit
+		} = this.props.currentUser;
+		const modified = { ...response };
+
+		delete modified.entryId;
+		modified.entryTime = moment(modified.entryTime)
+			.local()
+			.format(config.entryTimeFormat);
+
+		if (modified.averageDepth) {
+			modified.averageDepth = ToPreferredUnits.Distance[distanceUnit](modified.averageDepth);
+		}
+
+		if (modified.maxDepth) {
+			modified.maxDepth = ToPreferredUnits.Distance[distanceUnit](modified.maxDepth);
+		}
+
+		if (modified.weight && modified.weight.amount) {
+			modified.weight.amount = ToPreferredUnits.Distance[weightUnit](modified.weight.amount);
+		}
+
+		return modified;
 	}
 
 	render() {

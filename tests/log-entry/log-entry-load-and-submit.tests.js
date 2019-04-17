@@ -1,6 +1,42 @@
-describe('Loading and Submitting Log Entries', () => {
-	it('Read-only entries are displayed on a read-only page', async () => {
+import { By, until } from 'selenium-webdriver';
+import driver from '../web-driver';
+import { expect } from 'chai';
+import mockApis, { logEntries } from '../webapp/mock-apis';
+import sinon from 'sinon';
 
+async function refreshPage(url) {
+	await driver.navigate().to(url);
+	await driver.wait(until.elementLocated(By.id('location')));
+}
+
+const NewEntryUrl = 'http://localhost:8081/logs/jake_smith/new';
+const EntryUrl = `http://localhost:8081/logs/jake_smith/${ logEntries[0].entryId }`;
+
+describe('Loading and Submitting Log Entries', () => {
+	let stub = null;
+
+	afterEach(() => {
+		if (stub) {
+			stub.restore();
+			stub = null;
+		}
+	});
+
+	it('Read-only entries are displayed on a read-only page', async () => {
+		const logEntry = {
+			...logEntries[0],
+			isReadOnly: true
+		};
+
+		stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+		stub.callsFake((req, res) => {
+			res.json(logEntry);
+		});
+
+		await refreshPage(EntryUrl);
+		expect(async () => {
+			await driver.findElement(By.id('btn-save'));
+		}).to.throw;
 	});
 
 	[
@@ -8,7 +44,18 @@ describe('Loading and Submitting Log Entries', () => {
 		{ mode: 'read-write', isReadOnly: false }
 	].forEach(t => {
 		it(`Weight can be rendered in lbs in ${ t.mode } mode`, async () => {
+			const logEntry = {
+				...logEntries[0],
+				isReadOnly: t.isReadOnly
+			};
 
+			stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+			stub.callsFake((req, res) => {
+				res.json(logEntry);
+			});
+
+			await refreshPage(EntryUrl);
+			// TODO: Figure this out.
 		});
 
 		it(`Depth can be rendered in ft in ${ t.mode } mode`, async () => {

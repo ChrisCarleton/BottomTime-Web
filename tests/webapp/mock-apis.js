@@ -9,7 +9,10 @@ export const exampleUser = {
 	role: 'user',
 	isAnonymous: false,
 	isLockedOut: false,
-	hasPassword: true
+	hasPassword: true,
+	distanceUnit: 'm',
+	weightUnit: 'kg',
+	temperatureUnit: 'c'
 };
 
 export const exampleProfile = {
@@ -27,6 +30,9 @@ export const exampleProfile = {
 	certificationAgencies: 'SSI',
 	specialties: 'Nitrox, Night Diver',
 	about: 'J\'aime beaucoup la plange! C\'est magnifique!',
+	distanceUnit: 'm',
+	weightUnit: 'kg',
+	temperatureUnit: 'c',
 	divesLogged: 47,
 	bottomTimeLogged: 1748,
 	readOnly: false
@@ -52,7 +58,8 @@ for (let i = 0; i < logEntries.length; i++) {
 		},
 		weight: {
 			amount: faker.random.number({ min: 0, max: 12 })
-		}
+		},
+		isReadOnly: false
 	};
 }
 

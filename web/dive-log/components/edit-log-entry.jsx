@@ -6,9 +6,12 @@ import {
 	Row
 } from 'react-bootstrap';
 import config from '../../config';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
+import { FromPreferredUnits } from '../../unit-conversion';
 import handleError from '../../handle-error';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -17,6 +20,16 @@ import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
 
 class EditLogEntry extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
 	constructor(props) {
 		super(props);
 
@@ -60,16 +73,22 @@ class EditLogEntry extends React.Component {
 		}
 
 		if (model.averageDepth) {
-			mapped.averageDepth = parseFloat(model.averageDepth);
+			mapped.averageDepth = FromPreferredUnits.Distance[this.props.currentUser.distanceUnit](
+				parseFloat(model.averageDepth)
+			);
 		}
 
 		if (model.maxDepth) {
-			mapped.maxDepth = parseFloat(model.maxDepth);
+			mapped.maxDepth = FromPreferredUnits.Distance[this.props.currentUser.distanceUnit](
+				parseFloat(model.maxDepth)
+			);
 		}
 
 		if (model.weight_amount) {
 			mapped.weight = {
-				amount: parseFloat(model.weight_amount)
+				amount: FromPreferredUnits.Weight[this.props.currentUser.weightUnit](
+					parseFloat(model.weight_amount)
+				)
 			};
 		}
 
@@ -208,9 +227,6 @@ class EditLogEntry extends React.Component {
 
 	/* eslint-disable complexity */
 	render() {
-		const currentEntryTime = this.props.currentEntry.entryTime
-			? moment(this.props.currentEntry.entryTime).local().format(config.entryTimeFormat)
-			: '';
 		const weight = this.props.currentEntry.weight || {};
 		const gps = this.props.currentEntry.gps || {};
 
@@ -282,7 +298,7 @@ class EditLogEntry extends React.Component {
 							required
 							placeholder={ moment().format(config.entryTimeFormat) }
 							onChange={ entryTime => this.handleUpdate({ entryTime }) }
-							value={ currentEntryTime }
+							value={ this.props.currentEntry.entryTime || '' }
 							validations={ {
 								isDateTime: config.entryTimeFormat
 							} }
@@ -426,4 +442,4 @@ EditLogEntry.propTypes = {
 	match: PropTypes.object.isRequired
 };
 
-export default withRouter(EditLogEntry);
+export default connectToStores(withRouter(EditLogEntry));

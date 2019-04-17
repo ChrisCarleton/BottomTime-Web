@@ -6,7 +6,10 @@ export default {
 			createdAt: null,
 			role: 'user',
 			isAnonymous: true,
-			isLockedOut: false
+			isLockedOut: false,
+			distanceUnit: 'm',
+			weightUnit: 'kg',
+			temperatureUnit: 'c'
 		}
 	},
 	ErrorStore: {
