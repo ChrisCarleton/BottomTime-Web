@@ -198,13 +198,28 @@ class EditLogEntry extends React.Component {
 		}
 	}
 
+	renderDepth(value) {
+		return value || '';
+	}
+
+	renderWeight(value) {
+		return value || '';
+	}
+
 	/* eslint-disable complexity */
 	render() {
+		const currentEntryTime = this.props.currentEntry.entryTime
+			? moment(this.props.currentEntry.entryTime).local().format(config.entryTimeFormat)
+			: '';
 		const weight = this.props.currentEntry.weight || {};
 		const gps = this.props.currentEntry.gps || {};
 
 		return (
-			<Formsy onValidSubmit={ this.handleSubmit } mapping={ this.mapModel }>
+			<Formsy
+				onValidSubmit={ this.handleSubmit }
+				mapping={ this.mapModel }
+				className="form-horizontal"
+			>
 				<Modal show={ this.state.showConfirmReset }>
 					<Modal.Header>
 						<Modal.Title>Confirm Reset</Modal.Title>
@@ -267,7 +282,7 @@ class EditLogEntry extends React.Component {
 							required
 							placeholder={ moment().format(config.entryTimeFormat) }
 							onChange={ entryTime => this.handleUpdate({ entryTime }) }
-							value={ this.props.currentEntry.entryTime || '' }
+							value={ currentEntryTime }
 							validations={ {
 								isDateTime: config.entryTimeFormat
 							} }
@@ -321,7 +336,7 @@ class EditLogEntry extends React.Component {
 							validationErrors={ {
 								isBetween: 'Latitude must be between -90 and 90 degrees.'
 							} }
-							units="&deg;N/S"
+							units="&deg;"
 						/>
 						<TextBox
 							name="gps_longitude"
@@ -335,7 +350,7 @@ class EditLogEntry extends React.Component {
 							validationErrors={ {
 								isBetween: 'Longitude must be between -180 and 180 degrees.'
 							} }
-							units="&deg;E/W"
+							units="&deg;"
 						/>
 					</Col>
 				</Row>
@@ -347,7 +362,7 @@ class EditLogEntry extends React.Component {
 							controlId="averageDepth"
 							label="Average depth"
 							onChange={ averageDepth => this.handleUpdate({ averageDepth }) }
-							value={ this.props.currentEntry.averageDepth || '' }
+							value={ this.renderDepth(this.props.currentEntry.averageDepth) }
 							units="m"
 							validations={ {
 								isGreaterThan: 0
@@ -361,7 +376,7 @@ class EditLogEntry extends React.Component {
 							controlId="maxDepth"
 							label="Max. depth"
 							onChange={ maxDepth => this.handleUpdate({ maxDepth }) }
-							value={ this.props.currentEntry.maxDepth || '' }
+							value={ this.renderDepth(this.props.currentEntry.maxDepth) }
 							units="m"
 							validations={ {
 								isGreaterThan: 0,
@@ -381,7 +396,7 @@ class EditLogEntry extends React.Component {
 							controlId="weight_amount"
 							label="Amount worn"
 							onChange={ amount => this.handleWeightUpdate({ amount }) }
-							value={ weight.amount || '' }
+							value={ this.renderWeight(weight.amount) }
 							units="kg"
 							validations={ {
 								isGreaterThanOrEqual: 0

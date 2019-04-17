@@ -54,8 +54,8 @@ class LogEntry extends React.Component {
 	}
 
 	render() {
-		const logsListPage = `/logs/${ this.props.match.params.username }`;
-		const pageTitle = 'Log Entry';
+		const logsListPage = `/logs/${ this.props.match.params.username || '' }`;
+		const pageTitle = this.props.match.params.logId ? 'View/Edit Log Entry' : 'Create Log Entry';
 		let pageContent = null;
 
 		if (
