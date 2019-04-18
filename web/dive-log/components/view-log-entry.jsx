@@ -7,6 +7,7 @@ import CurrentUserStore from '../../users/stores/current-user-store';
 import Formsy from 'formsy-react';
 import React from 'react';
 import StaticField from '../../components/static-field';
+import { ToPreferredUnits } from '../../unit-conversion';
 import PropTypes from 'prop-types';
 
 const Unspecified = 'Unspecified';
@@ -27,11 +28,36 @@ class ViewLogEntry extends React.Component {
 	}
 
 	renderDepth(value) {
-		return value ? `${ value }${ this.props.currentUser.distanceUnit }` : null;
+		if (!value) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Distance[this.props.currentUser.distanceUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.distanceUnit }`;
+	}
+
+	renderTemperature(value) {
+		if (!value) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Temperature[this.props.currentUser.temperatureUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.temperatureUnit === 'c' ? '°C' : '°F' }`;
 	}
 
 	renderWeight(value) {
-		return value ? `${ value }${ this.props.currentUser.weightUnit }` : null;
+		if (!value) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Weight[this.props.currentUser.weightUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.weightUnit }`;
 	}
 
 	render() {

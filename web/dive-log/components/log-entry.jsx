@@ -1,16 +1,13 @@
 import agent from '../../agent';
 import { Breadcrumb } from 'react-bootstrap';
-import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import CurrentLogEntryStore from '../stores/current-log-entry-store';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import EditLogEntry from './edit-log-entry';
-import { ToPreferredUnits } from '../../unit-conversion';
 import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
-import moment from 'moment';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -39,9 +36,7 @@ class LogEntry extends React.Component {
 				try {
 					const response = await agent
 						.get(`/api/users/${ params.username }/logs/${ params.logId }`);
-					CurrentLogEntryActions.setCurrentEntry(
-						this.processQueryResponse(response.body)
-					);
+					CurrentLogEntryActions.setCurrentEntry(response.body);
 				} catch (err) {
 					CurrentLogEntryActions.finishLoading();
 					handleError(err, this.props.history);
@@ -50,34 +45,6 @@ class LogEntry extends React.Component {
 				CurrentLogEntryActions.setCurrentEntry({});
 			}
 		}, 0);
-	}
-
-	processQueryResponse(response) {
-		const {
-			distanceUnit,
-			// temperatureUnit,
-			weightUnit
-		} = this.props.currentUser;
-		const modified = { ...response };
-
-		delete modified.entryId;
-		modified.entryTime = moment(modified.entryTime)
-			.local()
-			.format(config.entryTimeFormat);
-
-		if (modified.averageDepth) {
-			modified.averageDepth = ToPreferredUnits.Distance[distanceUnit](modified.averageDepth);
-		}
-
-		if (modified.maxDepth) {
-			modified.maxDepth = ToPreferredUnits.Distance[distanceUnit](modified.maxDepth);
-		}
-
-		if (modified.weight && modified.weight.amount) {
-			modified.weight.amount = ToPreferredUnits.Distance[weightUnit](modified.weight.amount);
-		}
-
-		return modified;
 	}
 
 	render() {

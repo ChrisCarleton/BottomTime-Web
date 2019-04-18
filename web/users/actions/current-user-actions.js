@@ -44,8 +44,8 @@ class CurrentUserActions {
 		return result.body.user;
 	}
 
-	fetchCurrentUser() {
-		return true;
+	updateUser(update) {
+		return update;
 	}
 }
 

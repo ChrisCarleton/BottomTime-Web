@@ -1,5 +1,8 @@
 import agent from '../../agent';
 import { Button, Modal } from 'react-bootstrap';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserActions from '../../users/actions/current-user-actions';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import DatePicker from '../../components/date-picker';
 import ErrorActions from '../../actions/error-actions';
 import FormButtonGroup from '../../components/form-button-group';
@@ -17,6 +20,16 @@ import UserProfileActions from '../actions/user-profile-actions';
 import { withRouter } from 'react-router-dom';
 
 class EditProfile extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -42,6 +55,15 @@ class EditProfile extends React.Component {
 				.patch(`/api/users/${ this.props.username }/profile`)
 				.send(model);
 			UserProfileActions.setProfile(model);
+
+			if (this.props.username === this.props.currentUser.username) {
+				CurrentUserActions.updateUser({
+					logsVisibility: model.logsVisibility,
+					distanceUnit: model.distanceUnit,
+					temperatureUnit: model.temperatureUnit,
+					weightUnit: model.weightUnit
+				});
+			}
 			ErrorActions.showSuccess('Profile info saved');
 		} catch (err) {
 			handleError(err, this.props.history);
@@ -395,9 +417,10 @@ class EditProfile extends React.Component {
 }
 
 EditProfile.propTypes = {
+	currentUser: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	profile: PropTypes.object.isRequired,
 	username: PropTypes.string.isRequired
 };
 
-export default withRouter(EditProfile);
+export default connectToStores(withRouter(EditProfile));
