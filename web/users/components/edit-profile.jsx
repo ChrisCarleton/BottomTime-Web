@@ -313,7 +313,63 @@ class EditProfile extends React.Component {
 						}
 					] }
 				</RadioList>
-
+				<RadioList
+					controlId="distanceUnit"
+					name="distanceUnit"
+					label="Depth unit"
+					value={ this.props.profile.distanceUnit }
+					inline
+					required
+				>
+					{ [
+						{
+							text: 'Meters',
+							value: 'm'
+						},
+						{
+							text: 'Feet',
+							value: 'ft'
+						}
+					] }
+				</RadioList>
+				<RadioList
+					controlId="temperatureUnit"
+					name="temperatureUnit"
+					label="Temperature unit"
+					value={ this.props.profile.temperatureUnit }
+					inline
+					required
+				>
+					{ [
+						{
+							text: 'Celcius',
+							value: 'c'
+						},
+						{
+							text: 'Farenheit',
+							value: 'f'
+						}
+					] }
+				</RadioList>
+				<RadioList
+					controlId="weightUnit"
+					name="weightUnit"
+					label="Weight unit"
+					value={ this.props.profile.weightUnit }
+					inline
+					required
+				>
+					{ [
+						{
+							text: 'Kilograms',
+							value: 'kg'
+						},
+						{
+							text: 'Pounds',
+							value: 'lbs'
+						}
+					] }
+				</RadioList>
 				<FormButtonGroup>
 					<Button id="btn-save" bsStyle="primary" type="submit">Save Changes</Button>
 					{ ' ' }
