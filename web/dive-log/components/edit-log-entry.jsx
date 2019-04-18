@@ -101,6 +101,8 @@ class EditLogEntry extends React.Component {
 			} else {
 				CurrentLogEntryActions.setCurrentEntry({});
 			}
+
+			ErrorActions.showSuccess('Log entry changes have been discarded.');
 		} catch (err) {
 			CurrentLogEntryActions.finishLoading();
 			handleError(err);
@@ -208,11 +210,10 @@ class EditLogEntry extends React.Component {
 
 	/* eslint-disable complexity */
 	render() {
-		const currentEntryTime = this.props.currentEntry.entryTime
-			? moment(this.props.currentEntry.entryTime).local().format(config.entryTimeFormat)
-			: '';
 		const weight = this.props.currentEntry.weight || {};
 		const gps = this.props.currentEntry.gps || {};
+
+		const { distanceUnit, weightUnit } = this.props.currentUser;
 
 		return (
 			<Formsy
@@ -282,7 +283,7 @@ class EditLogEntry extends React.Component {
 							required
 							placeholder={ moment().format(config.entryTimeFormat) }
 							onChange={ entryTime => this.handleUpdate({ entryTime }) }
-							value={ currentEntryTime }
+							value={ this.props.currentEntry.entryTime }
 							validations={ {
 								isDateTime: config.entryTimeFormat
 							} }
@@ -363,7 +364,7 @@ class EditLogEntry extends React.Component {
 							label="Average depth"
 							onChange={ averageDepth => this.handleUpdate({ averageDepth }) }
 							value={ this.renderDepth(this.props.currentEntry.averageDepth) }
-							units="m"
+							units={ distanceUnit }
 							validations={ {
 								isGreaterThan: 0
 							} }
@@ -377,7 +378,7 @@ class EditLogEntry extends React.Component {
 							label="Max. depth"
 							onChange={ maxDepth => this.handleUpdate({ maxDepth }) }
 							value={ this.renderDepth(this.props.currentEntry.maxDepth) }
-							units="m"
+							units={ distanceUnit }
 							validations={ {
 								isGreaterThan: 0,
 								isGreaterThanOrEqualToField: 'averageDepth'
@@ -397,7 +398,7 @@ class EditLogEntry extends React.Component {
 							label="Amount worn"
 							onChange={ amount => this.handleWeightUpdate({ amount }) }
 							value={ this.renderWeight(weight.amount) }
-							units="kg"
+							units={ weightUnit }
 							validations={ {
 								isGreaterThanOrEqual: 0
 							} }
