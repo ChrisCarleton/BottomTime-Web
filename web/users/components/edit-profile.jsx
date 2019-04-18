@@ -1,8 +1,10 @@
+import agent from '../../agent';
 import { Button, Modal } from 'react-bootstrap';
 import DatePicker from '../../components/date-picker';
 import ErrorActions from '../../actions/error-actions';
 import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
+import handleError from '../../handle-error';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
@@ -27,7 +29,7 @@ class EditProfile extends React.Component {
 		this.handleCancelDiscardChanges = this.handleCancelDiscardChanges.bind(this);
 	}
 
-	handleSubmit(model) {
+	async handleSubmit(model) {
 		delete model.memberSince;
 		delete model.divesLogged;
 		delete model.bottomTimeLogged;
@@ -35,11 +37,15 @@ class EditProfile extends React.Component {
 		model.startedDiving = model.startedDiving ? moment(model.startedDiving).year() : null;
 		model.birthdate = model.birthdate ? moment(model.birthdate).format('YYYY-MM-DD') : null;
 
-		UserProfileActions.saveProfile(
-			this.props.username,
-			model,
-			this.props.history
-		);
+		try {
+			await agent
+				.patch(`/api/users/${ this.props.username }/profile`)
+				.send(model);
+			UserProfileActions.setProfile(model);
+			ErrorActions.showSuccess('Profile info saved');
+		} catch (err) {
+			handleError(err, this.props.history);
+		}
 	}
 
 	handleInvalidSubmit() {
@@ -49,12 +55,20 @@ class EditProfile extends React.Component {
 	}
 
 	handleDiscardChanges() {
-		this.setState(Object.assign({}, this.state, { showConfirmReset: true }));
+		this.setState({ ...this.state, showConfirmReset: true });
 	}
 
-	handleConfirmDiscardChanges() {
-		this.setState(Object.assign({}, this.state, { showConfirmReset: false }));
-		UserProfileActions.getProfile(this.props.username, this.props.history);
+	async handleConfirmDiscardChanges() {
+		UserProfileActions.beginLoading();
+		this.setState({ ...this.state, showConfirmReset: false });
+		try {
+			const response = await agent.get(`/api/users/${ this.props.username }/profile`);
+			UserProfileActions.setProfile(response.body);
+			ErrorActions.showSuccess('Profile information has been restored.');
+		} catch (err) {
+			UserProfileActions.finishLoading();
+			handleError(err, this.props.history);
+		}
 	}
 
 	handleCancelDiscardChanges() {
@@ -317,7 +331,7 @@ class EditProfile extends React.Component {
 					controlId="distanceUnit"
 					name="distanceUnit"
 					label="Depth unit"
-					value={ this.props.profile.distanceUnit }
+					value={ this.props.profile.distanceUnit || 'm' }
 					inline
 					required
 				>
@@ -336,7 +350,7 @@ class EditProfile extends React.Component {
 					controlId="temperatureUnit"
 					name="temperatureUnit"
 					label="Temperature unit"
-					value={ this.props.profile.temperatureUnit }
+					value={ this.props.profile.temperatureUnit || 'c' }
 					inline
 					required
 				>
@@ -355,7 +369,7 @@ class EditProfile extends React.Component {
 					controlId="weightUnit"
 					name="weightUnit"
 					label="Weight unit"
-					value={ this.props.profile.weightUnit }
+					value={ this.props.profile.weightUnit || 'kg' }
 					inline
 					required
 				>

@@ -222,8 +222,8 @@ describe('Editing Profiles', () => {
 		await driver.findElement(By.id('logsVisibility_public')).click();
 		await driver.findElement(By.id('btn-reset')).click();
 
-		await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
 		await driver.findElement(By.id('btn-confirm-discard')).click();
+		await driver.wait(until.elementLocated(By.id('global-error-bar')));
 
 		expect(spy.called).to.be.false;
 

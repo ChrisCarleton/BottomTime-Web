@@ -29,7 +29,10 @@ export const exampleProfile = {
 	about: 'J\'aime beaucoup la plange! C\'est magnifique!',
 	divesLogged: 47,
 	bottomTimeLogged: 1748,
-	readOnly: false
+	readOnly: false,
+	distanceUnit: 'm',
+	temperatureUnit: 'c',
+	weightUnit: 'kg'
 };
 
 export const logEntries = new Array(250);
