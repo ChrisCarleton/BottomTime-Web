@@ -4,42 +4,30 @@ import UserProfileActions from '../actions/user-profile-actions';
 class UserProfileStore {
 	constructor() {
 		this.currentProfile = {};
-		this.isLoading = false;
-		this.isForbidden = false;
+		this.isLoading = true;
 
 		this.bindListeners({
-			onGetProfile: UserProfileActions.GET_PROFILE,
-			onProfileRetrieved: UserProfileActions.PROFILE_RETRIEVED,
-			onProfileSaved: UserProfileActions.PROFILE_SAVED,
-			onAccessDenied: UserProfileActions.ACCESS_DENIED
+			onBeginLoading: UserProfileActions.BEGIN_LOADING,
+			onSetProfile: UserProfileActions.SET_PROFILE,
+			onFinishLoading: UserProfileActions.FINISH_LOADING
 		});
 
-		this.onGetProfile = this.onGetProfile.bind(this);
-		this.onProfileRetrieved = this.onProfileRetrieved.bind(this);
-		this.onProfileSaved = this.onProfileSaved.bind(this);
-		this.onAccessDenied = this.onAccessDenied.bind(this);
+		this.onSetProfile = this.onSetProfile.bind(this);
+		this.onBeginLoading = this.onBeginLoading.bind(this);
+		this.onFinishLoading = this.onFinishLoading.bind(this);
 	}
 
-	onGetProfile() {
-		this.currentProfile = {};
-		this.isLoading = true;
-		this.isForbidden = false;
-	}
-
-	onProfileRetrieved(profile) {
-		this.currentProfile = profile;
-		this.isLoading = false;
-		this.isForbidden = false;
-	}
-
-	onProfileSaved(profile) {
+	onSetProfile(profile) {
 		Object.assign(this.currentProfile, profile);
+		this.isLoading = false;
 	}
 
-	onAccessDenied() {
-		this.isForbidden = true;
+	onBeginLoading() {
+		this.isLoading = true;
+	}
+
+	onFinishLoading() {
 		this.isLoading = false;
-		this.currentProfile = {};
 	}
 }
 

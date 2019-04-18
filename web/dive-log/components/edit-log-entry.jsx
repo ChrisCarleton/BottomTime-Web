@@ -120,6 +120,8 @@ class EditLogEntry extends React.Component {
 			} else {
 				CurrentLogEntryActions.setCurrentEntry({});
 			}
+
+			ErrorActions.showSuccess('Log entry changes have been discarded.');
 		} catch (err) {
 			CurrentLogEntryActions.finishLoading();
 			handleError(err);
@@ -229,6 +231,8 @@ class EditLogEntry extends React.Component {
 	render() {
 		const weight = this.props.currentEntry.weight || {};
 		const gps = this.props.currentEntry.gps || {};
+
+		const { distanceUnit, weightUnit } = this.props.currentUser;
 
 		return (
 			<Formsy
@@ -379,7 +383,7 @@ class EditLogEntry extends React.Component {
 							label="Average depth"
 							onChange={ averageDepth => this.handleUpdate({ averageDepth }) }
 							value={ this.renderDepth(this.props.currentEntry.averageDepth) }
-							units="m"
+							units={ distanceUnit }
 							validations={ {
 								isGreaterThan: 0
 							} }
@@ -393,7 +397,7 @@ class EditLogEntry extends React.Component {
 							label="Max. depth"
 							onChange={ maxDepth => this.handleUpdate({ maxDepth }) }
 							value={ this.renderDepth(this.props.currentEntry.maxDepth) }
-							units="m"
+							units={ distanceUnit }
 							validations={ {
 								isGreaterThan: 0,
 								isGreaterThanOrEqualToField: 'averageDepth'
@@ -413,7 +417,7 @@ class EditLogEntry extends React.Component {
 							label="Amount worn"
 							onChange={ amount => this.handleWeightUpdate({ amount }) }
 							value={ this.renderWeight(weight.amount) }
-							units="kg"
+							units={ weightUnit }
 							validations={ {
 								isGreaterThanOrEqual: 0
 							} }

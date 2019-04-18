@@ -9,7 +9,7 @@ module.exports = merge(common, {
 	mode: 'development',
 	devtool: 'inline-source-map',
 	output: {
-		filename: '[name].[contenthash].js',
+		filename: '[name].[hash].js',
 		path: path.resolve(__dirname, 'dist/dev'),
 		publicPath: '/'
 	},
@@ -17,6 +17,7 @@ module.exports = merge(common, {
 		new webpack.DefinePlugin({
 			'process.env.BT_API_URL': process.env.BT_API_URL
 		}),
-		new CleanWebpackPlugin(['dist/dev'])
+		new CleanWebpackPlugin(['dist/dev']),
+		new webpack.HotModuleReplacementPlugin()
 	]
 });

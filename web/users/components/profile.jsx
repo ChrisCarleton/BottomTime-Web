@@ -1,7 +1,8 @@
+import agent from '../../agent';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../stores/current-user-store';
 import EditProfile from './edit-profile';
-import Forbidden from '../../components/forbidden';
+import handleError from '../../handle-error';
 import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
@@ -18,32 +19,35 @@ class Profile extends React.Component {
 	}
 
 	static getPropsFromStores() {
-		const { currentProfile, isForbidden, isLoading } = UserProfileStore.getState();
 		return {
-			currentProfile,
-			isForbidden,
-			isLoading,
+			...UserProfileStore.getState(),
 			currentUser: CurrentUserStore.getState().currentUser
 		};
 	}
 
 	componentDidMount() {
 		if (this.props.match.params.username || !this.props.currentUser.isAnonymous) {
+			UserProfileActions.beginLoading();
 			const username = this.props.match.params.username
 				|| this.props.currentUser.username;
-			UserProfileActions.getProfile(username, this.props.history);
+
+			setTimeout(async () => {
+				try {
+					const result = await agent.get(`/api/users/${ username }/profile`);
+					UserProfileActions.setProfile(result.body);
+				} catch (err) {
+					UserProfileActions.finishLoading();
+					handleError(err, this.props.history);
+				}
+			}, 0);
 		}
 	}
 
 	render() {
 		if (this.props.currentUser.isAnonymous) {
-			if (!this.props.match.params.username || this.props.isForbidden) {
+			if (!this.props.match.params.username) {
 				return <RequireUser />;
 			}
-		}
-
-		if (this.props.isForbidden) {
-			return <Forbidden />;
 		}
 
 		const username = this.props.match.params.username || this.props.currentUser.username;
@@ -76,7 +80,6 @@ Profile.propTypes = {
 	currentProfile: PropTypes.object.isRequired,
 	currentUser: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
-	isForbidden: PropTypes.bool.isRequired,
 	isLoading: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired
 };
