@@ -3,6 +3,7 @@
 import agent from './agent';
 import alt from './alt';
 import App from './components/app';
+import config from './config';
 import initialState from './initial-state';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,25 +11,29 @@ import ReactDOM from 'react-dom';
 require('./validators');
 require('./styles/main.less');
 require('./img/loading-spinner.gif');
-require('./img/reef-background.jpg');
+// require('./img/reef-background.jpg');
 
-agent.get('/api/auth/me')
-	.then(result => {
+(async () => {
+	try {
+		const result = await agent.get('/api/auth/me');
 		alt.bootstrap(JSON.stringify({
 			...initialState,
 			CurrentUserStore: {
 				currentUser: result.body
 			}
 		}));
-	})
-	.catch(err => {
+	} catch (err) {
 		if (err.response && err.response.status === 401) {
 			agent.clearAuthToken();
+		} else {
+			console.error(JSON.stringify(err.response));
 		}
 		alt.bootstrap(JSON.stringify(initialState));
-		console.error(JSON.stringify(err.response));
-	})
-	.finally(() => {
+	} finally {
 		ReactDOM.render(<App />, document.getElementById('app'));
-		document.body.style.backgroundImage = 'url("/img/reef-background.jpg")';
-	});
+
+		if (config.nodeEnv !== 'production') {
+			module.hot.accept();
+		}
+	}
+})();
