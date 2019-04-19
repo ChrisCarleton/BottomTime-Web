@@ -222,6 +222,7 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('btn-reset')).click();
 			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
 			await driver.findElement(By.id('btn-confirm-discard')).click();
+			await driver.wait(until.elementLocated(By.id('global-error-bar')));
 
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
@@ -253,6 +254,7 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('btn-reset')).click();
 			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
 			await driver.findElement(By.id('btn-confirm-discard')).click();
+			await driver.wait(until.elementLocated(By.id('global-error-bar')));
 
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
