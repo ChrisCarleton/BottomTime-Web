@@ -33,6 +33,7 @@ class EditLogEntry extends React.Component {
 	constructor(props) {
 		super(props);
 
+		this.form = React.createRef();
 		this.state = { showConfirmReset: false };
 
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -106,12 +107,15 @@ class EditLogEntry extends React.Component {
 	}
 
 	async handleDiscardChanges() {
-		CurrentLogEntryActions.beginLoading();
+		this.setState({ ...this.state, showConfirmReset: false });
+
 		try {
 			const username = this.props.match.params.username || this.props.currentUser.username;
 			const { logId } = this.props.match.params;
 
+			this.form.current.reset();
 			if (logId) {
+				CurrentLogEntryActions.beginLoading();
 				const response = await agent
 					.get(`/api/users/${ username }/logs/${ logId }`);
 				CurrentLogEntryActions.setCurrentEntry(response.body);
@@ -128,6 +132,13 @@ class EditLogEntry extends React.Component {
 
 	handleCancelDiscardChanges() {
 		this.setState({ ...this.state, showConfirmReset: false });
+	}
+
+	handleInvalidSubmit() {
+		ErrorActions.showError(
+			'There is a problem with one or more of your values',
+			'Check below for the error.'
+		);
 	}
 
 	async handleSubmit(model, resetForm, invalidateForm) {
@@ -196,14 +207,19 @@ class EditLogEntry extends React.Component {
 	render() {
 		const weight = this.props.currentEntry.weight || {};
 		const gps = this.props.currentEntry.gps || {};
+		const entryTime = this.props.currentEntry.entryTime
+			? moment(this.props.currentEntry.entryTime).format(config.entryTimeFormat)
+			: '';
 
 		const { distanceUnit, weightUnit } = this.props.currentUser;
 
 		return (
 			<Formsy
 				onValidSubmit={ this.handleSubmit }
+				onInvalidSubmit={ this.handleInvalidSubmit }
 				mapping={ this.mapModel }
 				className="form-horizontal"
+				ref={ this.form }
 			>
 				<Modal show={ this.state.showConfirmReset }>
 					<Modal.Header>
@@ -264,7 +280,7 @@ class EditLogEntry extends React.Component {
 							label="Entry time"
 							required
 							placeholder={ moment().format(config.entryTimeFormat) }
-							value={ this.props.currentEntry.entryTime || '' }
+							value={ entryTime }
 							validations={ {
 								isDateTime: config.entryTimeFormat
 							} }

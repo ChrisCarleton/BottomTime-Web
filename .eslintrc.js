@@ -34,6 +34,7 @@ module.exports = {
 		"no-console": 1,
 		"no-mixed-operators": 0,
 		"no-tabs": 0,
+		"no-underscore-dangle": 0,
 		"no-unused-expressions" : 0,
 		"no-warning-comments": 1,
 		"operator-linebreak": [2, "before"],
