@@ -59,7 +59,7 @@ for (let i = 0; i < logEntries.length; i++) {
 		weight: {
 			amount: faker.random.number({ min: 0, max: 12 })
 		},
-		isReadOnly: false
+		readOnly: false
 	};
 }
 

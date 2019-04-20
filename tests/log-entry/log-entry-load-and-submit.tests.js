@@ -51,7 +51,7 @@ describe('Loading and Submitting Log Entries', () => {
 	it('Read-only entries are displayed on a read-only page', async () => {
 		const logEntry = {
 			...logEntries[0],
-			isReadOnly: true
+			readOnly: true
 		};
 
 		stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
@@ -67,8 +67,8 @@ describe('Loading and Submitting Log Entries', () => {
 	});
 
 	[
-		{ mode: 'read-only', isReadOnly: true },
-		{ mode: 'read-write', isReadOnly: false }
+		{ mode: 'read-only', readOnly: true },
+		{ mode: 'read-write', readOnly: false }
 	].forEach(t => {
 		it(`Weight can be rendered in lbs in ${ t.mode } mode`, async () => {
 			const auth = {
@@ -77,7 +77,7 @@ describe('Loading and Submitting Log Entries', () => {
 			};
 			const logEntry = {
 				...logEntries[0],
-				isReadOnly: t.isReadOnly
+				readOnly: t.readOnly
 			};
 			logEntry.weight.amount = logEntry.weight.amount || 1.5;
 
@@ -93,11 +93,11 @@ describe('Loading and Submitting Log Entries', () => {
 
 			await refreshPage(EntryUrl);
 			const weightElement = await driver.findElement(By.id('weight_amount'));
-			const displayedWeight = t.isReadOnly
+			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
 			let expectedWeight = (logEntry.weight.amount * 2.20462).toFixed(2);
-			if (t.isReadOnly) {
+			if (t.readOnly) {
 				expectedWeight = `${ expectedWeight }lbs`;
 			}
 			expect(displayedWeight).to.equal(expectedWeight);
@@ -110,7 +110,7 @@ describe('Loading and Submitting Log Entries', () => {
 			};
 			const logEntry = {
 				...logEntries[0],
-				isReadOnly: t.isReadOnly
+				readOnly: t.readOnly
 			};
 			logEntry.weight.amount = 0;
 
@@ -126,11 +126,11 @@ describe('Loading and Submitting Log Entries', () => {
 
 			await refreshPage(EntryUrl);
 			const weightElement = await driver.findElement(By.id('weight_amount'));
-			const displayedWeight = t.isReadOnly
+			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
 			let expectedWeight = '0.00';
-			if (t.isReadOnly) {
+			if (t.readOnly) {
 				expectedWeight = `${ expectedWeight }lbs`;
 			}
 			expect(displayedWeight).to.equal(expectedWeight);
@@ -144,7 +144,7 @@ describe('Loading and Submitting Log Entries', () => {
 				};
 				const logEntry = {
 					...logEntries[0],
-					isReadOnly: t.isReadOnly
+					readOnly: t.readOnly
 				};
 
 				authStub = sinon.stub(mockApis, 'getAuthMe');
@@ -159,11 +159,11 @@ describe('Loading and Submitting Log Entries', () => {
 
 				await refreshPage(EntryUrl);
 				const depthElement = await driver.findElement(By.id(f));
-				const displayedDepth = t.isReadOnly
+				const displayedDepth = t.readOnly
 					? await depthElement.getText()
 					: await depthElement.getAttribute('value');
 				let expectedDepth = (logEntry[f] * 3.28084).toFixed(2);
-				if (t.isReadOnly) {
+				if (t.readOnly) {
 					expectedDepth = `${ expectedDepth }ft`;
 				}
 				expect(displayedDepth).to.equal(expectedDepth);
@@ -176,7 +176,7 @@ describe('Loading and Submitting Log Entries', () => {
 				};
 				const logEntry = {
 					...logEntries[0],
-					isReadOnly: t.isReadOnly
+					readOnly: t.readOnly
 				};
 				logEntry[f] = 0;
 
@@ -192,11 +192,11 @@ describe('Loading and Submitting Log Entries', () => {
 
 				await refreshPage(EntryUrl);
 				const depthElement = await driver.findElement(By.id(f));
-				const displayedDepth = t.isReadOnly
+				const displayedDepth = t.readOnly
 					? await depthElement.getText()
 					: await depthElement.getAttribute('value');
 				let expectedDepth = '0.00';
-				if (t.isReadOnly) {
+				if (t.readOnly) {
 					expectedDepth = `${ expectedDepth }ft`;
 				}
 				expect(displayedDepth).to.equal(expectedDepth);

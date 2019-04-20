@@ -63,7 +63,7 @@ class LogEntry extends React.Component {
 
 		if (this.props.isLoading) {
 			pageContent = <LoadingSpinner message="Loading Log Entry..." />;
-		} else if (this.props.currentEntry.isReadOnly) {
+		} else if (this.props.currentEntry.readOnly) {
 			pageContent = (
 				<ViewLogEntry
 					currentEntry={ this.props.currentEntry }
