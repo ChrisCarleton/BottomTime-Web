@@ -72,7 +72,10 @@ const mockApis = {
 			role: 'user',
 			isAnonymous: true,
 			isLockedOut: false,
-			hasPassword: false
+			hasPassword: false,
+			distanceUnit: 'm',
+			weightUnit: 'kg',
+			temperatureUnit: 'c'
 		});
 	},
 

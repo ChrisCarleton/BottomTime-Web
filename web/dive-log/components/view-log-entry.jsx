@@ -24,11 +24,11 @@ class ViewLogEntry extends React.Component {
 	}
 
 	renderTime(value) {
-		return value ? `${ value }minutes` : null;
+		return value || value === 0 ? `${ value }minutes` : null;
 	}
 
 	renderDepth(value) {
-		if (!value) {
+		if (!value && value !== 0) {
 			return null;
 		}
 
@@ -39,7 +39,7 @@ class ViewLogEntry extends React.Component {
 	}
 
 	renderTemperature(value) {
-		if (!value) {
+		if (!value && value !== 0) {
 			return null;
 		}
 
@@ -50,7 +50,7 @@ class ViewLogEntry extends React.Component {
 	}
 
 	renderWeight(value) {
-		if (!value) {
+		if (!value && value !== 0) {
 			return null;
 		}
 

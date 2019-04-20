@@ -175,19 +175,19 @@ class EditLogEntry extends React.Component {
 	}
 
 	renderDepth(value) {
-		return value
+		return value || value === 0
 			? ToPreferredUnits.Distance[this.props.currentUser.distanceUnit](value).toFixed(2)
 			: '';
 	}
 
 	renderTemperature(value) {
-		return value
+		return value || value === 0
 			? ToPreferredUnits.Temperature[this.props.currentUser.tempuratureUnit](value).toFixed(2)
 			: '';
 	}
 
 	renderWeight(value) {
-		return value
+		return value || value === 0
 			? ToPreferredUnits.Weight[this.props.currentUser.weightUnit](value).toFixed(2)
 			: '';
 	}
