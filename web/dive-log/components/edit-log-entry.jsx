@@ -294,6 +294,7 @@ class EditLogEntry extends React.Component {
 							label="Bottom time"
 							value={ this.props.currentEntry.bottomTime || '' }
 							units="minutes"
+							required
 							validations={ {
 								isGreaterThan: 0
 							} }
@@ -370,6 +371,7 @@ class EditLogEntry extends React.Component {
 							label="Max. depth"
 							value={ this.renderDepth(this.props.currentEntry.maxDepth) }
 							units={ distanceUnit }
+							required
 							validations={ {
 								isGreaterThan: 0,
 								isGreaterThanOrEqualToField: 'averageDepth'
