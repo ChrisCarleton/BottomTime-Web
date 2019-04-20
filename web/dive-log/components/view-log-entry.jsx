@@ -2,26 +2,62 @@ import {
 	Col,
 	Row
 } from 'react-bootstrap';
-import config from '../../config';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import Formsy from 'formsy-react';
-import moment from 'moment';
 import React from 'react';
 import StaticField from '../../components/static-field';
+import { ToPreferredUnits } from '../../unit-conversion';
 import PropTypes from 'prop-types';
 
 const Unspecified = 'Unspecified';
 
 class ViewLogEntry extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
 	renderTime(value) {
-		return value ? `${ value }minutes` : null;
+		return value || value === 0 ? `${ value }minutes` : null;
 	}
 
 	renderDepth(value) {
-		return value ? `${ value }m` : null;
+		if (!value && value !== 0) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Distance[this.props.currentUser.distanceUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.distanceUnit }`;
+	}
+
+	renderTemperature(value) {
+		if (!value && value !== 0) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Temperature[this.props.currentUser.temperatureUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.temperatureUnit === 'c' ? '°C' : '°F' }`;
 	}
 
 	renderWeight(value) {
-		return value ? `${ value }kg` : null;
+		if (!value && value !== 0) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Weight[this.props.currentUser.weightUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.weightUnit }`;
 	}
 
 	render() {
@@ -30,10 +66,10 @@ class ViewLogEntry extends React.Component {
 		const weight = currentEntry.weight || {};
 
 		const latitude = gps.latitude
-			? `${ Math.abs(gps.latitude) } &deg;${ gps.latitude >= 0 ? 'N' : 'S' }`
+			? `${ Math.abs(gps.latitude) } °${ gps.latitude >= 0 ? 'N' : 'S' }`
 			: null;
-		const longitutde = gps.longitutde
-			? `${ Math.abs(gps.longitutde) } &deg;${ gps.longitutde >= 0 ? 'E' : 'W' }`
+		const longitude = gps.longitude
+			? `${ Math.abs(gps.longitude) } °${ gps.longitude >= 0 ? 'E' : 'W' }`
 			: null;
 
 		return (
@@ -58,11 +94,7 @@ class ViewLogEntry extends React.Component {
 								controlId="entryTime"
 								name="entryTime"
 								label="Entry time"
-								value={
-									moment(currentEntry.entryTime)
-										.local()
-										.format(config.entryTimeFormat)
-								}
+								value={ currentEntry.entryTime }
 							/>
 							<StaticField
 								controlId="bottomTime"
@@ -93,7 +125,7 @@ class ViewLogEntry extends React.Component {
 								name="gps_longitude"
 								label="Longitude"
 								default={ Unspecified }
-								value={ longitutde }
+								value={ longitude }
 							/>
 						</Col>
 					</Row>
@@ -133,7 +165,8 @@ class ViewLogEntry extends React.Component {
 }
 
 ViewLogEntry.propTypes = {
-	currentEntry: PropTypes.object.isRequired
+	currentEntry: PropTypes.object.isRequired,
+	currentUser: PropTypes.object.isRequired
 };
 
-export default ViewLogEntry;
+export default connectToStores(ViewLogEntry);

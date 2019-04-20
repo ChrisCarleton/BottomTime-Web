@@ -132,6 +132,8 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('location')).sendKeys('Roatan');
 			await driver.findElement(By.id('site')).sendKeys('Mary\'s Place');
 			await driver.findElement(By.id('entryTime')).sendKeys('2016-02-04 10:30AM');
+			await driver.findElement(By.id('maxDepth')).sendKeys('80');
+			await driver.findElement(By.id('bottomTime')).sendKeys('38');
 			await driver.findElement(By.id('gps_longitude')).sendKeys('17.32828');
 			await driver.findElement(By.id('btn-save')).click();
 			await driver.wait(until.elementLocated(By.id('err-gps_latitude')));
@@ -141,6 +143,8 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('location')).sendKeys('Roatan');
 			await driver.findElement(By.id('site')).sendKeys('Mary\'s Place');
 			await driver.findElement(By.id('entryTime')).sendKeys('2016-02-04 10:30AM');
+			await driver.findElement(By.id('maxDepth')).sendKeys('80');
+			await driver.findElement(By.id('bottomTime')).sendKeys('38');
 			await driver.findElement(By.id('gps_latitude')).sendKeys('14.38394');
 			await driver.findElement(By.id('btn-save')).click();
 			await driver.wait(until.elementLocated(By.id('err-gps_longitude')));

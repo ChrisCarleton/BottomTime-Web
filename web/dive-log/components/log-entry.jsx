@@ -1,6 +1,5 @@
 import agent from '../../agent';
 import { Breadcrumb } from 'react-bootstrap';
-import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import CurrentLogEntryStore from '../stores/current-log-entry-store';
@@ -9,7 +8,6 @@ import EditLogEntry from './edit-log-entry';
 import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
-import moment from 'moment';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -38,10 +36,6 @@ class LogEntry extends React.Component {
 				try {
 					const response = await agent
 						.get(`/api/users/${ params.username }/logs/${ params.logId }`);
-					response.body.entryTime = moment(response.body.entryTime)
-						.local()
-						.format(config.entryTimeFormat);
-					delete response.body.entryId;
 					CurrentLogEntryActions.setCurrentEntry(response.body);
 				} catch (err) {
 					CurrentLogEntryActions.finishLoading();

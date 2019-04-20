@@ -6,9 +6,12 @@ import {
 	Row
 } from 'react-bootstrap';
 import config from '../../config';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
+import { FromPreferredUnits, ToPreferredUnits } from '../../unit-conversion';
 import handleError from '../../handle-error';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -17,18 +20,27 @@ import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
 
 class EditLogEntry extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
 	constructor(props) {
 		super(props);
 
+		this.form = React.createRef();
 		this.state = { showConfirmReset: false };
 
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleUpdate = this.handleUpdate.bind(this);
-		this.handleWeightUpdate = this.handleWeightUpdate.bind(this);
-		this.handleGpsUpdate = this.handleGpsUpdate.bind(this);
 		this.handleDiscardChanges = this.handleDiscardChanges.bind(this);
 		this.handleConfirmDiscardChanges = this.handleConfirmDiscardChanges.bind(this);
 		this.handleCancelDiscardChanges = this.handleCancelDiscardChanges.bind(this);
+		this.mapModel = this.mapModel.bind(this);
 	}
 
 	/* eslint-disable complexity */
@@ -60,16 +72,22 @@ class EditLogEntry extends React.Component {
 		}
 
 		if (model.averageDepth) {
-			mapped.averageDepth = parseFloat(model.averageDepth);
+			mapped.averageDepth = FromPreferredUnits.Distance[this.props.currentUser.distanceUnit](
+				parseFloat(model.averageDepth)
+			);
 		}
 
 		if (model.maxDepth) {
-			mapped.maxDepth = parseFloat(model.maxDepth);
+			mapped.maxDepth = FromPreferredUnits.Distance[this.props.currentUser.distanceUnit](
+				parseFloat(model.maxDepth)
+			);
 		}
 
 		if (model.weight_amount) {
 			mapped.weight = {
-				amount: parseFloat(model.weight_amount)
+				amount: FromPreferredUnits.Weight[this.props.currentUser.weightUnit](
+					parseFloat(model.weight_amount)
+				)
 			};
 		}
 
@@ -89,12 +107,15 @@ class EditLogEntry extends React.Component {
 	}
 
 	async handleDiscardChanges() {
-		CurrentLogEntryActions.beginLoading();
+		this.setState({ ...this.state, showConfirmReset: false });
+
 		try {
 			const username = this.props.match.params.username || this.props.currentUser.username;
 			const { logId } = this.props.match.params;
 
+			this.form.current.reset();
 			if (logId) {
+				CurrentLogEntryActions.beginLoading();
 				const response = await agent
 					.get(`/api/users/${ username }/logs/${ logId }`);
 				CurrentLogEntryActions.setCurrentEntry(response.body);
@@ -111,6 +132,13 @@ class EditLogEntry extends React.Component {
 
 	handleCancelDiscardChanges() {
 		this.setState({ ...this.state, showConfirmReset: false });
+	}
+
+	handleInvalidSubmit() {
+		ErrorActions.showError(
+			'There is a problem with one or more of your values',
+			'Check below for the error.'
+		);
 	}
 
 	async handleSubmit(model, resetForm, invalidateForm) {
@@ -141,6 +169,7 @@ class EditLogEntry extends React.Component {
 				await agent
 					.put(`/api/users/${ username }/logs/${ logId }`)
 					.send(model);
+				CurrentLogEntryActions.setCurrentEntry(model);
 			} else {
 				// Save a new record and redirect to that record's page.
 				const response = await agent
@@ -156,70 +185,41 @@ class EditLogEntry extends React.Component {
 		}
 	}
 
-	handleUpdate(update) {
-		const newEntry = {
-			...this.props.currentEntry,
-			...update
-		};
-		CurrentLogEntryActions.setCurrentEntry(newEntry);
-	}
-
-	handleGpsUpdate(update) {
-		if (this.props.currentEntry.gps) {
-			const gps = {
-				...this.props.currentEntry.gps,
-				...update
-			};
-			CurrentLogEntryActions.setCurrentEntry({
-				...this.props.currentEntry,
-				gps
-			});
-		} else {
-			CurrentLogEntryActions.setCurrentEntry({
-				...this.props.currentEntry,
-				gps: update
-			});
-		}
-	}
-
-	handleWeightUpdate(update) {
-		if (this.props.currentEntry.weight) {
-			const weight = {
-				...this.props.currentEntry.weight,
-				...update
-			};
-			CurrentLogEntryActions.setCurrentEntry({
-				...this.props.currentEntry,
-				weight
-			});
-		} else {
-			CurrentLogEntryActions.setCurrentEntry({
-				...this.props.currentEntry,
-				weight: update
-			});
-		}
-	}
-
 	renderDepth(value) {
-		return value || '';
+		return value || value === 0
+			? ToPreferredUnits.Distance[this.props.currentUser.distanceUnit](value).toFixed(2)
+			: '';
+	}
+
+	renderTemperature(value) {
+		return value || value === 0
+			? ToPreferredUnits.Temperature[this.props.currentUser.tempuratureUnit](value).toFixed(2)
+			: '';
 	}
 
 	renderWeight(value) {
-		return value || '';
+		return value || value === 0
+			? ToPreferredUnits.Weight[this.props.currentUser.weightUnit](value).toFixed(2)
+			: '';
 	}
 
 	/* eslint-disable complexity */
 	render() {
 		const weight = this.props.currentEntry.weight || {};
 		const gps = this.props.currentEntry.gps || {};
+		const entryTime = this.props.currentEntry.entryTime
+			? moment(this.props.currentEntry.entryTime).format(config.entryTimeFormat)
+			: '';
 
 		const { distanceUnit, weightUnit } = this.props.currentUser;
 
 		return (
 			<Formsy
 				onValidSubmit={ this.handleSubmit }
+				onInvalidSubmit={ this.handleInvalidSubmit }
 				mapping={ this.mapModel }
 				className="form-horizontal"
+				ref={ this.form }
 			>
 				<Modal show={ this.state.showConfirmReset }>
 					<Modal.Header>
@@ -251,7 +251,6 @@ class EditLogEntry extends React.Component {
 							label="Location"
 							placeholder="City or Area"
 							required
-							onChange={ location => this.handleUpdate({ location }) }
 							value={ this.props.currentEntry.location || '' }
 							maxLength={ 200 }
 							validations={ {
@@ -266,7 +265,6 @@ class EditLogEntry extends React.Component {
 							controlId="site"
 							label="Dive site"
 							required
-							onChange={ site => this.handleUpdate({ site }) }
 							value={ this.props.currentEntry.site || '' }
 							maxLength={ 200 }
 							validations={ {
@@ -282,8 +280,7 @@ class EditLogEntry extends React.Component {
 							label="Entry time"
 							required
 							placeholder={ moment().format(config.entryTimeFormat) }
-							onChange={ entryTime => this.handleUpdate({ entryTime }) }
-							value={ this.props.currentEntry.entryTime }
+							value={ entryTime }
 							validations={ {
 								isDateTime: config.entryTimeFormat
 							} }
@@ -295,9 +292,9 @@ class EditLogEntry extends React.Component {
 							name="bottomTime"
 							controlId="bottomTime"
 							label="Bottom time"
-							onChange={ bottomTime => this.handleUpdate({ bottomTime }) }
 							value={ this.props.currentEntry.bottomTime || '' }
 							units="minutes"
+							required
 							validations={ {
 								isGreaterThan: 0
 							} }
@@ -309,7 +306,6 @@ class EditLogEntry extends React.Component {
 							name="totalTime"
 							controlId="totalTime"
 							label="Total time"
-							onChange={ totalTime => this.handleUpdate({ totalTime }) }
 							value={ this.props.currentEntry.totalTime || '' }
 							units="minutes"
 							validations={ {
@@ -330,7 +326,6 @@ class EditLogEntry extends React.Component {
 							controlId="gps_latitude"
 							label="Latitude"
 							value={ gps.latitude || '' }
-							onChange={ latitude => this.handleGpsUpdate({ latitude }) }
 							validations={ {
 								isBetween: { min: -90.0, max: 90.0 }
 							} }
@@ -344,7 +339,6 @@ class EditLogEntry extends React.Component {
 							controlId="gps_longitude"
 							label="Longitude"
 							value={ gps.longitude || '' }
-							onChange={ longitude => this.handleGpsUpdate({ longitude }) }
 							validations={ {
 								isBetween: { min: -180.0, max: 180.0 }
 							} }
@@ -362,7 +356,6 @@ class EditLogEntry extends React.Component {
 							name="averageDepth"
 							controlId="averageDepth"
 							label="Average depth"
-							onChange={ averageDepth => this.handleUpdate({ averageDepth }) }
 							value={ this.renderDepth(this.props.currentEntry.averageDepth) }
 							units={ distanceUnit }
 							validations={ {
@@ -376,9 +369,9 @@ class EditLogEntry extends React.Component {
 							name="maxDepth"
 							controlId="maxDepth"
 							label="Max. depth"
-							onChange={ maxDepth => this.handleUpdate({ maxDepth }) }
 							value={ this.renderDepth(this.props.currentEntry.maxDepth) }
 							units={ distanceUnit }
+							required
 							validations={ {
 								isGreaterThan: 0,
 								isGreaterThanOrEqualToField: 'averageDepth'
@@ -396,7 +389,6 @@ class EditLogEntry extends React.Component {
 							name="weight_amount"
 							controlId="weight_amount"
 							label="Amount worn"
-							onChange={ amount => this.handleWeightUpdate({ amount }) }
 							value={ this.renderWeight(weight.amount) }
 							units={ weightUnit }
 							validations={ {
@@ -408,9 +400,6 @@ class EditLogEntry extends React.Component {
 						/>
 					</Col>
 				</Row>
-				<p>
-					<em>{ JSON.stringify(this.props.currentEntry) }</em>
-				</p>
 				<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
 				&nbsp;
 				<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
@@ -427,4 +416,4 @@ EditLogEntry.propTypes = {
 	match: PropTypes.object.isRequired
 };
 
-export default withRouter(EditLogEntry);
+export default connectToStores(withRouter(EditLogEntry));
