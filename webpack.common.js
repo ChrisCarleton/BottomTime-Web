@@ -88,17 +88,23 @@ module.exports = {
 			maxInitialRequests: Infinity,
 			minSize: 0,
 			cacheGroups: {
+				default: false,
+				vendors: false,
 				vendor: {
-					test: /\/node_modules\//,
-					name(currentModule) {
-						var packageName = currentModule.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-						return `npm.${ packageName.replace('@', '') }`;
-					}
+					test: /\/node_modules\//
+					// name(currentModule) {
+					// 	var packageName = currentModule.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+					// 	return `npm.${ packageName.replace('@', '') }`;
+					// }
 				},
-				default: {
+
+				common: {
+					name: 'common',
 					minChunks: 2,
+					chunks: 'async',
 					priority: 10,
-					chunks: 'all'
+					reuseExistingChunk: true,
+					enforce: true
 				}
 			}
 		}
