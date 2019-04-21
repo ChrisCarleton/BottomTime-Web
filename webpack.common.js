@@ -91,11 +91,11 @@ module.exports = {
 				default: false,
 				vendors: false,
 				vendor: {
-					test: /\/node_modules\//
-					// name(currentModule) {
-					// 	var packageName = currentModule.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-					// 	return `npm.${ packageName.replace('@', '') }`;
-					// }
+					test: /\/node_modules\//,
+					name(currentModule) {
+						var packageName = currentModule.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+						return `npm.${ packageName.replace('@', '') }`;
+					}
 				},
 
 				common: {
