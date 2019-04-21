@@ -1,6 +1,7 @@
 module.exports = {
 	"plugins": [
-		"react"
+		"react",
+		"import"
 	],
 	"extends": [
 		"strict",
@@ -8,6 +9,7 @@ module.exports = {
 		"strict/browser",
 		"strict-react/es6"
 	],
+	"parser": "babel-eslint",
 	"parserOptions": {
 		"ecmaVersion": 9,
 		"sourceType": "module"
@@ -70,6 +72,11 @@ module.exports = {
 	"settings": {
 		"react": {
 			"version": "16.4.1"
+		},
+		"import/resolver": {
+			"webpack": {
+				"config" : "webpack.dev.js"
+			}
 		}
 	}
 };
