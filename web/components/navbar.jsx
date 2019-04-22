@@ -73,9 +73,14 @@ class AppNavBar extends React.Component {
 						{
 							this.props.currentUser.isAnonymous
 								? null
-								: <LinkContainer to={ '/logs' }>
-									<NavItem>My Logs</NavItem>
-								</LinkContainer>
+								: [
+									<LinkContainer key="logs" to={ '/logs' }>
+										<NavItem>Log Book</NavItem>
+									</LinkContainer>,
+									<LinkContainer key="friends" to={ '/friends' }>
+										<NavItem>Dive Buddies</NavItem>
+									</LinkContainer>
+								]
 						}
 					</Nav>
 					{ this.renderRightNav() }

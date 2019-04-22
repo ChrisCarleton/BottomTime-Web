@@ -12,7 +12,14 @@ const webpackDevConfig = require('./webpack.dev');
 const webpackProdConfig = require('./webpack.prod');
 
 function lint() {
-	return gulp.src([ 'web/**/*.js', 'web/**/*.jsx', 'tests/**/*.js', 'gulpfile.babel.js' ])
+	return gulp.src(
+		[
+			'web/**/*.js',
+			'web/**/*.jsx',
+			'tests/**/*.js',
+			'gulpfile.babel.js',
+			'webpack.*.js'
+		])
 		.pipe(eslint())
 		.pipe(eslint.format())
 		.pipe(eslint.failAfterError());
