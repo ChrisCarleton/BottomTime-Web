@@ -1,5 +1,12 @@
 import agent from '../../agent';
-import { Alert, Button, ButtonGroup, Glyphicon, Label } from 'react-bootstrap';
+import {
+	Alert,
+	Button,
+	ButtonGroup,
+	ButtonToolbar,
+	Glyphicon,
+	Label
+} from 'react-bootstrap';
 import FriendsActions from '../actions/friends-actions';
 import handleError from '../../handle-error';
 import PropTypes from 'prop-types';
@@ -47,9 +54,18 @@ class FriendsList extends React.Component {
 
 		return (
 			<div>
-				<ButtonGroup>
-					<Button bsStyle="primary">New Buddy Request</Button>
-				</ButtonGroup>
+				<ButtonToolbar>
+					<ButtonGroup>
+						<Button id="btn-new-request" bsStyle="primary">New Buddy Request</Button>
+					</ButtonGroup>
+
+					<ButtonGroup>
+						<Button id="btn-refresh-friends">
+							<Glyphicon glyph="refresh" />&nbsp;
+							Refresh
+						</Button>
+					</ButtonGroup>
+				</ButtonToolbar>
 				<p>Showing <Label>{ friendsList.length }</Label> dive buddies.</p>
 				{ this.renderList() }
 			</div>

@@ -5,6 +5,7 @@ import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React, { lazy, Suspense } from 'react';
+import RequireUser from '../../components/require-user';
 import {
 	Tab,
 	Tabs
@@ -27,6 +28,10 @@ class Friends extends React.Component {
 	}
 
 	render() {
+		if (this.props.currentUser.isAnonymous) {
+			return <RequireUser />;
+		}
+
 		return (
 			<div>
 				<PageTitle title="My Dive Buddies" />
