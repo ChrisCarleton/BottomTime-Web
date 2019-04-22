@@ -1,15 +1,17 @@
+import {
+	Breadcrumb,
+	Tab,
+	Tabs
+} from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import FriendsStore from '../stores/friends-store';
+import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React, { lazy, Suspense } from 'react';
 import RequireUser from '../../components/require-user';
-import {
-	Tab,
-	Tabs
-} from 'react-bootstrap';
 
 const FriendsList = lazy(() => import('./friends-list'));
 const FriendRequests = lazy(() => import('./friend-requests'));
@@ -34,6 +36,12 @@ class Friends extends React.Component {
 
 		return (
 			<div>
+				<Breadcrumb>
+					<LinkContainer to="/">
+						<Breadcrumb.Item>Home</Breadcrumb.Item>
+					</LinkContainer>
+					<Breadcrumb.Item active>Dive Buddies</Breadcrumb.Item>
+				</Breadcrumb>
 				<PageTitle title="My Dive Buddies" />
 				<Tabs id="friends-tabs" defaultActiveKey={ 0 }>
 					<Tab eventKey={ 0 } title="Dive Buddies">
