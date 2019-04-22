@@ -18,6 +18,6 @@ module.exports = merge(common, {
 			// Force React to compile in production mode.
 			'process.env.BT_API_URL': '\'https://api.bottomtime.ca/\''
 		}),
-		new CleanWebpackPlugin([ 'dist/prod' ])
+		new CleanWebpackPlugin()
 	]
 });

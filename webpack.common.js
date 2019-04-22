@@ -88,6 +88,8 @@ module.exports = {
 			maxInitialRequests: Infinity,
 			minSize: 0,
 			cacheGroups: {
+				default: false,
+				vendors: false,
 				vendor: {
 					test: /\/node_modules\//,
 					name(currentModule) {
@@ -95,10 +97,14 @@ module.exports = {
 						return `npm.${ packageName.replace('@', '') }`;
 					}
 				},
-				default: {
+
+				common: {
+					name: 'common',
 					minChunks: 2,
+					chunks: 'async',
 					priority: 10,
-					chunks: 'all'
+					reuseExistingChunk: true,
+					enforce: true
 				}
 			}
 		}
