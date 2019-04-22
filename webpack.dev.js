@@ -1,9 +1,11 @@
-var CleanWebpackPlugin = require('clean-webpack-plugin');
-var merge = require('webpack-merge');
-var path = require('path');
-var webpack = require('webpack');
+/* eslint-disable no-process-env */
 
-var common = require('./webpack.common');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const merge = require('webpack-merge');
+const path = require('path');
+const webpack = require('webpack');
+
+const common = require('./webpack.common');
 
 module.exports = merge(common, {
 	mode: 'development',

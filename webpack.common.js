@@ -1,7 +1,8 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var MiniCssExtractPlugin = require('mini-css-extract-plugin');
-var path = require('path');
-var webpack = require('webpack');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
 	entry: {
@@ -53,7 +54,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(eot|svg|ttf|woff2?)$/,
+				test: /\.(eot|ttf|woff2?)$/,
 				use: {
 					loader: 'file-loader',
 					options: {
@@ -69,7 +70,7 @@ module.exports = {
 			'node_modules',
 			path.resolve(__dirname, 'web')
 		],
-		extensions: ['.js', '.jsx', '.html']
+		extensions: [ '.js', '.jsx', '.html' ]
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
@@ -79,10 +80,14 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: '[name].css'
 		}),
-		new webpack.HashedModuleIdsPlugin()
+		new webpack.HashedModuleIdsPlugin(),
+		new CompressionWebpackPlugin({
+			filename: '[path].gz[query]',
+			algorithm: 'gzip',
+			test: /\.(jsx?|css|less|png|jpe?g|gif|svg|eot|ttf|woff2?)$/i
+		})
 	],
 	optimization: {
-		runtimeChunk: 'single',
 		splitChunks: {
 			chunks: 'all',
 			maxInitialRequests: Infinity,
@@ -92,10 +97,7 @@ module.exports = {
 				vendors: false,
 				vendor: {
 					test: /\/node_modules\//,
-					name(currentModule) {
-						var packageName = currentModule.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-						return `npm.${ packageName.replace('@', '') }`;
-					}
+					priority: 20
 				},
 
 				common: {
