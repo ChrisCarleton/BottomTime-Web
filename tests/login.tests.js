@@ -24,13 +24,13 @@ describe('Login page', () => {
 	let stub = null;
 
 	before(refreshPage);
-	afterEach(() => {
+	afterEach(async () => {
 		if (stub) {
 			stub.restore();
 			stub = null;
 		}
 
-		refreshPage();
+		await refreshPage();
 	});
 
 	it('catches missing username', async () => {
