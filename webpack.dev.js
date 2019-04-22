@@ -17,7 +17,7 @@ module.exports = merge(common, {
 		new webpack.DefinePlugin({
 			'process.env.BT_API_URL': process.env.BT_API_URL
 		}),
-		new CleanWebpackPlugin(['dist/dev']),
+		new CleanWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin()
 	]
 });
