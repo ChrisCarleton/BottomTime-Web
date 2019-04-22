@@ -32,6 +32,9 @@ class AppNavBar extends React.Component {
 						<LinkContainer to="/profile">
 							<NavItem>My Profile</NavItem>
 						</LinkContainer>
+						<LinkContainer to="/friends">
+							<NavItem>My Dive Buddies</NavItem>
+						</LinkContainer>
 						<LinkContainer to="/changePassword">
 							<NavItem>Change Password</NavItem>
 						</LinkContainer>
