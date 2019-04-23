@@ -5,19 +5,21 @@ class FriendsStore {
 	constructor() {
 		this.isLoading = false;
 		this.friendsList = [];
-		this.pendingRequests = [];
-		this.rejectedRequests = [];
+		this.myRequests = [];
+		this.requestsToMe = [];
 		this.showNewFriendRequestDialog = false;
 
 		this.bindListeners({
 			handleFinishLoading: FriendsActions.FINISH_LOADING,
 			handleSetFriendsList: FriendsActions.SET_FRIENDS_LIST,
+			handleSetRequestsList: FriendsActions.SET_REQUESTS_LIST,
 			handleStartLoading: FriendsActions.BEGIN_LOADING,
 			handleNewFriendRequestVisiblityChanged: FriendsActions.SET_NEW_FRIEND_REQUEST_DIALOG_VISIBLE
 		});
 
 		this.handleFinishLoading = this.handleFinishLoading.bind(this);
 		this.handleSetFriendsList = this.handleSetFriendsList.bind(this);
+		this.handleSetRequestsList = this.handleSetRequestsList.bind(this);
 		this.handleStartLoading = this.handleStartLoading.bind(this);
 		this.handleNewFriendRequestVisiblityChanged
 			= this.handleNewFriendRequestVisiblityChanged.bind(this);
@@ -29,7 +31,10 @@ class FriendsStore {
 
 	handleSetFriendsList(friends) {
 		this.friendsList = friends;
-		this.isLoading = false;
+	}
+
+	handleSetRequestsList(requests) {
+		this.requestsToMe = requests;
 	}
 
 	handleStartLoading() {

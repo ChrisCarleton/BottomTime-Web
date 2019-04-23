@@ -1,4 +1,3 @@
-import agent from '../../agent';
 import {
 	Alert,
 	Button,
@@ -8,27 +7,11 @@ import {
 	Label
 } from 'react-bootstrap';
 import FriendsActions from '../actions/friends-actions';
-import handleError from '../../handle-error';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 class FriendsList extends React.Component {
-	componentDidMount() {
-		setTimeout(async () => {
-			try {
-				FriendsActions.beginLoading();
-				const response = await agent
-					.get(`/api/users/${ this.props.username }/friends`)
-					.query({ type: 'friends' });
-				FriendsActions.setFriendsList(response.body);
-			} catch (err) {
-				FriendsActions.finishLoading();
-				handleError(err, this.props.history);
-			}
-		}, 0);
-	}
-
 	renderList() {
 		const { friendsList } = this.props;
 
@@ -80,9 +63,7 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
-	friendsList: PropTypes.array.isRequired,
-	history: PropTypes.object.isRequired,
-	username: PropTypes.string.isRequired
+	friendsList: PropTypes.array.isRequired
 };
 
 export default withRouter(FriendsList);

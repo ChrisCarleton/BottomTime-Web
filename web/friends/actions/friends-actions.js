@@ -13,6 +13,10 @@ class FriendsActions {
 		return friends;
 	}
 
+	setRequestsList(requests) {
+		return requests;
+	}
+
 	setNewFriendRequestDialogVisible(isVisible) {
 		return isVisible;
 	}
