@@ -12,6 +12,10 @@ class FriendsActions {
 	setFriendsList(friends) {
 		return friends;
 	}
+
+	setNewFriendRequestDialogVisible(isVisible) {
+		return isVisible;
+	}
 }
 
 export default alt.createActions(FriendsActions);

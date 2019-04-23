@@ -8,6 +8,7 @@ import CurrentUserStore from '../../users/stores/current-user-store';
 import FriendsStore from '../stores/friends-store';
 import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
+import NewFriendRequestDialog from './new-friend-request-dialog';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React, { lazy, Suspense } from 'react';
@@ -29,6 +30,14 @@ class Friends extends React.Component {
 		};
 	}
 
+	renderNewFriendRequestDialog() {
+		if (this.props.showNewFriendRequestDialog) {
+			return <NewFriendRequestDialog />;
+		}
+
+		return null;
+	}
+
 	render() {
 		if (this.props.currentUser.isAnonymous) {
 			return <RequireUser />;
@@ -36,6 +45,7 @@ class Friends extends React.Component {
 
 		return (
 			<div>
+				{ this.renderNewFriendRequestDialog() }
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -65,7 +75,8 @@ class Friends extends React.Component {
 
 Friends.propTypes = {
 	friendsList: PropTypes.array.isRequired,
-	currentUser: PropTypes.object.isRequired
+	currentUser: PropTypes.object.isRequired,
+	showNewFriendRequestDialog: PropTypes.bool.isRequired
 };
 
 export default connectToStores(Friends);

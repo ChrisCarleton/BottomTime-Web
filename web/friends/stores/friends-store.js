@@ -7,16 +7,20 @@ class FriendsStore {
 		this.friendsList = [];
 		this.pendingRequests = [];
 		this.rejectedRequests = [];
+		this.showNewFriendRequestDialog = false;
 
 		this.bindListeners({
 			handleFinishLoading: FriendsActions.FINISH_LOADING,
 			handleSetFriendsList: FriendsActions.SET_FRIENDS_LIST,
-			handleStartLoading: FriendsActions.BEGIN_LOADING
+			handleStartLoading: FriendsActions.BEGIN_LOADING,
+			handleNewFriendRequestVisiblityChanged: FriendsActions.SET_NEW_FRIEND_REQUEST_DIALOG_VISIBLE
 		});
 
 		this.handleFinishLoading = this.handleFinishLoading.bind(this);
 		this.handleSetFriendsList = this.handleSetFriendsList.bind(this);
 		this.handleStartLoading = this.handleStartLoading.bind(this);
+		this.handleNewFriendRequestVisiblityChanged
+			= this.handleNewFriendRequestVisiblityChanged.bind(this);
 	}
 
 	handleFinishLoading() {
@@ -30,6 +34,10 @@ class FriendsStore {
 
 	handleStartLoading() {
 		this.isLoading = true;
+	}
+
+	handleNewFriendRequestVisiblityChanged(isVisible) {
+		this.showNewFriendRequestDialog = isVisible;
 	}
 }
 

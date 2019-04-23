@@ -56,7 +56,13 @@ class FriendsList extends React.Component {
 			<div>
 				<ButtonToolbar>
 					<ButtonGroup>
-						<Button id="btn-new-request" bsStyle="primary">New Buddy Request</Button>
+						<Button
+							id="btn-new-request"
+							bsStyle="primary"
+							onClick={ () => FriendsActions.setNewFriendRequestDialogVisible(true) }
+						>
+							New Buddy Request
+						</Button>
 					</ButtonGroup>
 
 					<ButtonGroup>

@@ -2,11 +2,12 @@
 A React-based front-end for the Bottom Time application.
 
 Component | Status
--|-
+---|---
 Master Build | [![CircleCI](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/master.svg?style=svg&circle-token=0da34d6d5ac574445b77bfbb8904220521684aa4)](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/master)
 Production Build | [![CircleCI](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/prod.svg?style=svg&circle-token=0da34d6d5ac574445b77bfbb8904220521684aa4)](https://circleci.com/gh/ChrisCarleton/BottomTime-Web/tree/prod)
 Dependencies | [![dependencies Status](https://david-dm.org/ChrisCarleton/BottomTime-Web/status.svg)](https://david-dm.org/ChrisCarleton/BottomTime-Web)
 Dev Dependencies | [![devDependencies Status](https://david-dm.org/ChrisCarleton/BottomTime-Web/dev-status.svg)](https://david-dm.org/ChrisCarleton/BottomTime-Web?type=dev)
+Security Vulnerabilities | [![Known Vulnerabilities](https://snyk.io/test/github/ChrisCarleton/BottomTime-Web/badge.svg?targetFile=package.json)](https://snyk.io/test/github/ChrisCarleton/BottomTime-Web?targetFile=package.json)
 
 ## Building and Running Locally
 ### Prerequisites

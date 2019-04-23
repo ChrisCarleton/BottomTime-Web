@@ -46,6 +46,7 @@ class TextBox extends React.Component {
 
 		const formControl = (
 			<FormControl
+				autoFocus={ this.props.autoFocus }
 				type={ this.props.password ? 'password' : 'text' }
 				value={ this.props.getValue() || '' }
 				onChange={ this.handleTextChanged }
@@ -74,6 +75,7 @@ class TextBox extends React.Component {
 }
 
 TextBox.propTypes = {
+	autoFocus: PropTypes.bool,
 	controlId: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
 	maxLength: PropTypes.number,
