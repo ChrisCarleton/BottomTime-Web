@@ -17,6 +17,21 @@ class FriendsActions {
 		return requests;
 	}
 
+	showReasonBox(index, isVisible) {
+		return {
+			index,
+			isVisible
+		};
+	}
+
+	showProfileCard(username) {
+		return username;
+	}
+
+	hideProfileCard() {
+		return true;
+	}
+
 	setNewFriendRequestDialogVisible(isVisible) {
 		return isVisible;
 	}

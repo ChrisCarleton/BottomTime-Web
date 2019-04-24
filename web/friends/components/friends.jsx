@@ -1,6 +1,7 @@
 import agent from '../../agent';
 import {
 	Breadcrumb,
+	Modal,
 	Nav,
 	NavItem
 } from 'react-bootstrap';
@@ -13,6 +14,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
 import NewFriendRequestDialog from './new-friend-request-dialog';
 import PageTitle from '../../components/page-title';
+import ProfileCard from '../../users/components/profile-card';
 import PropTypes from 'prop-types';
 import React, { lazy, Suspense } from 'react';
 import RequireUser from '../../components/require-user';
@@ -68,6 +70,14 @@ class Friends extends React.Component {
 		return (
 			<div>
 				{ this.renderNewFriendRequestDialog() }
+				<Modal show={ this.props.profileCard !== '' } onHide={ FriendsActions.hideProfileCard }>
+					<Modal.Header closeButton>
+						<Modal.Title>{ this.props.profileCard }</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<ProfileCard username={ this.props.profileCard } />
+					</Modal.Body>
+				</Modal>
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -97,6 +107,7 @@ class Friends extends React.Component {
 Friends.propTypes = {
 	currentUser: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
+	profileCard: PropTypes.string.isRequired,
 	showNewFriendRequestDialog: PropTypes.bool.isRequired
 };
 
