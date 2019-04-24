@@ -20,6 +20,14 @@ class FriendsActions {
 	setNewFriendRequestDialogVisible(isVisible) {
 		return isVisible;
 	}
+
+	checkAllRequests() {
+		return true;
+	}
+
+	uncheckAllRequests() {
+		return true;
+	}
 }
 
 export default alt.createActions(FriendsActions);

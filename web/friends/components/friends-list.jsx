@@ -1,3 +1,4 @@
+import agent from '../../agent';
 import {
 	Alert,
 	Button,
@@ -6,12 +7,43 @@ import {
 	Glyphicon,
 	Label
 } from 'react-bootstrap';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import FriendsActions from '../actions/friends-actions';
+import FriendsStore from '../stores/friends-store';
+import handleError from '../../handle-error';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 
 class FriendsList extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore, FriendsStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			...FriendsStore.getState(),
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
+	constructor(props) {
+		super(props);
+		this.handleRefresh = this.handleRefresh.bind(this);
+	}
+
+	async handleRefresh() {
+		try {
+			const response = await agent
+				.get(`/api/users/${ this.props.currentUser.username }/friends`)
+				.query({ type: 'friends' });
+			FriendsActions.setFriendsList(response.body);
+		} catch (err) {
+			handleError(err, this.props.history);
+		}
+	}
+
 	renderList() {
 		const { friendsList } = this.props;
 
@@ -21,9 +53,7 @@ class FriendsList extends React.Component {
 					<p>
 						<Glyphicon glyph="exclamation-sign" />&nbsp;
 						Sorry, but you have no dive buddies yet. Try clicking <strong>New Buddy Request</strong> above.
-					</p>
-					<p>
-						<em>One should never dive alone! ;)</em>
+						One should never dive alone! ;)
 					</p>
 				</Alert>
 			);
@@ -49,7 +79,7 @@ class FriendsList extends React.Component {
 					</ButtonGroup>
 
 					<ButtonGroup>
-						<Button id="btn-refresh-friends">
+						<Button id="btn-refresh-friends" onClick={ this.handleRefresh }>
 							<Glyphicon glyph="refresh" />&nbsp;
 							Refresh
 						</Button>
@@ -63,7 +93,9 @@ class FriendsList extends React.Component {
 }
 
 FriendsList.propTypes = {
-	friendsList: PropTypes.array.isRequired
+	currentUser: PropTypes.object.isRequired,
+	friendsList: PropTypes.array.isRequired,
+	history: PropTypes.object.isRequired
 };
 
-export default withRouter(FriendsList);
+export default connectToStores(withRouter(FriendsList));

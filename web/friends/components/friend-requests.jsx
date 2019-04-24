@@ -1,9 +1,9 @@
+import agent from '../../agent';
 import {
 	Alert,
 	Button,
 	ButtonGroup,
 	ButtonToolbar,
-	Checkbox,
 	Col,
 	Glyphicon,
 	Label,
@@ -11,11 +11,33 @@ import {
 	ListGroupItem,
 	Row
 } from 'react-bootstrap';
+import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserStore from '../../users/stores/current-user-store';
+import FriendsActions from '../actions/friends-actions';
+import FriendsStore from '../stores/friends-store';
+import handleError from '../../handle-error';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 class FriendRequests extends React.Component {
+	static getStores() {
+		return [ CurrentUserStore, FriendsStore ];
+	}
+
+	static getPropsFromStores() {
+		return {
+			...FriendsStore.getState(),
+			currentUser: CurrentUserStore.getState().currentUser
+		};
+	}
+
+	constructor(props) {
+		super(props);
+		this.handleRefreshRequests = this.handleRefreshRequests.bind(this);
+	}
+
 	handleAcceptRequest(index) {
 		console.log('Accept', index);
 	}
@@ -24,9 +46,21 @@ class FriendRequests extends React.Component {
 		console.log('Decline', index);
 	}
 
+	async handleRefreshRequests() {
+		try {
+			const response = await agent
+				.get(`/api/users/${ this.props.currentUser.username }/friends`)
+				.query({ type: 'requests-incoming' });
+
+			FriendsActions.setRequestsList(response.body);
+		} catch (err) {
+			handleError(err, this.props.history);
+		}
+	}
+
 	renderRequestsList() {
-		const { requestsList } = this.props;
-		if (requestsList.length === 0) {
+		const { requestsToMe } = this.props;
+		if (requestsToMe.length === 0) {
 			return (
 				<Alert bsStyle="info">
 					<p>
@@ -40,13 +74,10 @@ class FriendRequests extends React.Component {
 		return (
 			<ListGroup>
 				{
-					requestsList.map((r, i) => (
+					requestsToMe.map((r, i) => (
 						<ListGroupItem key={ i }>
 							<Row>
-								<Col sm={ 4 } md={ 1 }>
-									<Checkbox />
-								</Col>
-								<Col sm={ 6 } md={ 6 }>
+								<Col sm={ 12 } md={ 7 }>
 									<h4>
 										<a href="#">{ r.user }</a>
 										&nbsp;
@@ -56,17 +87,19 @@ class FriendRequests extends React.Component {
 									</h4>
 								</Col>
 								<Col sm={ 12 } md={ 5 }>
-									<Button bsStyle="success" onClick={ () => this.handleAcceptRequest(i) }>
-										<Glyphicon glyph="ok" />
+									<div className="text-right" style={ { width: '100%' } }>
+										<Button bsStyle="success" onClick={ () => this.handleAcceptRequest(i) }>
+											<Glyphicon glyph="ok" />
+											&nbsp;
+											Accept
+										</Button>
 										&nbsp;
-										Accept
-									</Button>
-									&nbsp;
-									<Button bsStyle="danger" onClick={ () => this.handleDeclineRequest(i) }>
-										<Glyphicon glyph="remove" />
-										&nbsp;
-										Decline
-									</Button>
+										<Button bsStyle="danger" onClick={ () => this.handleDeclineRequest(i) }>
+											<Glyphicon glyph="remove" />
+											&nbsp;
+											Decline
+										</Button>
+									</div>
 								</Col>
 							</Row>
 						</ListGroupItem>
@@ -81,23 +114,22 @@ class FriendRequests extends React.Component {
 			<div>
 				<ButtonToolbar>
 					<ButtonGroup>
-						<Button>Select All</Button>
-						<Button>Select None</Button>
+						<Button
+							bsStyle="primary"
+							onClick={ () => FriendsActions.setNewFriendRequestDialogVisible(true) }
+						>
+							New Buddy Request
+						</Button>
 					</ButtonGroup>
 					<ButtonGroup>
-						<Button>
+						<Button onClick={ this.handleRefreshRequests }>
 							<Glyphicon glyph="refresh" />
 							&nbsp;
 							Refresh
 						</Button>
-						<Button disabled>
-							<Glyphicon glyph="trash" />
-							&nbsp;
-							Delete
-						</Button>
 					</ButtonGroup>
 				</ButtonToolbar>
-				<p>You have <Label>{ this.props.requestsList.length }</Label> pending dive buddy requests.</p>
+				<p>You have <Label>{ this.props.requestsToMe.length }</Label> pending dive buddy requests.</p>
 				{ this.renderRequestsList() }
 			</div>
 		);
@@ -105,7 +137,9 @@ class FriendRequests extends React.Component {
 }
 
 FriendRequests.propTypes = {
-	requestsList: PropTypes.array.isRequired
+	currentUser: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
+	requestsToMe: PropTypes.array.isRequired
 };
 
-export default FriendRequests;
+export default withRouter(connectToStores(FriendRequests));

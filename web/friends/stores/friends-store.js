@@ -14,7 +14,9 @@ class FriendsStore {
 			handleSetFriendsList: FriendsActions.SET_FRIENDS_LIST,
 			handleSetRequestsList: FriendsActions.SET_REQUESTS_LIST,
 			handleStartLoading: FriendsActions.BEGIN_LOADING,
-			handleNewFriendRequestVisiblityChanged: FriendsActions.SET_NEW_FRIEND_REQUEST_DIALOG_VISIBLE
+			handleNewFriendRequestVisiblityChanged: FriendsActions.SET_NEW_FRIEND_REQUEST_DIALOG_VISIBLE,
+			handleCheckAllRequests: FriendsActions.CHECK_ALL_REQUESTS,
+			handleUncheckAllRequests: FriendsActions.UNCHECK_ALL_REQUESTS
 		});
 
 		this.handleFinishLoading = this.handleFinishLoading.bind(this);
@@ -23,6 +25,8 @@ class FriendsStore {
 		this.handleStartLoading = this.handleStartLoading.bind(this);
 		this.handleNewFriendRequestVisiblityChanged
 			= this.handleNewFriendRequestVisiblityChanged.bind(this);
+		this.handleCheckAllRequests = this.handleCheckAllRequests.bind(this);
+		this.handleUncheckAllRequests = this.handleUncheckAllRequests.bind(this);
 	}
 
 	handleFinishLoading() {
@@ -43,6 +47,20 @@ class FriendsStore {
 
 	handleNewFriendRequestVisiblityChanged(isVisible) {
 		this.showNewFriendRequestDialog = isVisible;
+	}
+
+	handleCheckAllRequests() {
+		this.requestsToMe = this.requestsToMe.map(r => ({
+			...r,
+			checked: true
+		}));
+	}
+
+	handleUncheckAllRequests() {
+		this.requestsToMe = this.requestsToMe.map(r => ({
+			...r,
+			checked: false
+		}));
 	}
 }
 
