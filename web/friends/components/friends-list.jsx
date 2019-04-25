@@ -4,17 +4,23 @@ import {
 	Button,
 	ButtonGroup,
 	ButtonToolbar,
+	Checkbox,
+	Col,
 	Glyphicon,
-	Label
+	Label,
+	ListGroup,
+	ListGroupItem,
+	Row
 } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import FriendsActions from '../actions/friends-actions';
 import FriendsStore from '../stores/friends-store';
 import handleError from '../../handle-error';
+import LoadingSpinner from '../../components/loading-spinner';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class FriendsList extends React.Component {
 	static getStores() {
@@ -45,13 +51,18 @@ class FriendsList extends React.Component {
 	}
 
 	renderList() {
-		const { friendsList } = this.props;
+		const { isLoading, friendsList } = this.props;
+
+		if (isLoading) {
+			return <LoadingSpinner message="Getting your friends list..." />;
+		}
 
 		if (friendsList.length === 0) {
 			return (
 				<Alert bsStyle="info">
 					<p>
-						<Glyphicon glyph="exclamation-sign" />&nbsp;
+						<Glyphicon glyph="exclamation-sign" />
+						&nbsp;
 						Sorry, but you have no dive buddies yet. Try clicking <strong>New Buddy Request</strong> above.
 						One should never dive alone! ;)
 					</p>
@@ -59,7 +70,33 @@ class FriendsList extends React.Component {
 			);
 		}
 
-		return null;
+		return (
+			<ListGroup>
+				{
+					friendsList.map((r, i) => (
+						<ListGroupItem key={ i }>
+							<Row>
+								<Col sm={ 3 } md={ 1 }>
+									<div className="text-center" style={ { width: '100%' } }>
+										<Checkbox
+											checked={ r.checked }
+										/>
+									</div>
+								</Col>
+								<Col sm={ 9 } md={ 11 }>
+									<h4>{ r.friend }</h4>
+									[
+									<Link to={ `/logs/${ r.friend }` }>View Log Book</Link>
+									&nbsp;|&nbsp;
+									<Link to={ `/profile/${ r.friend }` }>View Profile</Link>
+									]
+								</Col>
+							</Row>
+						</ListGroupItem>
+					))
+				}
+			</ListGroup>
+		);
 	}
 
 	render() {
@@ -95,7 +132,8 @@ class FriendsList extends React.Component {
 FriendsList.propTypes = {
 	currentUser: PropTypes.object.isRequired,
 	friendsList: PropTypes.array.isRequired,
-	history: PropTypes.object.isRequired
+	history: PropTypes.object.isRequired,
+	isLoading: PropTypes.bool.isRequired
 };
 
 export default connectToStores(withRouter(FriendsList));

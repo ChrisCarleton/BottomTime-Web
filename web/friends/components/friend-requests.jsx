@@ -42,6 +42,7 @@ class FriendRequests extends React.Component {
 	constructor(props) {
 		super(props);
 		this.refreshRequests = this.refreshRequests.bind(this);
+		this.refreshFriends = this.refreshFriends.bind(this);
 		this.processFriendRequest = this.processFriendRequest.bind(this);
 		this.handleSubmitDecline = this.handleSubmitDecline.bind(this);
 	}
@@ -61,6 +62,21 @@ class FriendRequests extends React.Component {
 		}
 	}
 
+	async refreshFriends() {
+		try {
+			FriendsActions.beginLoading();
+			const response = await agent
+				.get(`/api/users/${ this.props.currentUser.username }/friends`)
+				.query({ type: 'friends' });
+
+			FriendsActions.setFriendsList(response.body);
+		} catch (err) {
+			handleError(err, this.props.history);
+		} finally {
+			FriendsActions.finishLoading();
+		}
+	}
+
 	async processFriendRequest(index, approveOrDisapprove, reason) {
 		const request = this.props.requestsToMe[index];
 
@@ -71,6 +87,7 @@ class FriendRequests extends React.Component {
 			ErrorActions.showSuccess(
 				`Dive buddy request has been ${ approveOrDisapprove === 'approve' ? 'approved' : 'declined' }.`);
 			await this.refreshRequests();
+			await this.refreshFriends();
 		} catch (err) {
 			handleError(err, this.props.history);
 		}
