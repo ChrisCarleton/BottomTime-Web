@@ -77,6 +77,16 @@ class ViewLogEntry extends React.Component {
 				<Formsy className="form-horizontal">
 					<Row>
 						<Col sm={ 12 } md={ 6 }>
+							<StaticField
+								controlId="diveNumber"
+								name="diveNumber"
+								label="diveNumber"
+								value={ currentEntry.diveNumber }
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Col sm={ 12 } md={ 6 }>
 							<h4>Time and Location</h4>
 							<StaticField
 								controlId="location"
@@ -108,6 +118,13 @@ class ViewLogEntry extends React.Component {
 								name="totalTime"
 								label="Total time"
 								value={ this.renderTime(currentEntry.totalTime) }
+								default={ Unspecified }
+							/>
+							<StaticField
+								controlId="surfaceInterval"
+								name="surfaceInterval"
+								label="Surface interval"
+								value={ this.renderTime(currentEntry.surfaceInterval) }
 								default={ Unspecified }
 							/>
 						</Col>

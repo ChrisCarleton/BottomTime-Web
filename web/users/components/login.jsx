@@ -1,5 +1,5 @@
 import agent from '../../agent';
-import { Button } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
@@ -30,8 +30,8 @@ class Login extends React.Component {
 	async handleSubmit(model, resetForm) {
 		try {
 			const result = await agent.post('/api/auth/login').send(model);
-			CurrentUserActions.loginSucceeded(result);
 			resetForm();
+			CurrentUserActions.loginSucceeded(result);
 		} catch (err) {
 			if (err.response && err.response.status === 401) {
 				ErrorActions.showError(
@@ -56,24 +56,30 @@ class Login extends React.Component {
 					Sign in with your username and password. <em>Coming soon: Sign in with Google, Twitter, etc.</em>
 				</p>
 
-				<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
-					<TextBox
-						controlId="username"
-						label="Username"
-						name="username"
-						required
-					/>
-					<TextBox
-						controlId="password"
-						label="Password"
-						name="password"
-						password
-						required
-					/>
-					<FormButtonGroup>
-						<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
-					</FormButtonGroup>
-				</Formsy>
+				<Row>
+					<Col smHidden mdOffset={ 2 } />
+					<Col sm={ 12 } md={ 6 }>
+						<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
+							<TextBox
+								autoFocus
+								controlId="username"
+								label="Username"
+								name="username"
+								required
+							/>
+							<TextBox
+								controlId="password"
+								label="Password"
+								name="password"
+								password
+								required
+							/>
+							<FormButtonGroup>
+								<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
+							</FormButtonGroup>
+						</Formsy>
+					</Col>
+				</Row>
 			</div>
 		);
 	}

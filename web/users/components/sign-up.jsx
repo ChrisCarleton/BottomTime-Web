@@ -96,6 +96,7 @@ class SignUpPage extends React.Component {
 					className="form-horizontal"
 				>
 					<TextBox
+						autoFocus
 						controlId="username"
 						label="User name"
 						name="username"

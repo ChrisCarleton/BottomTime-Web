@@ -16,15 +16,18 @@ class CustomFormGroup extends React.Component {
 		return (
 			<FormGroup
 				bsClass="form-group row"
+				bsSize="small"
 				controlId={ this.props.controlId }
 				validationState={ this.props.validationState }
 			>
-				<Col xs={ 12 } sm={ 3 } md={ 2 } mdOffset={ 1 }>
-					<ControlLabel>
-						{ label }{ this.props.required ? <span className="text-danger">*</span> : null }{ ':' }
-					</ControlLabel>
+				<Col xs={ 12 } sm={ 3 } md={ 3 } mdOffset={ 1 }>
+					<div className="text-right" style={ { width: '100%' } }>
+						<ControlLabel>
+							{ label }{ this.props.required ? <span className="text-danger">*</span> : null }{ ':' }
+						</ControlLabel>
+					</div>
 				</Col>
-				<Col xs={ 12 } sm={ 9 } md={ 6 }>
+				<Col xs={ 12 } sm={ 9 } md={ 8 }>
 					{ this.props.children }
 					{ this.props.errorMessage
 						? <p id={ `err-${ this.props.controlId }` } className="text-danger">

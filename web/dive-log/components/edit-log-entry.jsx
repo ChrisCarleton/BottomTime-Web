@@ -3,20 +3,24 @@ import {
 	Button,
 	Col,
 	Modal,
+	Nav,
+	NavItem,
 	Row
 } from 'react-bootstrap';
 import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import CurrentUserStore from '../../users/stores/current-user-store';
+import DiveInfo from './edit-dive-info';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
-import { FromPreferredUnits, ToPreferredUnits } from '../../unit-conversion';
+import { FromPreferredUnits } from '../../unit-conversion';
 import handleError from '../../handle-error';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import TextBox from '../../components/text-box';
+import TimeAndPlace from './edit-time-place';
 import { withRouter } from 'react-router-dom';
 
 class EditLogEntry extends React.Component {
@@ -51,12 +55,20 @@ class EditLogEntry extends React.Component {
 			entryTime: moment(model.entryTime, config.entryTimeFormat).utc().toISOString()
 		};
 
+		if (model.diveNumber) {
+			mapped.diveNumber = parseInt(model.diveNumber, 10);
+		}
+
 		if (model.bottomTime) {
 			mapped.bottomTime = parseFloat(model.bottomTime);
 		}
 
 		if (model.totalTime) {
 			mapped.totalTime = parseFloat(model.totalTime);
+		}
+
+		if (model.surfaceInterval) {
+			mapped.surfaceInterval = parseFloat(model.surfaceInterval);
 		}
 
 		if (model.gps_latitude || model.gps_longitude) {
@@ -161,8 +173,9 @@ class EditLogEntry extends React.Component {
 		}
 
 		try {
-			const username = this.props.match.params.username || this.props.currentUser.username;
-			const { logId } = this.props.match.params;
+			const { currentUser, match } = this.props;
+			const username = match.params.username || currentUser.username;
+			const { logId } = match.params;
 
 			if (logId) {
 				// Update an existing record.
@@ -185,225 +198,150 @@ class EditLogEntry extends React.Component {
 		}
 	}
 
-	renderDepth(value) {
-		return value || value === 0
-			? ToPreferredUnits.Distance[this.props.currentUser.distanceUnit](value).toFixed(2)
-			: '';
-	}
-
-	renderTemperature(value) {
-		return value || value === 0
-			? ToPreferredUnits.Temperature[this.props.currentUser.tempuratureUnit](value).toFixed(2)
-			: '';
-	}
-
-	renderWeight(value) {
-		return value || value === 0
-			? ToPreferredUnits.Weight[this.props.currentUser.weightUnit](value).toFixed(2)
-			: '';
-	}
-
 	/* eslint-disable complexity */
 	render() {
-		const weight = this.props.currentEntry.weight || {};
-		const gps = this.props.currentEntry.gps || {};
-		const entryTime = this.props.currentEntry.entryTime
-			? moment(this.props.currentEntry.entryTime).format(config.entryTimeFormat)
-			: '';
+		const { currentEntry, currentUser } = this.props;
 
-		const { distanceUnit, weightUnit } = this.props.currentUser;
+		const temperature = currentEntry.temperature || {};
+		temperature.thermoclines = temperature.thermoclines || [];
+		temperature.thermoclines[0] = temperature.thermoclines[0] || {};
+
+		const { distanceUnit, pressureUnit, weightUnit } = currentUser;
+		let temperatureUnit = '°C';
+		let temperatureLowerBoundError = 'Temperature cannot be below -2°C.';
+		let temperatureUpperBoundError = 'Temperature cannot be above 50°C.';
+
+		if (currentUser.temperatureUnit === 'f') {
+			temperatureUnit = '°F';
+			temperatureLowerBoundError = 'Temperature cannot be below 28.4°F.';
+			temperatureUpperBoundError = 'Temperature cannot be above 122°F.';
+		}
 
 		return (
-			<Formsy
-				onValidSubmit={ this.handleSubmit }
-				onInvalidSubmit={ this.handleInvalidSubmit }
-				mapping={ this.mapModel }
-				className="form-horizontal"
-				ref={ this.form }
-			>
-				<Modal show={ this.state.showConfirmReset }>
-					<Modal.Header>
-						<Modal.Title>Confirm Reset</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<p>
-							Are you sure you want to discard all of the changes you have made?
-						</p>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button
-							id="btn-confirm-discard"
-							bsStyle="primary"
-							onClick={ this.handleDiscardChanges }
-						>
-							Yes
-						</Button>
+			<div>
+				<Col smHidden md={ 2 }>
+					<Nav bsStyle="pills" activeKey={ 0 } stacked>
+						<NavItem eventKey={ 0 }>Time and Location</NavItem>
+						<NavItem eventKey={ 1 }>Dive Info</NavItem>
+						<NavItem eventKey={ 2 }>Conditions</NavItem>
+					</Nav>
+				</Col>
+				<Col sm={ 12 } md={ 10 }>
+					<Formsy
+						onValidSubmit={ this.handleSubmit }
+						onInvalidSubmit={ this.handleInvalidSubmit }
+						mapping={ this.mapModel }
+						className="form-horizontal"
+						ref={ this.form }
+					>
+						<Modal show={ this.state.showConfirmReset }>
+							<Modal.Header>
+								<Modal.Title>Confirm Reset</Modal.Title>
+							</Modal.Header>
+							<Modal.Body>
+								<p>
+									Are you sure you want to discard all of the changes you have made?
+								</p>
+							</Modal.Body>
+							<Modal.Footer>
+								<Button
+									id="btn-confirm-discard"
+									bsStyle="primary"
+									onClick={ this.handleDiscardChanges }
+								>
+									Yes
+								</Button>
+								&nbsp;
+								<Button id="btn-cancel-discard" onClick={ this.handleCancelDiscardChanges }>No</Button>
+							</Modal.Footer>
+						</Modal>
+						<Row>
+							<Col sm={ 12 } md={ 6 }>
+								<TextBox
+									autoFocus
+									name="diveNumber"
+									controlId="diveNumber"
+									label="Dive number"
+									value={ currentEntry.diveNumber || '' }
+									validations={ {
+										isInt: true,
+										isGreaterThan: 0
+									} }
+									validationErrors={ {
+										isInt: 'Dive number must be an integer.',
+										isGreaterThan: 'Dive number must be positive.'
+									} }
+								/>
+							</Col>
+						</Row>
+						<TimeAndPlace currentEntry={ currentEntry } />
+						<DiveInfo
+							currentEntry={ currentEntry }
+							distanceUnit={ distanceUnit }
+							pressureUnit={ pressureUnit }
+							weightUnit={ weightUnit }
+						/>
+						{/* <Row>
+							<Col sm={ 12 } md={ 6 }>
+								<TextBox
+									name="temperature_surface"
+									controlId="temperature_surface"
+									label="Surface temp"
+									value={ this.renderTemperature(temperature.surface) || '' }
+									units={ temperatureUnit }
+									validations={ {
+										isNumeric: true,
+										isGreaterThanOrEqual: -2,
+										isLessThanOrEqual: 50
+									} }
+									validationErrors={ {
+										isNumeric: 'Temperature must be a number',
+										isGreaterThanOrEqual: temperatureLowerBoundError,
+										isLessThanOrEqual: temperatureUpperBoundError
+									} }
+								/>
+								<TextBox
+									name="temperature_water"
+									controlId="temperature_water"
+									label="Water temp"
+									value={ this.renderTemperature(temperature.water) || '' }
+									units={ temperatureUnit }
+									validations={ {
+										isNumeric: true,
+										isGreaterThanOrEqual: -2,
+										isLessThanOrEqual: 50
+									} }
+									validationErrors={ {
+										isNumeric: 'Temperature must be a number',
+										isGreaterThanOrEqual: temperatureLowerBoundError,
+										isLessThanOrEqual: temperatureUpperBoundError
+									} }
+								/>
+								<TextBox
+									name="temperature_thermocline"
+									controlId="temperature_thermocline"
+									label="Thermocline"
+									value={ this.renderTemperature(temperature.thermoclines[0].temperature) || '' }
+									units={ temperatureUnit }
+									validations={ {
+										isNumeric: true,
+										isGreaterThanOrEqual: -2,
+										isLessThanOrEqual: 50
+									} }
+									validationErrors={ {
+										isNumeric: 'Temperature must be a number',
+										isGreaterThanOrEqual: temperatureLowerBoundError,
+										isLessThanOrEqual: temperatureUpperBoundError
+									} }
+								/>
+							</Col>
+						</Row> */}
+						<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
 						&nbsp;
-						<Button id="btn-cancel-discard" onClick={ this.handleCancelDiscardChanges }>No</Button>
-					</Modal.Footer>
-				</Modal>
-				<Row>
-					<Col sm={ 12 } md={ 6 }>
-						<h4>Time and Location</h4>
-						<TextBox
-							name="location"
-							controlId="location"
-							label="Location"
-							placeholder="City or Area"
-							required
-							value={ this.props.currentEntry.location || '' }
-							maxLength={ 200 }
-							validations={ {
-								maxLength: 200
-							} }
-							validationErrors={ {
-								maxLength: 'Location cannot be more than 200 characters long.'
-							} }
-						/>
-						<TextBox
-							name="site"
-							controlId="site"
-							label="Dive site"
-							required
-							value={ this.props.currentEntry.site || '' }
-							maxLength={ 200 }
-							validations={ {
-								maxLength: 200
-							} }
-							validationErrors={ {
-								maxLength: 'Site cannot be more than 200 characters long.'
-							} }
-						/>
-						<TextBox
-							name="entryTime"
-							controlId="entryTime"
-							label="Entry time"
-							required
-							placeholder={ moment().format(config.entryTimeFormat) }
-							value={ entryTime }
-							validations={ {
-								isDateTime: config.entryTimeFormat
-							} }
-							validationErrors={ {
-								isDateTime: 'Entry time must in the format of yyyy-mm-dd h:mm(am/pm).'
-							} }
-						/>
-						<TextBox
-							name="bottomTime"
-							controlId="bottomTime"
-							label="Bottom time"
-							value={ this.props.currentEntry.bottomTime || '' }
-							units="minutes"
-							required
-							validations={ {
-								isGreaterThan: 0
-							} }
-							validationErrors={ {
-								isGreaterThan: 'Bottom time must be a positive number.'
-							} }
-						/>
-						<TextBox
-							name="totalTime"
-							controlId="totalTime"
-							label="Total time"
-							value={ this.props.currentEntry.totalTime || '' }
-							units="minutes"
-							validations={ {
-								isGreaterThan: 0,
-								isGreaterThanOrEqualToField: 'bottomTime'
-							} }
-							validationErrors={ {
-								isGreaterThan: 'Total time must be a positive number.',
-								isGreaterThanOrEqualToField:
-									'Total time cannot be less than what you recorded for bottom time.'
-							} }
-						/>
-					</Col>
-					<Col sm={ 12 } md={ 6 }>
-						<h4>GPS</h4>
-						<TextBox
-							name="gps_latitude"
-							controlId="gps_latitude"
-							label="Latitude"
-							value={ gps.latitude || '' }
-							validations={ {
-								isBetween: { min: -90.0, max: 90.0 }
-							} }
-							validationErrors={ {
-								isBetween: 'Latitude must be between -90 and 90 degrees.'
-							} }
-							units="&deg;"
-						/>
-						<TextBox
-							name="gps_longitude"
-							controlId="gps_longitude"
-							label="Longitude"
-							value={ gps.longitude || '' }
-							validations={ {
-								isBetween: { min: -180.0, max: 180.0 }
-							} }
-							validationErrors={ {
-								isBetween: 'Longitude must be between -180 and 180 degrees.'
-							} }
-							units="&deg;"
-						/>
-					</Col>
-				</Row>
-				<Row>
-					<Col md={ 6 } sm={ 12 }>
-						<h4>Dive Info</h4>
-						<TextBox
-							name="averageDepth"
-							controlId="averageDepth"
-							label="Average depth"
-							value={ this.renderDepth(this.props.currentEntry.averageDepth) }
-							units={ distanceUnit }
-							validations={ {
-								isGreaterThan: 0
-							} }
-							validationErrors={ {
-								isGreaterThan: 'Average depth must be a positive number.'
-							} }
-						/>
-						<TextBox
-							name="maxDepth"
-							controlId="maxDepth"
-							label="Max. depth"
-							value={ this.renderDepth(this.props.currentEntry.maxDepth) }
-							units={ distanceUnit }
-							required
-							validations={ {
-								isGreaterThan: 0,
-								isGreaterThanOrEqualToField: 'averageDepth'
-							} }
-							validationErrors={ {
-								isGreaterThan: 'Maximum depth must be a positive number.',
-								isGreaterThanOrEqualToField:
-									'Maximum depth cannot be less than the average depth of the dive.'
-							} }
-						/>
-					</Col>
-					<Col md={ 6 } sm={ 12 }>
-						<h4>Weight</h4>
-						<TextBox
-							name="weight_amount"
-							controlId="weight_amount"
-							label="Amount worn"
-							value={ this.renderWeight(weight.amount) }
-							units={ weightUnit }
-							validations={ {
-								isGreaterThanOrEqual: 0
-							} }
-							validationErrors={ {
-								isGreaterThanOrEqual: 'Amount worn cannot be a negative number.'
-							} }
-						/>
-					</Col>
-				</Row>
-				<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
-				&nbsp;
-				<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
-			</Formsy>
+						<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
+					</Formsy>
+				</Col>
+			</div>
 		);
 	}
 	/* eslint-enable complexity */
