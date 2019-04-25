@@ -33,6 +33,7 @@ export const exampleProfile = {
 	distanceUnit: 'm',
 	weightUnit: 'kg',
 	temperatureUnit: 'c',
+	pressureUnit: 'bar',
 	divesLogged: 47,
 	bottomTimeLogged: 1748,
 	readOnly: false

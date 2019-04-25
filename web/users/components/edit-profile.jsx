@@ -369,6 +369,25 @@ class EditProfile extends React.Component {
 					] }
 				</RadioList>
 				<RadioList
+					controlId="pressureUnit"
+					name="pressureUnit"
+					label="Pressure unit"
+					value={ this.props.profile.pressureUnit || 'bar' }
+					inline
+					required
+				>
+					{ [
+						{
+							text: 'Bar',
+							value: 'bar'
+						},
+						{
+							text: 'psi',
+							value: 'psi'
+						}
+					] }
+				</RadioList>
+				<RadioList
 					controlId="temperatureUnit"
 					name="temperatureUnit"
 					label="Temperature unit"
