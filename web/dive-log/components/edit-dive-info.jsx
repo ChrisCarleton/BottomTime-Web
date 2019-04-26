@@ -6,6 +6,7 @@ import LogEntryUtilities from './log-entry-utilities';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
 import React from 'react';
+import TankCapacity from './tank-capacity';
 import TextBox from '../../components/text-box';
 
 class DiveInfo extends React.Component {
@@ -124,6 +125,12 @@ class DiveInfo extends React.Component {
 							validationErrors={ {
 								isGreaterThanOrEqual: 'Starting pressure must be a positive number.'
 							} }
+						/>
+						<TankCapacity
+							controlId="tankCapacity"
+							name="tankCapacity"
+							label="Tank capacity"
+							value={ { volume: air.volume, volumeUnit: air.volumeUnit } }
 						/>
 						<RadioList
 							controlId="air_material"
