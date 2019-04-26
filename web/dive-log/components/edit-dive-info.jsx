@@ -6,14 +6,16 @@ import LogEntryUtilities from './log-entry-utilities';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
 import React from 'react';
-import TankCapacity from './tank-capacity';
 import TextBox from '../../components/text-box';
 
 class DiveInfo extends React.Component {
+	/* eslint-disable complexity */
 	render() {
 		const { currentEntry, distanceUnit, pressureUnit, weightUnit } = this.props;
 		const weight = currentEntry.weight || {};
 		const air = currentEntry.air || {};
+		const decoStops = currentEntry.decoStops || [];
+		decoStops[0] = decoStops[0] || {};
 
 		return (
 			<div>
@@ -95,6 +97,33 @@ class DiveInfo extends React.Component {
 								{ text: 'Feet up', value: 'feet up' }
 							] }
 						</RadioList>
+						<strong>Safety Stop</strong>
+						<TextBox
+							name="ss_depth"
+							controlId="ss_depth"
+							label="Depth"
+							value={ LogEntryUtilities.renderDepth(decoStops[0].depth, distanceUnit) }
+							units={ distanceUnit }
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Safety stop depth must be a positive number.'
+							} }
+						/>
+						<TextBox
+							name="ss_duration"
+							controlId="ss_duration"
+							label="Duration"
+							value={ LogEntryUtilities.renderDepth(decoStops[0].depth, distanceUnit) }
+							units="minutes"
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Safety stop duration must be a positive number.'
+							} }
+						/>
 					</Col>
 					<Col md={ 6 } sm={ 12 }>
 						<strong>Air</strong>
@@ -126,12 +155,29 @@ class DiveInfo extends React.Component {
 								isGreaterThanOrEqual: 'Starting pressure must be a positive number.'
 							} }
 						/>
-						<TankCapacity
-							controlId="tankCapacity"
-							name="tankCapacity"
-							label="Tank capacity"
-							value={ { volume: air.volume, volumeUnit: air.volumeUnit } }
+						<TextBox
+							name="air_volume"
+							controlId="air_volume"
+							label="Tank volume"
+							value={ air.volume || '' }
+							validations={ {
+								isGreaterThanOrEqual: 0
+							} }
+							validationErrors={ {
+								isGreaterThanOrEqual: 'Tank volume must be a positive number.'
+							} }
 						/>
+						<RadioList
+							controlId="air_volumeUnit"
+							name="air_volumeUnit"
+							value={ air.volumeUnit || '' }
+							inline
+						>
+							{ [
+								{ text: 'L', value: 'l' },
+								{ text: 'cf', value: 'cf' }
+							] }
+						</RadioList>
 						<RadioList
 							controlId="air_material"
 							name="air_material"
@@ -164,6 +210,7 @@ class DiveInfo extends React.Component {
 			</div>
 		);
 	}
+	/* eslint-enable complexity */
 }
 
 DiveInfo.propTypes = {

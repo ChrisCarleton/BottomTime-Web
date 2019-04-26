@@ -9,10 +9,6 @@ import {
 
 class CustomFormGroup extends React.Component {
 	render() {
-		const label = this.props.smallLabel
-			? <small><em>{ this.props.label }</em></small>
-			: this.props.label;
-
 		return (
 			<FormGroup
 				bsClass="form-group row"
@@ -20,14 +16,27 @@ class CustomFormGroup extends React.Component {
 				controlId={ this.props.controlId }
 				validationState={ this.props.validationState }
 			>
-				<Col xs={ 12 } sm={ 3 } md={ 3 } mdOffset={ 1 }>
-					<div className="text-right" style={ { width: '100%' } }>
-						<ControlLabel>
-							{ label }{ this.props.required ? <span className="text-danger">*</span> : null }{ ':' }
-						</ControlLabel>
-					</div>
-				</Col>
-				<Col xs={ 12 } sm={ 9 } md={ 8 }>
+				{
+					this.props.label
+						? (
+							<Col xs={ 12 } sm={ 3 } md={ 3 } mdOffset={ 1 }>
+								<div className="text-right" style={ { width: '100%' } }>
+									<ControlLabel>
+										{ this.props.label }
+										{ this.props.required ? <span className="text-danger">*</span> : null }
+										{ ':' }
+									</ControlLabel>
+								</div>
+							</Col>)
+						: null
+				}
+				<Col
+					xs={ 12 }
+					smOffset={ this.props.label ? 0 : 3 }
+					sm={ 9 }
+					mdOffset={ this.props.label ? 0 : 4 }
+					md={ 8 }
+				>
 					{ this.props.children }
 					{ this.props.errorMessage
 						? <p id={ `err-${ this.props.controlId }` } className="text-danger">
@@ -43,9 +52,8 @@ CustomFormGroup.propTypes = {
 	children: PropTypes.node,
 	controlId: PropTypes.string.isRequired,
 	errorMessage: PropTypes.string,
-	label: PropTypes.string.isRequired,
+	label: PropTypes.string,
 	required: PropTypes.bool,
-	smallLabel: PropTypes.bool,
 	validationState: PropTypes.oneOf([ 'success', 'warning', 'error' ])
 };
 

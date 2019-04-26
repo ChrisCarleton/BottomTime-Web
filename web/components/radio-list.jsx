@@ -81,7 +81,7 @@ RadioList.propTypes = {
 	children: PropTypes.array.isRequired,
 	controlId: PropTypes.string.isRequired,
 	inline: PropTypes.bool,
-	label: PropTypes.string.isRequired,
+	label: PropTypes.string,
 	name: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	...formsyProps
