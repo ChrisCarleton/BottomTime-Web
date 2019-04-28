@@ -17,6 +17,8 @@ describe('Editing Log Entries', () => {
 	let authStub = null;
 
 	describe('Validation', () => {
+		let stub = null;
+
 		before(() => {
 			authStub = sinon.stub(mockApis, 'getAuthMe');
 			authStub.callsFake((req, res) => {
@@ -24,27 +26,56 @@ describe('Editing Log Entries', () => {
 			});
 		});
 
+		afterEach(() => {
+			if (stub) {
+				stub.restore();
+				stub = null;
+			}
+		});
+
 		after(() => {
 			authStub.restore();
 			authStub = null;
 		});
 
-		const LongString = faker.lorem.sentences(8).substr(0, 201);
+		const LongString = faker.lorem.sentences(8).substr(0, 190);
 
 		beforeEach(async () => {
 			await refreshPage(NewEntryUrl);
 		});
 
 		it('Will not allow location to be longer than 200 characters', async () => {
+			const logEntry = {
+				...logEntries[0],
+				location: LongString
+			};
+			stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+			stub.callsFake((req, res) => {
+				res.json(logEntry);
+			});
+
+			await driver.navigate().to(EntryUrl);
+			await driver.wait(until.elementLocated(By.id('location')));
 			const element = await driver.findElement(By.id('location'));
-			await element.sendKeys(LongString);
+			await element.sendKeys(faker.lorem.sentence(15));
 			const value = await element.getAttribute('value');
 			expect(value).to.have.lengthOf(200);
 		});
 
 		it('Will not allow site to be longer than 200 characters', async () => {
+			const logEntry = {
+				...logEntries[0],
+				site: LongString
+			};
+			stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+			stub.callsFake((req, res) => {
+				res.json(logEntry);
+			});
+
+			await driver.navigate().to(EntryUrl);
+			await driver.wait(until.elementLocated(By.id('location')));
 			const element = await driver.findElement(By.id('site'));
-			await element.sendKeys(LongString);
+			await element.sendKeys(faker.lorem.sentence(15));
 			const value = await element.getAttribute('value');
 			expect(value).to.have.lengthOf(200);
 		});
@@ -87,45 +118,45 @@ describe('Editing Log Entries', () => {
 		});
 
 		it('Latitude must be a number', async () => {
-			await driver.findElement(By.id('gps_latitude')).sendKeys('nope');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('114.38484');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('nope');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('114.38484');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_latitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.latitude')));
 		});
 
 		it('Latitude cannot be less than -90.0 degrees', async () => {
-			await driver.findElement(By.id('gps_latitude')).sendKeys('-90.32324');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('114.38484');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('-90.32324');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('114.38484');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_latitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.latitude')));
 		});
 
 		it('Latitude cannot be more than 90 degrees', async () => {
-			await driver.findElement(By.id('gps_latitude')).sendKeys('90.5373582');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('114.38484');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('90.5373582');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('114.38484');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_latitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.latitude')));
 		});
 
 		it('longitude must be a number', async () => {
-			await driver.findElement(By.id('gps_latitude')).sendKeys('14.38394');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('nope');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('14.38394');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('nope');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_longitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.longitude')));
 		});
 
 		it('longitude cannot be less than -180 degrees', async () => {
-			await driver.findElement(By.id('gps_latitude')).sendKeys('14.38394');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('-180.45782575');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('14.38394');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('-180.45782575');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_longitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.longitude')));
 		});
 
 		it('longitude cannot be more than 180 degrees', async () => {
-			await driver.findElement(By.id('gps_latitude')).sendKeys('14.38394');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('180.35735735');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('14.38394');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('180.35735735');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_longitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.longitude')));
 		});
 
 		it('if longitude is entered, latitude must also be present', async () => {
@@ -134,9 +165,9 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('entryTime')).sendKeys('2016-02-04 10:30AM');
 			await driver.findElement(By.id('maxDepth')).sendKeys('80');
 			await driver.findElement(By.id('bottomTime')).sendKeys('38');
-			await driver.findElement(By.id('gps_longitude')).sendKeys('17.32828');
+			await driver.findElement(By.id('gps.longitude')).sendKeys('17.32828');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_latitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.latitude')));
 		});
 
 		it('if latitude is entered, longitude must also be present', async () => {
@@ -145,9 +176,9 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('entryTime')).sendKeys('2016-02-04 10:30AM');
 			await driver.findElement(By.id('maxDepth')).sendKeys('80');
 			await driver.findElement(By.id('bottomTime')).sendKeys('38');
-			await driver.findElement(By.id('gps_latitude')).sendKeys('14.38394');
+			await driver.findElement(By.id('gps.latitude')).sendKeys('14.38394');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.wait(until.elementLocated(By.id('err-gps_longitude')));
+			await driver.wait(until.elementLocated(By.id('err-gps.longitude')));
 		});
 
 		it('Average depth must be a number', async () => {
@@ -182,15 +213,15 @@ describe('Editing Log Entries', () => {
 		});
 
 		it('Weight amount must be a number', async () => {
-			await driver.findElement(By.id('weight_amount')).sendKeys('lol');
+			await driver.findElement(By.id('weight.amount')).sendKeys('lol');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-weight_amount'));
+			await driver.findElement(By.id('err-weight.amount'));
 		});
 
 		it('Weight amount must be positive', async () => {
-			await driver.findElement(By.id('weight_amount')).sendKeys('-0.1');
+			await driver.findElement(By.id('weight.amount')).sendKeys('-0.1');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-weight_amount'));
+			await driver.findElement(By.id('err-weight.amount'));
 		});
 	});
 
@@ -212,7 +243,7 @@ describe('Editing Log Entries', () => {
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
 				driver.findElement(By.id('averageDepth')),
-				driver.findElement(By.id('weight_amount'))
+				driver.findElement(By.id('weight.amount'))
 			]);
 
 			await location.clear();
@@ -231,7 +262,7 @@ describe('Editing Log Entries', () => {
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
 				driver.findElement(By.id('averageDepth')).getAttribute('value'),
-				driver.findElement(By.id('weight_amount')).getAttribute('value')
+				driver.findElement(By.id('weight.amount')).getAttribute('value')
 			]);
 
 			expect(locationValue).to.equal(logEntries[0].location);
@@ -244,7 +275,7 @@ describe('Editing Log Entries', () => {
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
 				driver.findElement(By.id('averageDepth')),
-				driver.findElement(By.id('weight_amount'))
+				driver.findElement(By.id('weight.amount'))
 			]);
 
 			await location.clear();
@@ -263,7 +294,7 @@ describe('Editing Log Entries', () => {
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
 				driver.findElement(By.id('averageDepth')).getAttribute('value'),
-				driver.findElement(By.id('weight_amount')).getAttribute('value')
+				driver.findElement(By.id('weight.amount')).getAttribute('value')
 			]);
 
 			expect(locationValue).to.equal('');
@@ -280,7 +311,7 @@ describe('Editing Log Entries', () => {
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
 				driver.findElement(By.id('averageDepth')),
-				driver.findElement(By.id('weight_amount'))
+				driver.findElement(By.id('weight.amount'))
 			]);
 
 			await location.clear();
@@ -298,7 +329,7 @@ describe('Editing Log Entries', () => {
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
 				driver.findElement(By.id('averageDepth')).getAttribute('value'),
-				driver.findElement(By.id('weight_amount')).getAttribute('value')
+				driver.findElement(By.id('weight.amount')).getAttribute('value')
 			]);
 
 			expect(locationValue).to.equal(expectedLocation);

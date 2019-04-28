@@ -60,7 +60,7 @@ describe('Loading and Submitting Log Entries', () => {
 		});
 
 		await refreshPage(EntryUrl);
-		await driver.wait(until.elementLocated(By.id('weight_amount')));
+		await driver.wait(until.elementLocated(By.id('weight.amount')));
 		expect(async () => {
 			await driver.findElement(By.id('btn-save'));
 		}).to.throw;
@@ -92,7 +92,7 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 
 			await refreshPage(EntryUrl);
-			const weightElement = await driver.findElement(By.id('weight_amount'));
+			const weightElement = await driver.findElement(By.id('weight.amount'));
 			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
@@ -125,7 +125,7 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 
 			await refreshPage(EntryUrl);
-			const weightElement = await driver.findElement(By.id('weight_amount'));
+			const weightElement = await driver.findElement(By.id('weight.amount'));
 			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
@@ -223,7 +223,7 @@ describe('Loading and Submitting Log Entries', () => {
 
 		await refreshPage(NewEntryUrl);
 		await fillInRequiredFields();
-		await driver.findElement(By.id('weight_amount')).sendKeys('6');
+		await driver.findElement(By.id('weight.amount')).sendKeys('6');
 		await driver.findElement(By.id('btn-save')).click();
 
 		expect(spy.called).to.be.true;

@@ -131,15 +131,15 @@ class ViewLogEntry extends React.Component {
 						<Col sm={ 12 } md={ 6 }>
 							<h4>GPS</h4>
 							<StaticField
-								controlId="gps_latitude"
-								name="gps_latitude"
+								controlId="gps.latitude"
+								name="gps.latitude"
 								label="Latitude"
 								default={ Unspecified }
 								value={ latitude }
 							/>
 							<StaticField
-								controlId="gps_longitude"
-								name="gps_longitude"
+								controlId="gps.longitude"
+								name="gps.longitude"
 								label="Longitude"
 								default={ Unspecified }
 								value={ longitude }
@@ -167,8 +167,8 @@ class ViewLogEntry extends React.Component {
 						<Col md={ 6 } sm={ 12 }>
 							<h4>Weight</h4>
 							<StaticField
-								controlId="weight_amount"
-								name="weight_amount"
+								controlId="weight.amount"
+								name="weight.amount"
 								label="Amount worn"
 								default={ Unspecified }
 								value={ this.renderWeight(weight.amount) }
