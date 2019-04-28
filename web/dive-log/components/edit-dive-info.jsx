@@ -1,5 +1,6 @@
 import {
 	Col,
+	Glyphicon,
 	Row
 } from 'react-bootstrap';
 import LogEntryUtilities from './log-entry-utilities';
@@ -21,7 +22,7 @@ class DiveInfo extends React.Component {
 			<div>
 				<Row>
 					<Col sm={ 12 }>
-						<h4>Dive Info</h4>
+						<h3><Glyphicon glyph="dashboard" />&nbsp;Dive Info</h3>
 					</Col>
 				</Row>
 				<Row>
@@ -59,8 +60,8 @@ class DiveInfo extends React.Component {
 						/>
 						<strong>Weight</strong>
 						<TextBox
-							name="weight_amount"
-							controlId="weight_amount"
+							name="weight.amount"
+							controlId="weight.amount"
 							label="Amount worn"
 							value={ LogEntryUtilities.renderWeight(weight.amount, weightUnit) }
 							units={ weightUnit }
@@ -72,8 +73,8 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<RadioList
-							controlId="weight_correctness"
-							name="weight_correctness"
+							controlId="weight.correctness"
+							name="weight.correctness"
 							label="Correctness"
 							value={ weight.correctness || '' }
 							inline
@@ -85,8 +86,8 @@ class DiveInfo extends React.Component {
 							] }
 						</RadioList>
 						<RadioList
-							controlId="weight_trim"
-							name="weight_trim"
+							controlId="weight.trim"
+							name="weight.trim"
 							label="Trim"
 							value={ weight.trim || '' }
 							inline
@@ -99,8 +100,8 @@ class DiveInfo extends React.Component {
 						</RadioList>
 						<strong>Safety Stop</strong>
 						<TextBox
-							name="ss_depth"
-							controlId="ss_depth"
+							name="decoStops[0].depth"
+							controlId="decoStops[0].depth"
 							label="Depth"
 							value={ LogEntryUtilities.renderDepth(decoStops[0].depth, distanceUnit) }
 							units={ distanceUnit }
@@ -112,10 +113,10 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<TextBox
-							name="ss_duration"
-							controlId="ss_duration"
+							name="decoStops[0].duration"
+							controlId="decoStops[0].duration"
 							label="Duration"
-							value={ LogEntryUtilities.renderDepth(decoStops[0].depth, distanceUnit) }
+							value={ decoStops[0].duration || '' }
 							units="minutes"
 							validations={ {
 								isGreaterThan: 0
@@ -128,8 +129,8 @@ class DiveInfo extends React.Component {
 					<Col md={ 6 } sm={ 12 }>
 						<strong>Air</strong>
 						<TextBox
-							name="air_in"
-							controlId="air_in"
+							name="air.in"
+							controlId="air.in"
 							label="Start pressure"
 							value={ LogEntryUtilities.renderPressure(air.in, pressureUnit) }
 							units={ pressureUnit }
@@ -143,8 +144,8 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<TextBox
-							name="air_out"
-							controlId="air_out"
+							name="air.out"
+							controlId="air.out"
 							label="End pressure"
 							value={ LogEntryUtilities.renderPressure(air.out, pressureUnit) }
 							units={ pressureUnit }
@@ -156,8 +157,8 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<TextBox
-							name="air_volume"
-							controlId="air_volume"
+							name="air.volume"
+							controlId="air.volume"
 							label="Tank volume"
 							value={ air.volume || '' }
 							validations={ {
@@ -168,8 +169,8 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<RadioList
-							controlId="air_volumeUnit"
-							name="air_volumeUnit"
+							controlId="air.volumeUnit"
+							name="air.volumeUnit"
 							value={ air.volumeUnit || '' }
 							inline
 						>
@@ -179,8 +180,8 @@ class DiveInfo extends React.Component {
 							] }
 						</RadioList>
 						<RadioList
-							controlId="air_material"
-							name="air_material"
+							controlId="air.material"
+							name="air.material"
 							label="Tanks"
 							value={ air.material || '' }
 							inline
@@ -191,8 +192,8 @@ class DiveInfo extends React.Component {
 							] }
 						</RadioList>
 						<TextBox
-							name="air_oxygen"
-							controlId="air_oxygen"
+							name="air.oxygen"
+							controlId="air.oxygen"
 							label="Oxygen content"
 							value={ air.oxygen || '' }
 							units={ '%' }

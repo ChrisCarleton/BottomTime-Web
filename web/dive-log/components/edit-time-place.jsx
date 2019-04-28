@@ -1,5 +1,6 @@
 import {
 	Col,
+	Glyphicon,
 	Row
 } from 'react-bootstrap';
 import config from '../../config';
@@ -19,7 +20,7 @@ class TimeAndPlace extends React.Component {
 		return (
 			<Row>
 				<Col sm={ 12 } md={ 6 }>
-					<h4>Time and Location</h4>
+					<h3><Glyphicon glyph="map-marker" />&nbsp;Time and Place</h3>
 					<TextBox
 						name="location"
 						controlId="location"
@@ -110,8 +111,8 @@ class TimeAndPlace extends React.Component {
 				<Col sm={ 12 } md={ 6 }>
 					<h4>GPS</h4>
 					<TextBox
-						name="gps_latitude"
-						controlId="gps_latitude"
+						name="gps.latitude"
+						controlId="gps.latitude"
 						label="Latitude"
 						value={ gps.latitude || '' }
 						validations={ {
@@ -123,8 +124,8 @@ class TimeAndPlace extends React.Component {
 						units="&deg;"
 					/>
 					<TextBox
-						name="gps_longitude"
-						controlId="gps_longitude"
+						name="gps.longitude"
+						controlId="gps.longitude"
 						label="Longitude"
 						value={ gps.longitude || '' }
 						validations={ {

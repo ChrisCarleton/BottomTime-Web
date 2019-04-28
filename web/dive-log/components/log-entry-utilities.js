@@ -1,4 +1,88 @@
-import { ToPreferredUnits } from '../../unit-conversion';
+import config from '../../config';
+import CurrentUserStore from '../../users/stores/current-user-store';
+import Dot from 'dot-object';
+import { FromPreferredUnits, ToPreferredUnits } from '../../unit-conversion';
+import moment from 'moment';
+
+const dot = new Dot();
+dot.override = true;
+
+function trim(str) {
+	if (typeof str === 'string') {
+		return str.trim();
+	}
+
+	return str;
+}
+
+function toISOString(str) {
+	if (typeof str === 'string') {
+		return moment(str, config.entryTimeFormat).utc().toISOString();
+	}
+
+	return str;
+}
+
+function toNumber(str) {
+	const float = parseFloat(str);
+	return isNaN(float) ? null : float;
+}
+
+function toDepth(str) {
+	const { distanceUnit } = CurrentUserStore.getState().currentUser;
+	const value = parseFloat(str);
+	return isNaN(value) ? null : FromPreferredUnits.Distance[distanceUnit](value);
+}
+
+function toPressure(str) {
+	const { pressureUnit } = CurrentUserStore.getState().currentUser;
+	const value = parseFloat(str);
+	return isNaN(value) ? null : FromPreferredUnits.Pressure[pressureUnit](value);
+}
+
+function toTemperature(str) {
+	const { temperatureUnit } = CurrentUserStore.getState().currentUser;
+	const value = parseFloat(str);
+	return isNaN(value) ? null : FromPreferredUnits.Temperature[temperatureUnit](value);
+}
+
+function toWeight(str) {
+	const { weightUnit } = CurrentUserStore.getState().currentUser;
+	const value = parseFloat(str);
+	return isNaN(value) ? null : FromPreferredUnits.Weight[weightUnit](value);
+}
+
+function nullIfEmpty(str) {
+	if (str === '') {
+		return null;
+	}
+
+	return str;
+}
+
+const FormMods = {
+	'location': trim,
+	'site': trim,
+	'entryTime': toISOString,
+	'bottomTime': toNumber,
+	'totalTime': toNumber,
+	'surfaceInterval': toNumber,
+	'averageDepth': toDepth,
+	'maxDepth': toDepth,
+	'gps.latitude': toNumber,
+	'gps.longitude': toNumber,
+	'weight.amount': toWeight,
+	'decoStops[0].depth': toDepth,
+	'decoStops[0].duration': toNumber,
+	'air.in': toPressure,
+	'air.out': toPressure,
+	'air.volume': toNumber,
+	'air.oxygen': toNumber,
+	'temperature.surface': toTemperature,
+	'temperature.water': toTemperature,
+	'temperature.thermoclines[0].temperature': toTemperature,
+	'comments': [ trim, nullIfEmpty ]
+};
 
 const leUtilities = {
 	renderDepth(value, unit) {
@@ -23,8 +107,35 @@ const leUtilities = {
 		return value || value === 0
 			? ToPreferredUnits.Weight[unit](value).toFixed(2)
 			: '';
-	}
+	},
 
+	mapFormValues(formData) {
+		return dot.object(formData, FormMods);
+	},
+
+	postValidate(model, invalidateForm) {
+		if (model.gps) {
+			if (!model.gps.latitude && model.gps.longitude) {
+				invalidateForm({
+					'gps.latitude': 'Latitude is required if longitude is entered.'
+				});
+				return false;
+			}
+
+			if (!model.gps.longitude && model.gps.latitude) {
+				invalidateForm({
+					'gps.longitude': 'Longitude is required if latitude is entered.'
+				});
+				return false;
+			}
+
+			if (!model.gps.longitude && !model.gps.latitude) {
+				delete model.gps;
+			}
+		}
+
+		return true;
+	}
 };
 
 export default leUtilities;

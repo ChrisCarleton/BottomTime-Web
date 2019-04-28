@@ -2,21 +2,22 @@ import agent from '../../agent';
 import {
 	Button,
 	Col,
+	Glyphicon,
 	Modal,
 	Nav,
 	NavItem,
 	Row
 } from 'react-bootstrap';
-import config from '../../config';
+import Conditions from './edit-conditions';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import DiveInfo from './edit-dive-info';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
-import { FromPreferredUnits } from '../../unit-conversion';
 import handleError from '../../handle-error';
-import moment from 'moment';
+import LogEntryUtilities from './log-entry-utilities';
+import OtherInfo from './edit-other-info';
 import PropTypes from 'prop-types';
 import React from 'react';
 import TextBox from '../../components/text-box';
@@ -44,68 +45,7 @@ class EditLogEntry extends React.Component {
 		this.handleDiscardChanges = this.handleDiscardChanges.bind(this);
 		this.handleConfirmDiscardChanges = this.handleConfirmDiscardChanges.bind(this);
 		this.handleCancelDiscardChanges = this.handleCancelDiscardChanges.bind(this);
-		this.mapModel = this.mapModel.bind(this);
 	}
-
-	/* eslint-disable complexity */
-	mapModel(model) {
-		const mapped = {
-			location: model.location,
-			site: model.site,
-			entryTime: moment(model.entryTime, config.entryTimeFormat).utc().toISOString()
-		};
-
-		if (model.diveNumber) {
-			mapped.diveNumber = parseInt(model.diveNumber, 10);
-		}
-
-		if (model.bottomTime) {
-			mapped.bottomTime = parseFloat(model.bottomTime);
-		}
-
-		if (model.totalTime) {
-			mapped.totalTime = parseFloat(model.totalTime);
-		}
-
-		if (model.surfaceInterval) {
-			mapped.surfaceInterval = parseFloat(model.surfaceInterval);
-		}
-
-		if (model.gps_latitude || model.gps_longitude) {
-			mapped.gps = {};
-
-			if (model.gps_latitude) {
-				mapped.gps.latitude = parseFloat(model.gps_latitude);
-			}
-
-			if (model.gps_longitude) {
-				mapped.gps.longitude = parseFloat(model.gps_longitude);
-			}
-		}
-
-		if (model.averageDepth) {
-			mapped.averageDepth = FromPreferredUnits.Distance[this.props.currentUser.distanceUnit](
-				parseFloat(model.averageDepth)
-			);
-		}
-
-		if (model.maxDepth) {
-			mapped.maxDepth = FromPreferredUnits.Distance[this.props.currentUser.distanceUnit](
-				parseFloat(model.maxDepth)
-			);
-		}
-
-		if (model.weight_amount) {
-			mapped.weight = {
-				amount: FromPreferredUnits.Weight[this.props.currentUser.weightUnit](
-					parseFloat(model.weight_amount)
-				)
-			};
-		}
-
-		return mapped;
-	}
-	/* eslint-enable complexity */
 
 	showValidationError() {
 		ErrorActions.showError(
@@ -154,22 +94,9 @@ class EditLogEntry extends React.Component {
 	}
 
 	async handleSubmit(model, resetForm, invalidateForm) {
-		if (model.gps) {
-			if (!model.gps.latitude && model.gps.longitude) {
-				invalidateForm({
-					'gps_latitude': 'Latitude is required if longitude is entered.'
-				});
-				this.showValidationError();
-				return;
-			}
-
-			if (!model.gps.longitude && model.gps.latitude) {
-				invalidateForm({
-					'gps_longitude': 'Longitude is required if latitude is entered.'
-				});
-				this.showValidationError();
-				return;
-			}
+		if (!LogEntryUtilities.postValidate(model, invalidateForm)) {
+			this.showValidationError();
+			return;
 		}
 
 		try {
@@ -198,39 +125,33 @@ class EditLogEntry extends React.Component {
 		}
 	}
 
-	/* eslint-disable complexity */
 	render() {
 		const { currentEntry, currentUser } = this.props;
-
-		const temperature = currentEntry.temperature || {};
-		temperature.thermoclines = temperature.thermoclines || [];
-		temperature.thermoclines[0] = temperature.thermoclines[0] || {};
-
-		const { distanceUnit, pressureUnit, weightUnit } = currentUser;
-		let temperatureUnit = '°C';
-		let temperatureLowerBoundError = 'Temperature cannot be below -2°C.';
-		let temperatureUpperBoundError = 'Temperature cannot be above 50°C.';
-
-		if (currentUser.temperatureUnit === 'f') {
-			temperatureUnit = '°F';
-			temperatureLowerBoundError = 'Temperature cannot be below 28.4°F.';
-			temperatureUpperBoundError = 'Temperature cannot be above 122°F.';
-		}
+		const { distanceUnit, pressureUnit, temperatureUnit, weightUnit } = currentUser;
 
 		return (
 			<div>
 				<Col smHidden md={ 2 }>
 					<Nav bsStyle="pills" activeKey={ 0 } stacked>
-						<NavItem eventKey={ 0 }>Time and Location</NavItem>
-						<NavItem eventKey={ 1 }>Dive Info</NavItem>
-						<NavItem eventKey={ 2 }>Conditions</NavItem>
+						<NavItem eventKey={ 0 }>
+							<Glyphicon glyph="map-marker" />&nbsp;&nbsp;Time and Place
+						</NavItem>
+						<NavItem eventKey={ 1 }>
+							<Glyphicon glyph="dashboard" />&nbsp;&nbsp;Dive Info
+						</NavItem>
+						<NavItem eventKey={ 2 }>
+							<Glyphicon glyph="sunglasses" />&nbsp;&nbsp;Conditions
+						</NavItem>
+						<NavItem eventKey={ 3 }>
+							<Glyphicon glyph="pencil" />&nbsp;&nbsp;Notes
+						</NavItem>
 					</Nav>
 				</Col>
 				<Col sm={ 12 } md={ 10 }>
 					<Formsy
 						onValidSubmit={ this.handleSubmit }
 						onInvalidSubmit={ this.handleInvalidSubmit }
-						mapping={ this.mapModel }
+						mapping={ LogEntryUtilities.mapFormValues }
 						className="form-horizontal"
 						ref={ this.form }
 					>
@@ -281,61 +202,11 @@ class EditLogEntry extends React.Component {
 							pressureUnit={ pressureUnit }
 							weightUnit={ weightUnit }
 						/>
-						{/* <Row>
-							<Col sm={ 12 } md={ 6 }>
-								<TextBox
-									name="temperature_surface"
-									controlId="temperature_surface"
-									label="Surface temp"
-									value={ this.renderTemperature(temperature.surface) || '' }
-									units={ temperatureUnit }
-									validations={ {
-										isNumeric: true,
-										isGreaterThanOrEqual: -2,
-										isLessThanOrEqual: 50
-									} }
-									validationErrors={ {
-										isNumeric: 'Temperature must be a number',
-										isGreaterThanOrEqual: temperatureLowerBoundError,
-										isLessThanOrEqual: temperatureUpperBoundError
-									} }
-								/>
-								<TextBox
-									name="temperature_water"
-									controlId="temperature_water"
-									label="Water temp"
-									value={ this.renderTemperature(temperature.water) || '' }
-									units={ temperatureUnit }
-									validations={ {
-										isNumeric: true,
-										isGreaterThanOrEqual: -2,
-										isLessThanOrEqual: 50
-									} }
-									validationErrors={ {
-										isNumeric: 'Temperature must be a number',
-										isGreaterThanOrEqual: temperatureLowerBoundError,
-										isLessThanOrEqual: temperatureUpperBoundError
-									} }
-								/>
-								<TextBox
-									name="temperature_thermocline"
-									controlId="temperature_thermocline"
-									label="Thermocline"
-									value={ this.renderTemperature(temperature.thermoclines[0].temperature) || '' }
-									units={ temperatureUnit }
-									validations={ {
-										isNumeric: true,
-										isGreaterThanOrEqual: -2,
-										isLessThanOrEqual: 50
-									} }
-									validationErrors={ {
-										isNumeric: 'Temperature must be a number',
-										isGreaterThanOrEqual: temperatureLowerBoundError,
-										isLessThanOrEqual: temperatureUpperBoundError
-									} }
-								/>
-							</Col>
-						</Row> */}
+						<Conditions
+							temperatureUnit={ temperatureUnit }
+							currentEntry={ currentEntry }
+						/>
+						<OtherInfo currentEntry={ currentEntry } />
 						<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
 						&nbsp;
 						<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
@@ -344,7 +215,6 @@ class EditLogEntry extends React.Component {
 			</div>
 		);
 	}
-	/* eslint-enable complexity */
 }
 
 EditLogEntry.propTypes = {
