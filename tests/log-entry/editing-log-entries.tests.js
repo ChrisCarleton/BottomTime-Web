@@ -1,8 +1,12 @@
+/* eslint max-statements: 0 */
+
 import { By, until } from 'selenium-webdriver';
+import config from '../../web/config';
 import driver from '../web-driver';
 import { expect } from 'chai';
 import faker from 'faker';
 import mockApis, { exampleUser, logEntries } from '../webapp/mock-apis';
+import moment from 'moment';
 import sinon from 'sinon';
 
 const NewEntryUrl = 'http://localhost:8081/logs/jake_smith/new';
@@ -13,8 +17,17 @@ async function refreshPage(url) {
 	await driver.wait(until.elementLocated(By.id('location')));
 }
 
+async function fillInRequiredFields() {
+	await driver.findElement(By.id('location')).sendKeys(logEntries[0].location);
+	await driver.findElement(By.id('site')).sendKeys(logEntries[0].site);
+	await driver.findElement(By.id('entryTime')).sendKeys(moment().format(config.entryTimeFormat));
+	await driver.findElement(By.id('maxDepth')).sendKeys(logEntries[0].maxDepth);
+	await driver.findElement(By.id('bottomTime')).sendKeys(logEntries[0].bottomTime);
+}
+
 describe('Editing Log Entries', () => {
 	let authStub = null;
+	const LongString = faker.lorem.sentences(8).substr(0, 190);
 
 	describe('Validation', () => {
 		let stub = null;
@@ -26,6 +39,10 @@ describe('Editing Log Entries', () => {
 			});
 		});
 
+		beforeEach(async () => {
+			await refreshPage(NewEntryUrl);
+		});
+
 		afterEach(() => {
 			if (stub) {
 				stub.restore();
@@ -35,13 +52,18 @@ describe('Editing Log Entries', () => {
 
 		after(() => {
 			authStub.restore();
-			authStub = null;
 		});
 
-		const LongString = faker.lorem.sentences(8).substr(0, 190);
+		it('Dive number must be a number', async () => {
+			await driver.findElement(By.id('diveNumber')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-diveNumber'));
+		});
 
-		beforeEach(async () => {
-			await refreshPage(NewEntryUrl);
+		it('Dive number must be positive', async () => {
+			await driver.findElement(By.id('diveNumber')).sendKeys('0');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-diveNumber'));
 		});
 
 		it('Will not allow location to be longer than 200 characters', async () => {
@@ -115,6 +137,18 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('totalTime')).sendKeys('30.6');
 			await driver.findElement(By.id('btn-save')).click();
 			await driver.wait(until.elementLocated(By.id('err-totalTime')));
+		});
+
+		it('Surface interval must be a number', async () => {
+			await driver.findElement(By.id('surfaceInterval')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-surfaceInterval'));
+		});
+
+		it('Surface interval must be positive', async () => {
+			await driver.findElement(By.id('surfaceInterval')).sendKeys('0');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-surfaceInterval'));
 		});
 
 		it('Latitude must be a number', async () => {
@@ -212,6 +246,89 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('err-maxDepth'));
 		});
 
+		it('Safety stop depth must be a number', async () => {
+			await driver.findElement(By.id('decoStops[0].depth')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-decoStops[0].depth'));
+		});
+
+		it('Safety stop depth must be positive', async () => {
+			await driver.findElement(By.id('decoStops[0].depth')).sendKeys('0');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-decoStops[0].depth'));
+		});
+
+		it('Safety stop duration must be a number', async () => {
+			await driver.findElement(By.id('decoStops[0].duration')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-decoStops[0].duration'));
+		});
+
+		it('Safety stop duration must be positive', async () => {
+			await driver.findElement(By.id('decoStops[0].duration')).sendKeys('0');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-decoStops[0].duration'));
+		});
+
+		it('Start pressure must be a number', async () => {
+			await driver.findElement(By.id('air.in')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.in'));
+		});
+
+		it('Start pressure must be positive', async () => {
+			await driver.findElement(By.id('air.in')).sendKeys('0');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.in'));
+		});
+
+		it('End pressure must be a number', async () => {
+			await driver.findElement(By.id('air.out')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.out'));
+		});
+
+		it('End pressure cannot be negative', async () => {
+			await driver.findElement(By.id('air.out')).sendKeys('-1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.out'));
+		});
+
+		it('End pressure cannot be greater than start pressure', async () => {
+			await driver.findElement(By.id('air.in')).sendKeys('200');
+			await driver.findElement(By.id('air.out')).sendKeys('210');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.in'));
+		});
+
+		it('Tank volume must be a number', async () => {
+			await driver.findElement(By.id('air.volume')).sendKeys('seven');
+			await driver.findElement(By.id('air.volumeUnit_cf')).click();
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.volume'));
+		});
+
+		it('Tank volume must be positive', async () => {
+			await driver.findElement(By.id('air.volume')).sendKeys('0');
+			await driver.findElement(By.id('air.volumeUnit_cf')).click();
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.volume'));
+		});
+
+		it('Tank volume is required if volume unit is supplied', async () => {
+			await fillInRequiredFields();
+			await driver.findElement(By.id('air.volume')).sendKeys('80');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.volumeUnit'));
+		});
+
+		it('Tank volume unit is required if volume is supplied', async () => {
+			await fillInRequiredFields();
+			await driver.findElement(By.id('air.volumeUnit_l')).click();
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-air.volume'));
+		});
+
 		it('Weight amount must be a number', async () => {
 			await driver.findElement(By.id('weight.amount')).sendKeys('lol');
 			await driver.findElement(By.id('btn-save')).click();
@@ -222,6 +339,145 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('weight.amount')).sendKeys('-0.1');
 			await driver.findElement(By.id('btn-save')).click();
 			await driver.findElement(By.id('err-weight.amount'));
+		});
+	});
+
+	describe('Temperature field validation', () => {
+		function setUserTempUnit(temperatureUnit) {
+			const user = {
+				...exampleUser,
+				temperatureUnit
+			};
+
+			authStub = sinon.stub(mockApis, 'getAuthMe');
+			authStub.callsFake((req, res) => {
+				res.json(user);
+			});
+		}
+
+		afterEach(() => {
+			authStub.restore();
+			authStub = null;
+		});
+
+		it('Surface temperature must be a number', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.surface')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.surface'));
+		});
+
+		it('Surface temperature cannot be less than -2C', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.surface')).sendKeys('-2.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.surface'));
+		});
+
+		it('Surface temperature cannot be greater than 50C', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.surface')).sendKeys('50.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.surface'));
+		});
+
+		it('Surface temperature cannot be less than 28.4F', async () => {
+			setUserTempUnit('f');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.surface')).sendKeys('28.3');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.surface'));
+		});
+
+		it('Surface temperature cannot be more than 120F', async () => {
+			setUserTempUnit('f');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.surface')).sendKeys('120.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.surface'));
+		});
+
+		it('Water temperature must be a number', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.water')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.water'));
+		});
+
+		it('Water temperature cannot be less than -2C', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.water')).sendKeys('-2.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.water'));
+		});
+
+		it('Water temperature cannot be greater than 50C', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.water')).sendKeys('50.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.water'));
+		});
+
+		it('Water temperature cannot be less than 28.4F', async () => {
+			setUserTempUnit('f');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.water')).sendKeys('28.3');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.water'));
+		});
+
+		it('Water temperature cannot be more than 120F', async () => {
+			setUserTempUnit('f');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.water')).sendKeys('120.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.water'));
+		});
+
+		it('Thermocline temperature must be a number', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('seven');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.thermoclines[0].temperature'));
+		});
+
+		it('Thermocline temperature cannot be less than -2C', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('-2.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.thermoclines[0].temperature'));
+		});
+
+		it('Thermocline temperature cannot be greater than 50C', async () => {
+			setUserTempUnit('c');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('50.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.thermoclines[0].temperature'));
+		});
+
+		it('Thermocline temperature cannot be less than 28.4F', async () => {
+			setUserTempUnit('f');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('28.3');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.thermoclines[0].temperature'));
+		});
+
+		it('Thermocline temperature cannot be more than 120F', async () => {
+			setUserTempUnit('f');
+			await refreshPage(NewEntryUrl);
+			await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('120.1');
+			await driver.findElement(By.id('btn-save')).click();
+			await driver.findElement(By.id('err-temperature.thermoclines[0].temperature'));
 		});
 	});
 

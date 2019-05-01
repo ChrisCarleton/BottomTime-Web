@@ -7,6 +7,50 @@ import moment from 'moment';
 const dot = new Dot();
 dot.override = true;
 
+function validateGPS(model, invalidateForm) {
+	if (model.gps) {
+		if (!model.gps.latitude && model.gps.longitude) {
+			invalidateForm({
+				'gps.latitude': 'Latitude is required if longitude is entered.'
+			});
+			return false;
+		}
+
+		if (!model.gps.longitude && model.gps.latitude) {
+			invalidateForm({
+				'gps.longitude': 'Longitude is required if latitude is entered.'
+			});
+			return false;
+		}
+
+		if (!model.gps.longitude && !model.gps.latitude) {
+			delete model.gps;
+		}
+	}
+
+	return true;
+}
+
+function validateTankVolume(model, invalidateForm) {
+	if (model.air) {
+		if (!model.air.volume && model.air.volumeUnit) {
+			invalidateForm({
+				'air.volume': 'Tank volume is required if volume unit is selected.'
+			});
+			return false;
+		}
+
+		if (model.air.volume && !model.air.volumeUnit) {
+			invalidateForm({
+				'air.volumeUnit': 'Tank volume unit is required if volume is entered.'
+			});
+			return false;
+		}
+	}
+
+	return true;
+}
+
 function trim(str) {
 	if (typeof str === 'string') {
 		return str.trim();
@@ -72,11 +116,15 @@ const FormMods = {
 	'gps.latitude': toNumber,
 	'gps.longitude': toNumber,
 	'weight.amount': toWeight,
+	'weight.correctness': nullIfEmpty,
+	'weight.trim': nullIfEmpty,
 	'decoStops[0].depth': toDepth,
 	'decoStops[0].duration': toNumber,
 	'air.in': toPressure,
 	'air.out': toPressure,
 	'air.volume': toNumber,
+	'air.volumeUnit': nullIfEmpty,
+	'air.material': nullIfEmpty,
 	'air.oxygen': toNumber,
 	'temperature.surface': toTemperature,
 	'temperature.water': toTemperature,
@@ -114,27 +162,7 @@ const leUtilities = {
 	},
 
 	postValidate(model, invalidateForm) {
-		if (model.gps) {
-			if (!model.gps.latitude && model.gps.longitude) {
-				invalidateForm({
-					'gps.latitude': 'Latitude is required if longitude is entered.'
-				});
-				return false;
-			}
-
-			if (!model.gps.longitude && model.gps.latitude) {
-				invalidateForm({
-					'gps.longitude': 'Longitude is required if latitude is entered.'
-				});
-				return false;
-			}
-
-			if (!model.gps.longitude && !model.gps.latitude) {
-				delete model.gps;
-			}
-		}
-
-		return true;
+		return validateGPS(model, invalidateForm) && validateTankVolume(model, invalidateForm);
 	}
 };
 

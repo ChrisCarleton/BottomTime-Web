@@ -16,11 +16,15 @@ class Conditions extends React.Component {
 		temperature.thermoclines[0] = temperature.thermoclines[0] || {};
 
 		let temperatureUnitString = '°C';
+		let temperatureLowerBound = -2;
+		let temperatureUpperBound = 50;
 		let temperatureLowerBoundError = 'Temperature cannot be below -2°C.';
 		let temperatureUpperBoundError = 'Temperature cannot be above 50°C.';
 
 		if (temperatureUnit === 'f') {
 			temperatureUnitString = '°F';
+			temperatureLowerBound = 28.4;
+			temperatureUpperBound = 120;
 			temperatureLowerBoundError = 'Temperature cannot be below 28.4°F.';
 			temperatureUpperBoundError = 'Temperature cannot be above 122°F.';
 		}
@@ -43,8 +47,8 @@ class Conditions extends React.Component {
 							units={ temperatureUnitString }
 							validations={ {
 								isNumeric: true,
-								isGreaterThanOrEqual: -2,
-								isLessThanOrEqual: 50
+								isGreaterThanOrEqual: temperatureLowerBound,
+								isLessThanOrEqual: temperatureUpperBound
 							} }
 							validationErrors={ {
 								isNumeric: 'Temperature must be a number',
@@ -60,8 +64,8 @@ class Conditions extends React.Component {
 							units={ temperatureUnitString }
 							validations={ {
 								isNumeric: true,
-								isGreaterThanOrEqual: -2,
-								isLessThanOrEqual: 50
+								isGreaterThanOrEqual: temperatureLowerBound,
+								isLessThanOrEqual: temperatureUpperBound
 							} }
 							validationErrors={ {
 								isNumeric: 'Temperature must be a number',
@@ -81,8 +85,8 @@ class Conditions extends React.Component {
 							units={ temperatureUnitString }
 							validations={ {
 								isNumeric: true,
-								isGreaterThanOrEqual: -2,
-								isLessThanOrEqual: 50
+								isGreaterThanOrEqual: temperatureLowerBound,
+								isLessThanOrEqual: temperatureUpperBound
 							} }
 							validationErrors={ {
 								isNumeric: 'Temperature must be a number',

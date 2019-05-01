@@ -135,11 +135,11 @@ class DiveInfo extends React.Component {
 							value={ LogEntryUtilities.renderPressure(air.in, pressureUnit) }
 							units={ pressureUnit }
 							validations={ {
-								isGreaterThanOrEqual: 0,
-								isGreaterThanOrEqualToField: 'air_out'
+								isGreaterThan: 0,
+								isGreaterThanOrEqualToField: 'air.out'
 							} }
 							validationErrors={ {
-								isGreaterThanOrEqual: 'Starting pressure must be a positive number.',
+								isGreaterThan: 'Starting pressure must be a positive number.',
 								isGreaterThanOrEqualToField: 'Starting pressure must be greater than end pressure.'
 							} }
 						/>
@@ -153,7 +153,7 @@ class DiveInfo extends React.Component {
 								isGreaterThanOrEqual: 0
 							} }
 							validationErrors={ {
-								isGreaterThanOrEqual: 'Starting pressure must be a positive number.'
+								isGreaterThanOrEqual: 'Ending pressure must be a positive number.'
 							} }
 						/>
 						<TextBox
@@ -162,10 +162,10 @@ class DiveInfo extends React.Component {
 							label="Tank volume"
 							value={ air.volume || '' }
 							validations={ {
-								isGreaterThanOrEqual: 0
+								isGreaterThan: 0
 							} }
 							validationErrors={ {
-								isGreaterThanOrEqual: 'Tank volume must be a positive number.'
+								isGreaterThan: 'Tank volume must be a positive number.'
 							} }
 						/>
 						<RadioList

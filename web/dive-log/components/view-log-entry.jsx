@@ -2,9 +2,11 @@ import {
 	Col,
 	Row
 } from 'react-bootstrap';
+import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import Formsy from 'formsy-react';
+import moment from 'moment';
 import React from 'react';
 import StaticField from '../../components/static-field';
 import { ToPreferredUnits } from '../../unit-conversion';
@@ -104,7 +106,11 @@ class ViewLogEntry extends React.Component {
 								controlId="entryTime"
 								name="entryTime"
 								label="Entry time"
-								value={ currentEntry.entryTime }
+								value={
+									moment(currentEntry.entryTime)
+										.local()
+										.format(config.entryTimeFormat)
+								}
 							/>
 							<StaticField
 								controlId="bottomTime"

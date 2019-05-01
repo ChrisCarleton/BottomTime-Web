@@ -29,6 +29,11 @@ class RadioList extends React.Component {
 			errorMessage = `${ this.props.label } is required.`;
 			validationState = 'error';
 
+		} else if (this.props.showError()) {
+
+			errorMessage = this.props.getErrorMessage();
+			validationState = 'error';
+
 		} else if (this.props.isPristine()) {
 
 			errorMessage = null;
