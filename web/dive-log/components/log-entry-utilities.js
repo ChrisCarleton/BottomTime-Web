@@ -105,6 +105,7 @@ function nullIfEmpty(str) {
 }
 
 const FormMods = {
+	'diveNumber': nullIfEmpty,
 	'location': trim,
 	'site': trim,
 	'entryTime': toISOString,
@@ -126,9 +127,10 @@ const FormMods = {
 	'air.volumeUnit': nullIfEmpty,
 	'air.material': nullIfEmpty,
 	'air.oxygen': toNumber,
-	'temperature.surface': toTemperature,
-	'temperature.water': toTemperature,
-	'temperature.thermoclines[0].temperature': toTemperature,
+	'temperature.surface': [ nullIfEmpty, toTemperature ],
+	'temperature.water': [ nullIfEmpty, toTemperature ],
+	'temperature.thermoclines[0].temperature': [ nullIfEmpty, toTemperature ],
+	'temperature.thermoclines[0].depth': [ nullIfEmpty, toNumber ],
 	'comments': [ trim, nullIfEmpty ]
 };
 
@@ -162,6 +164,15 @@ const leUtilities = {
 	},
 
 	postValidate(model, invalidateForm) {
+		if (
+			model.temperature
+			&& model.temperature.thermoclines
+			&& model.temperature.thermoclines[0]
+			&& !model.temperature.thermoclines[0].temperature
+		) {
+			delete model.temperature.thermoclines;
+		}
+
 		return validateGPS(model, invalidateForm) && validateTankVolume(model, invalidateForm);
 	}
 };

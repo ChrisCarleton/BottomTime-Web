@@ -4,8 +4,6 @@ import { propTypes, withFormsy } from 'formsy-react';
 import React from 'react';
 import ReactTags from 'react-tag-autocomplete';
 
-require('./tags.css');
-
 class Tags extends React.Component {
 	constructor(props) {
 		super(props);
@@ -78,8 +76,8 @@ class Tags extends React.Component {
 					minQueryLength={ 1 }
 					placeholder="Type new tag and press &quot;Tab&quot;"
 					classNames={ {
-						root: 'form-control',
-						rootFocused: 'form-control',
+						root: 'react-tags__form-control',
+						rootFocused: 'react-tags__form-control',
 						selected: 'react-tags__selected',
 						selectedTag: 'react-tags__selected-tag',
 						selectedTagName: 'react-tags__selected-tag-name',

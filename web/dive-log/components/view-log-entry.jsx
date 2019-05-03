@@ -1,5 +1,6 @@
 import {
 	Col,
+	Glyphicon,
 	Row
 } from 'react-bootstrap';
 import config from '../../config';
@@ -25,8 +26,28 @@ class ViewLogEntry extends React.Component {
 		};
 	}
 
-	renderTime(value) {
-		return value || value === 0 ? `${ value }minutes` : null;
+	renderValueWithUnit(value, unit = ' minutes') {
+		return value || value === 0 ? `${ value }${ unit }` : null;
+	}
+
+	renderTankInfo(air) {
+		const tankMaterial = air.material
+			? `${ air.material[0].toUpperCase() }${ air.material.slice(1) }`
+			: null;
+		let tankVolume = null;
+		if (air.volume && air.volumeUnit) {
+			tankVolume = `${ air.volume }${ air.volumeUnit }`;
+		}
+
+		if (tankVolume && tankMaterial) {
+			return `${ tankMaterial } / ${ tankVolume }`;
+		} else if (tankVolume) {
+			return tankVolume;
+		} else if (tankMaterial) {
+			return tankMaterial;
+		}
+
+		return null;
 	}
 
 	renderDepth(value) {
@@ -51,6 +72,17 @@ class ViewLogEntry extends React.Component {
 		return `${ converted }${ this.props.currentUser.temperatureUnit === 'c' ? '°C' : '°F' }`;
 	}
 
+	renderPressure(value) {
+		if (!value && value !== 0) {
+			return null;
+		}
+
+		const converted = ToPreferredUnits
+			.Pressure[this.props.currentUser.pressureUnit](value)
+			.toFixed(2);
+		return `${ converted }${ this.props.currentUser.pressureUnit }`;
+	}
+
 	renderWeight(value) {
 		if (!value && value !== 0) {
 			return null;
@@ -62,10 +94,19 @@ class ViewLogEntry extends React.Component {
 		return `${ converted }${ this.props.currentUser.weightUnit }`;
 	}
 
+	/* eslint-disable complexity */
 	render() {
 		const { currentEntry } = this.props;
 		const gps = currentEntry.gps || {};
 		const weight = currentEntry.weight || {};
+		const air = currentEntry.air || {};
+
+		const temperature = currentEntry.temperature || {};
+		temperature.thermoclines = temperature.thermoclines || [];
+		temperature.thermoclines[0] = temperature.thermoclines[0] || {};
+
+		const decoStops = currentEntry.decoStops || [];
+		decoStops[0] = decoStops[0] || {};
 
 		const latitude = gps.latitude
 			? `${ Math.abs(gps.latitude) } °${ gps.latitude >= 0 ? 'N' : 'S' }`
@@ -88,8 +129,12 @@ class ViewLogEntry extends React.Component {
 						</Col>
 					</Row>
 					<Row>
+						<Col sm={ 12 }>
+							<h4><Glyphicon glyph="map-marker" />&nbsp;Time and Location</h4>
+						</Col>
+					</Row>
+					<Row>
 						<Col sm={ 12 } md={ 6 }>
-							<h4>Time and Location</h4>
 							<StaticField
 								controlId="location"
 								name="location"
@@ -116,26 +161,26 @@ class ViewLogEntry extends React.Component {
 								controlId="bottomTime"
 								name="bottomTime"
 								label="Bottom time"
-								value={ this.renderTime(currentEntry.bottomTime) }
+								value={ this.renderValueWithUnit(currentEntry.bottomTime) }
 								default={ Unspecified }
 							/>
 							<StaticField
 								controlId="totalTime"
 								name="totalTime"
 								label="Total time"
-								value={ this.renderTime(currentEntry.totalTime) }
+								value={ this.renderValueWithUnit(currentEntry.totalTime) }
 								default={ Unspecified }
 							/>
 							<StaticField
 								controlId="surfaceInterval"
 								name="surfaceInterval"
 								label="Surface interval"
-								value={ this.renderTime(currentEntry.surfaceInterval) }
+								value={ this.renderValueWithUnit(currentEntry.surfaceInterval) }
 								default={ Unspecified }
 							/>
 						</Col>
 						<Col sm={ 12 } md={ 6 }>
-							<h4>GPS</h4>
+							<strong>GPS</strong>
 							<StaticField
 								controlId="gps.latitude"
 								name="gps.latitude"
@@ -153,8 +198,12 @@ class ViewLogEntry extends React.Component {
 						</Col>
 					</Row>
 					<Row>
+						<Col sm={ 12 }>
+							<h4><Glyphicon glyph="dashboard" />&nbsp;Dive Info</h4>
+						</Col>
+					</Row>
+					<Row>
 						<Col md={ 6 } sm={ 12 }>
-							<h4>Dive Info</h4>
 							<StaticField
 								controlId="averageDepth"
 								name="averageDepth"
@@ -169,9 +218,7 @@ class ViewLogEntry extends React.Component {
 								value={ this.renderDepth(currentEntry.maxDepth) }
 								default={ Unspecified }
 							/>
-						</Col>
-						<Col md={ 6 } sm={ 12 }>
-							<h4>Weight</h4>
+							<strong>Weight</strong>
 							<StaticField
 								controlId="weight.amount"
 								name="weight.amount"
@@ -179,11 +226,123 @@ class ViewLogEntry extends React.Component {
 								default={ Unspecified }
 								value={ this.renderWeight(weight.amount) }
 							/>
+							<StaticField
+								controlId="weight.correctness"
+								name="weight.correctness"
+								label="Correctness"
+								default={ Unspecified }
+								value={ weight.correctness }
+							/>
+							<StaticField
+								controlId="weight.trim"
+								name="weight.trim"
+								label="Trim"
+								default={ Unspecified }
+								value={ weight.trim }
+							/>
+							<strong>Safety Stop</strong>
+							<StaticField
+								controlId="decoStops[0].depth"
+								name="decoStops[0].depth"
+								label="Depth"
+								default={ Unspecified }
+								value={ this.renderDepth(decoStops[0].depth) }
+							/>
+							<StaticField
+								controlId="decoStops[0].duration"
+								name="decoStops[0].duration"
+								label="Duration"
+								default={ Unspecified }
+								value={ this.renderValueWithUnit(decoStops[0].duration) }
+							/>
+						</Col>
+						<Col md={ 6 } sm={ 12 }>
+							<strong>Air</strong>
+							<StaticField
+								controlId="air.in"
+								name="air.in"
+								label="Start pressure"
+								default={ Unspecified }
+								value={ this.renderPressure(air.in) }
+							/>
+							<StaticField
+								controlId="air.out"
+								name="air.out"
+								label="End pressure"
+								default={ Unspecified }
+								value={ this.renderPressure(air.out) }
+							/>
+							<StaticField
+								controlId="air.volume"
+								name="air.volume"
+								label="Tank info"
+								default={ Unspecified }
+								value={ this.renderTankInfo(air) }
+							/>
+							<StaticField
+								controlId="air.oxygen"
+								name="air.oxygen"
+								label="Oxygen content"
+								default={ Unspecified }
+								value={ this.renderValueWithUnit(air.oxygen, '%') }
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Col sm={ 12 }>
+							<h3><Glyphicon glyph="sunglasses" />&nbsp;Conditions</h3>
+						</Col>
+						<Col sm={ 12 } md={ 6 }>
+							<StaticField
+								name="temperature.surface"
+								controlId="temperature.surface"
+								label="Surface temp"
+								default={ Unspecified }
+								value={ this.renderTemperature(temperature.surface) }
+							/>
+							<StaticField
+								name="temperature.water"
+								controlId="temperature.water"
+								label="Water temp"
+								default={ Unspecified }
+								value={ this.renderTemperature(temperature.water) }
+							/>
+							<StaticField
+								name="temperature.thermoclines[0].temperature"
+								controlId="temperature.thermoclines[0].temperature"
+								label="Thermocline"
+								default={ Unspecified }
+								value={ this.renderTemperature(temperature.thermoclines[0].temperature) }
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Col sm={ 12 }>
+							<h3><Glyphicon glyph="pencil" />&nbsp;Notes</h3>
+						</Col>
+					</Row>
+					<Row>
+						<Col sm={ 12 } md={ 6 }>
+							<StaticField
+								controlId="tags"
+								name="tags"
+								label="Tags"
+								default="None"
+								value={ currentEntry.tags ? currentEntry.tags.join(', ') : null }
+							/>
+							<StaticField
+								controlId="comments"
+								name="comments"
+								label="Comments"
+								default="None"
+								value={ currentEntry.comments }
+							/>
 						</Col>
 					</Row>
 				</Formsy>
 			</div>
 		);
+		/* eslint-enable complexity */
 	}
 }
 

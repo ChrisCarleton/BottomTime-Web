@@ -340,6 +340,25 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('btn-save')).click();
 			await driver.findElement(By.id('err-weight.amount'));
 		});
+
+		it('Comments cannot be more than 1000 characters', async () => {
+			const SuperLongEssay = faker.lorem.paragraphs(8).substr(0, 995);
+			const logEntry = {
+				...logEntries[0],
+				comments: SuperLongEssay
+			};
+			stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+			stub.callsFake((req, res) => {
+				res.json(logEntry);
+			});
+
+			await driver.navigate().to(EntryUrl);
+			await driver.wait(until.elementLocated(By.id('location')));
+			const commentsTextBox = await driver.findElement(By.id('comments'));
+			await commentsTextBox.sendKeys('This will push it over the max');
+			const value = await commentsTextBox.getAttribute('value');
+			expect(value).to.have.lengthOf(1000);
+		});
 	});
 
 	describe('Temperature field validation', () => {

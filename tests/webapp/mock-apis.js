@@ -12,7 +12,8 @@ export const exampleUser = {
 	hasPassword: true,
 	distanceUnit: 'm',
 	weightUnit: 'kg',
-	temperatureUnit: 'c'
+	temperatureUnit: 'c',
+	pressureUnit: 'bar'
 };
 
 export const exampleProfile = {
@@ -45,21 +46,52 @@ for (let i = 0; i < logEntries.length; i++) {
 	const averageDepth = faker.random.number({ min: 3, max: 35 });
 
 	logEntries[i] = {
+		diveNumber: i,
 		entryId: fakeMongoId(),
 		entryTime: faker.date.past(3).toISOString(),
 		bottomTime,
 		totalTime: bottomTime + faker.random.number({ min: 1, max: 5 }),
+		surfaceInterval: faker.random.number({ min: 20, max: 120 }),
 		location: faker.fake('{{address.city}}{{address.citySuffix}}, {{address.stateAbbr}}'),
 		site: faker.fake('{{address.cityPrefix}} {{name.lastName}}'),
 		averageDepth,
 		maxDepth: averageDepth + faker.random.number({ min: 1, max: 10 }),
+		air: {
+			in: faker.random.number({ min: 198, max: 212 }),
+			out: faker.random.number({ min: 32, max: 104 }),
+			doubles: false,
+			volume: 12,
+			volumeUnit: 'L',
+			material: faker.random.arrayElement([ 'steel', 'aluminum' ]),
+			oxygen: faker.random.number({ min: 21, max: 40 })
+		},
+		decoStops: [
+			{
+				depth: faker.random.number({ min: 2, max: 5 }),
+				duration: faker.random.number({ min: 3, max: 12 })
+			}
+		],
 		gps: {
 			latitude: faker.random.number({ min: -90, max: 90 }),
 			longitude: faker.random.number({ min: -180, max: 180 })
 		},
 		weight: {
-			amount: faker.random.number({ min: 0, max: 12 })
+			amount: faker.random.number({ min: 0, max: 12 }),
+			correctness: faker.random.arrayElement([ 'good', 'too much', 'too little' ]),
+			trim: faker.random.arrayElement([ 'good', 'feet up', 'feet down' ])
 		},
+		tags: [],
+		temperature: {
+			surface: faker.random.number({ min: 25, max: 35 }),
+			water: faker.random.number({ min: 18, max: 22 }),
+			thermoclines: [
+				{
+					depth: faker.random.number({ min: 9, max: 16 }),
+					temperature: faker.random.number({ min: 5, max: 15 })
+				}
+			]
+		},
+		comments: faker.lorem.sentences(6),
 		readOnly: false
 	};
 }
@@ -76,7 +108,8 @@ const mockApis = {
 			hasPassword: false,
 			distanceUnit: 'm',
 			weightUnit: 'kg',
-			temperatureUnit: 'c'
+			temperatureUnit: 'c',
+			pressureUnit: 'bar'
 		});
 	},
 
@@ -93,7 +126,11 @@ const mockApis = {
 				role: 'user',
 				isAnonymous: false,
 				isLockedOut: false,
-				hasPassword: true
+				hasPassword: true,
+				distanceUnit: 'm',
+				weightUnit: 'kg',
+				temperatureUnit: 'c',
+				pressureUnit: 'bar'
 			},
 			token: 'la.di.da'
 		});
