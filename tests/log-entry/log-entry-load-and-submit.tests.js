@@ -336,11 +336,57 @@ describe('Loading and Submitting Log Entries', () => {
 	});
 
 	it('Temperature can be submitted in °F', async () => {
-		// TODO: Add some fields to record temperature so we can test this.
+		const auth = {
+			...exampleUser,
+			temperatureUnit: 'f'
+		};
+
+		authStub = sinon.stub(mockApis, 'getAuthMe');
+		authStub.callsFake((req, res) => {
+			res.json(auth);
+		});
+
+		spy = sinon.spy(mockApis, 'postUsersUsernameLogs');
+
+		await refreshPage(NewEntryUrl);
+		await fillInRequiredFields();
+		await driver.findElement(By.id('temperature.surface')).sendKeys('75');
+		await driver.findElement(By.id('temperature.water')).sendKeys('65');
+		await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('48');
+
+		await driver.findElement(By.id('btn-save')).click();
+
+		expect(spy.called).to.be.true;
+		const { surface, water, thermoclines } = spy.getCall(0).args[0].body[0].temperature;
+		expect(surface).to.equal(23.88888888888889);
+		expect(water).to.equal(18.333333333333336);
+		expect(thermoclines[0].temperature).to.equal(8.88888888888889);
 	});
 
 	it('Pressure can be submitted in psi', async () => {
-		// TODO: TEST!!!
+		const auth = {
+			...exampleUser,
+			pressureUnit: 'psi'
+		};
+
+		authStub = sinon.stub(mockApis, 'getAuthMe');
+		authStub.callsFake((req, res) => {
+			res.json(auth);
+		});
+
+		spy = sinon.spy(mockApis, 'postUsersUsernameLogs');
+
+		await refreshPage(NewEntryUrl);
+		await fillInRequiredFields();
+		await driver.findElement(By.id('air.in')).sendKeys('3000');
+		await driver.findElement(By.id('air.out')).sendKeys('650');
+
+		await driver.findElement(By.id('btn-save')).click();
+
+		expect(spy.called).to.be.true;
+		const [ { air } ] = spy.getCall(0).args[0].body;
+		expect(air.in).to.equal(206.84279999999998);
+		expect(air.out).to.equal(44.81594);
 	});
 
 	it('Page redirects to Not Found page if entry is not found', async () => {
