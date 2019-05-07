@@ -1,14 +1,19 @@
+import agent from '../../agent';
 import {
 	Breadcrumb,
 	Button,
+	ButtonGroup,
 	ButtonToolbar,
+	Clearfix,
+	Glyphicon,
 	Label,
+	Modal,
 	ToggleButton,
 	ToggleButtonGroup
 } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
-import Forbidden from '../../components/forbidden';
+import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
 import LogEntryActions from '../actions/log-entry-actions';
 import LogEntryStore from '../stores/log-entry-store';
@@ -58,17 +63,27 @@ class LogsList extends React.Component {
 			possessive = `${ username }'s`;
 		}
 
-		this.state = { username, possessive };
+		this.state = {
+			username,
+			possessive,
+			isConfirmDeleteVisible: false,
+			recordsToBeDeleted: []
+		};
 
 		this.handleSortByChanged = this.handleSortByChanged.bind(this);
 		this.handleSortOrderChanged = this.handleSortOrderChanged.bind(this);
+		this.handleBulkDelete = this.handleBulkDelete.bind(this);
+		this.handleConfirmBulkDelete = this.handleConfirmBulkDelete.bind(this);
+		this.handleCancelBulkDelete = this.handleCancelBulkDelete.bind(this);
+		this.renderModal = this.renderModal.bind(this);
+		this.searchLogs = this.searchLogs.bind(this);
 	}
 
 	componentDidMount() {
-		this.searchLogs();
+		setTimeout(this.searchLogs, 0);
 	}
 
-	searchLogs(params) {
+	async searchLogs(params) {
 		const { username } = this.state;
 		if (!username) {
 			return;
@@ -79,11 +94,52 @@ class LogsList extends React.Component {
 			sortOrder: this.props.sortOrder
 		};
 
-		LogEntryActions.searchLogs(
-			username,
-			params,
-			this.props.history
-		);
+		try {
+			LogEntryActions.searchLogs();
+			const results = await agent
+				.get(`/api/users/${ username }/logs`)
+				.query(params);
+			LogEntryActions.searchLogsCompleted(results.body);
+		} catch (err) {
+			LogEntryActions.searchLogsFailed();
+			handleError(err, this.props.history);
+		}
+	}
+
+	handleBulkDelete() {
+		const recordsToBeDeleted = [];
+		const { listEntries } = this.props;
+
+		listEntries.forEach(entry => {
+			if (entry.checked) {
+				recordsToBeDeleted.push(entry.entryId);
+			}
+		});
+
+		this.setState({
+			...this.state,
+			isConfirmDeleteVisible: true,
+			recordsToBeDeleted
+		});
+	}
+
+	async handleConfirmBulkDelete() {
+		this.handleCancelBulkDelete();
+		try {
+			await agent
+				.del(`/api/users/${ this.state.username }/logs`)
+				.send(this.state.recordsToBeDeleted);
+			await this.searchLogs();
+		} catch (err) {
+			handleError(err, this.props.history);
+		}
+	}
+
+	handleCancelBulkDelete() {
+		this.setState({
+			...this.state,
+			isConfirmDeleteVisible: false
+		});
 	}
 
 	handleSortByChanged(value) {
@@ -102,15 +158,60 @@ class LogsList extends React.Component {
 		this.searchLogs({ sortBy, sortOrder });
 	}
 
+	renderModal() {
+		const recordCount = this.state.recordsToBeDeleted.length;
+		const message = recordCount > 0
+			? <p>Are you sure you want to permanently delete the <strong>{ recordCount }</strong> selected dives?</p>
+			: (
+				<p>
+					There are no dives selected.
+					Please check off the dives you wish to delete before clicking the Delete button.
+				</p>
+			);
+		const footer = recordCount > 0
+			? (
+				<Modal.Footer>
+					<Button
+						id="btn-confirm-delete"
+						bsStyle="primary"
+						onClick={ this.handleConfirmBulkDelete }
+					>
+						<Glyphicon glyph="trash" />&nbsp;Yes
+					</Button>
+					&nbsp;
+					<Button id="btn-cancel-delete" onClick={ this.handleCancelBulkDelete }>
+						No
+					</Button>
+				</Modal.Footer>
+			)
+			: (
+				<Modal.Footer>
+					<Button
+						id="btn-cancel-delete"
+						bsStyle="primary"
+						onClick={ this.handleCancelBulkDelete }
+					>
+						Ok
+					</Button>
+				</Modal.Footer>
+			);
+
+		return (
+			<Modal show={ this.state.isConfirmDeleteVisible }>
+				<Modal.Header>
+					<Modal.Title>Confirm Delete</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{ message }
+				</Modal.Body>
+				{ footer }
+			</Modal>
+		);
+	}
+
 	render() {
 		if (!this.state.username) {
 			return <RequireUser />;
-		}
-
-		if (this.props.isForbidden) {
-			return this.props.currentUser.isAnonymous
-				? <RequireUser />
-				: <Forbidden />;
 		}
 
 		let reverseOrderText = null;
@@ -130,6 +231,7 @@ class LogsList extends React.Component {
 
 		return (
 			<div>
+				{ this.renderModal() }
 				<Breadcrumb>
 					<LinkContainer to="/">
 						<Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -143,6 +245,13 @@ class LogsList extends React.Component {
 					<LinkContainer to={ `/logs/${ this.props.currentUser.username }/new` }>
 						<Button bsStyle="primary">Create New</Button>
 					</LinkContainer>
+
+					<ButtonGroup>
+						<Button onClick={ LogEntryActions.selectAllEntries }>Select All</Button>
+						<Button onClick={ LogEntryActions.selectNoEntries }>Select None</Button>
+					</ButtonGroup>
+
+					<Button onClick={ this.handleBulkDelete }><Glyphicon glyph="trash" /></Button>
 
 					<ToggleButtonGroup
 						name="sortBy"
@@ -178,10 +287,12 @@ class LogsList extends React.Component {
 							: null
 					}
 					<LogsListGrid
+						depthUnit={ this.props.currentUser.distanceUnit }
 						isSearching={ this.props.isSearching }
 						listEntries={ this.props.listEntries }
 						username={ this.state.username }
 					/>
+					<Clearfix />
 				</div>
 			</div>);
 	}
@@ -191,7 +302,6 @@ LogsList.propTypes = {
 	currentUser: PropTypes.object.isRequired,
 	listEntries: PropTypes.array,
 	history: PropTypes.object.isRequired,
-	isForbidden: PropTypes.bool.isRequired,
 	isSearching: PropTypes.bool.isRequired,
 	match: PropTypes.object.isRequired,
 	sortBy: PropTypes.string.isRequired,

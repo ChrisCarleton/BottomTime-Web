@@ -3,7 +3,6 @@ import LogEntryActions from '../actions/log-entry-actions';
 
 class LogEntryStore {
 	constructor() {
-		this.isForbidden = false;
 		this.isSearching = false;
 		this.listEntries = [];
 		this.sortBy = 'entryTime';
@@ -14,14 +13,15 @@ class LogEntryStore {
 			handleSearchFailed: LogEntryActions.SEARCH_LOGS_FAILED,
 			handleSearchCompleted: LogEntryActions.SEARCH_LOGS_COMPLETED,
 			handleChangeSortOrder: LogEntryActions.CHANGE_SORT_ORDER,
-			handleAccessDenied: LogEntryActions.ACCESS_DENIED
+			handleToggleEntryChecked: LogEntryActions.TOGGLE_CHECKED_ENTRY,
+			handleSelectAll: LogEntryActions.SELECT_ALL_ENTRIES,
+			handleSelectNone: LogEntryActions.SELECT_NO_ENTRIES
 		});
 	}
 
 	handleStartSearch() {
 		this.listEntries = [];
 		this.isSearching = true;
-		this.isForbidden = false;
 	}
 
 	handleSearchCompleted(results) {
@@ -33,16 +33,27 @@ class LogEntryStore {
 		this.isSearching = false;
 	}
 
-	handleAccessDenied() {
-		this.isForbidden = true;
-		this.isSearching = false;
-		this.listEntries = [];
-		this.currentEntry = {};
-	}
-
 	handleChangeSortOrder(sortParams) {
 		this.sortBy = sortParams.sortBy;
 		this.sortOrder = sortParams.sortOrder;
+	}
+
+	handleToggleEntryChecked(index) {
+		if (this.listEntries[index]) {
+			this.listEntries[index].checked = !this.listEntries[index].checked;
+		}
+	}
+
+	handleSelectAll() {
+		for (let i = 0; i < this.listEntries.length; i++) {
+			this.listEntries[i].checked = true;
+		}
+	}
+
+	handleSelectNone() {
+		for (let i = 0; i < this.listEntries.length; i++) {
+			this.listEntries[i].checked = false;
+		}
 	}
 }
 
