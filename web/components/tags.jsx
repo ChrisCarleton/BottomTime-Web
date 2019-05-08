@@ -32,9 +32,9 @@ class Tags extends React.Component {
 		this.props.setValue([ ...this.props.getValue(), tag.name ]);
 	}
 
-	handleDelete(i) {
+	handleDelete(index) {
 		const tags = [ ...this.props.getValue() ];
-		tags.splice(i, 1);
+		tags.splice(index, 1);
 		this.props.setValue(tags);
 	}
 
@@ -55,7 +55,6 @@ class Tags extends React.Component {
 	render() {
 		const tags = (this.props.getValue() || []).map(v => ({ name: v }));
 
-		/* eslint-disable react/jsx-handler-names */
 		return (
 			<FormGroup
 				controlId={ this.props.controlId }
@@ -92,7 +91,6 @@ class Tags extends React.Component {
 				/>
 			</FormGroup>
 		);
-		/* eslint-enable react/jsx-handler-names */
 	}
 }
 

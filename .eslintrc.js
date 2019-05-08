@@ -49,6 +49,7 @@ module.exports = {
 		"react/jsx-curly-spacing": [2, {
 			"when": "always"
 		}],
+		"react/jsx-handler-names": 0,
 		"react/jsx-indent": [2, "tab"],
 		"react/jsx-indent-props": [2, "tab"],
 		"react/jsx-max-props-per-line": 0,
