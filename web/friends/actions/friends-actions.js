@@ -1,11 +1,19 @@
 import alt from '../../alt';
 
 class FriendsActions {
-	beginLoading() {
+	beginLoadingFriends() {
 		return true;
 	}
 
-	finishLoading() {
+	finishLoadingFriends() {
+		return true;
+	}
+
+	beginLoadingRequests() {
+		return true;
+	}
+
+	finishLoadingRequests() {
 		return true;
 	}
 
@@ -13,8 +21,35 @@ class FriendsActions {
 		return friends;
 	}
 
+	setRequestsList(requests) {
+		return requests;
+	}
+
+	showReasonBox(index, isVisible) {
+		return {
+			index,
+			isVisible
+		};
+	}
+
+	showProfileCard(username) {
+		return username;
+	}
+
+	hideProfileCard() {
+		return true;
+	}
+
 	setNewFriendRequestDialogVisible(isVisible) {
 		return isVisible;
+	}
+
+	checkAllRequests() {
+		return true;
+	}
+
+	uncheckAllRequests() {
+		return true;
 	}
 }
 
