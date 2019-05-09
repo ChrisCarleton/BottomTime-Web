@@ -1,10 +1,13 @@
 import { By, until } from 'selenium-webdriver';
 import config from '../../web/config';
 import driver from '../web-driver';
+import Dot from 'dot-object';
 import { expect } from 'chai';
 import mockApis, { ErrorIds, exampleUser, logEntries } from '../webapp/mock-apis';
 import moment from 'moment';
 import sinon from 'sinon';
+
+const dot = new Dot();
 
 async function refreshPage(url) {
 	await driver.navigate().to(url);
@@ -60,7 +63,7 @@ describe('Loading and Submitting Log Entries', () => {
 		});
 
 		await refreshPage(EntryUrl);
-		await driver.wait(until.elementLocated(By.id('weight_amount')));
+		await driver.wait(until.elementLocated(By.id('weight.amount')));
 		expect(async () => {
 			await driver.findElement(By.id('btn-save'));
 		}).to.throw;
@@ -92,7 +95,7 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 
 			await refreshPage(EntryUrl);
-			const weightElement = await driver.findElement(By.id('weight_amount'));
+			const weightElement = await driver.findElement(By.id('weight.amount'));
 			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
@@ -125,7 +128,7 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 
 			await refreshPage(EntryUrl);
-			const weightElement = await driver.findElement(By.id('weight_amount'));
+			const weightElement = await driver.findElement(By.id('weight.amount'));
 			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
@@ -203,8 +206,81 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 		});
 
-		it.skip(`Temperature can be rendered in °F in ${ t.mode }`, async () => {
-			// TODO: Add some fields to record temperature so we can test this.
+		[
+			{ label: 'Start pressure', key: 'air.in' },
+			{ label: 'End pressure', key: 'air.out' }
+		].forEach(f => {
+			it(`${ f.label } can be rendered in psi in ${ t.mode }`, async () => {
+				const auth = {
+					...exampleUser,
+					pressureUnit: 'psi'
+				};
+				const logEntry = {
+					...logEntries[0],
+					readOnly: t.readOnly
+				};
+
+				authStub = sinon.stub(mockApis, 'getAuthMe');
+				authStub.callsFake((req, res) => {
+					res.json(auth);
+				});
+
+				stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+				stub.callsFake((req, res) => {
+					res.json(logEntry);
+				});
+
+				await refreshPage(EntryUrl);
+				const pressureElement = await driver.findElement(By.id(f.key));
+				const displayedPressure = t.readOnly
+					? await pressureElement.getText()
+					: await pressureElement.getAttribute('value');
+
+				let expectedPressure = (dot.pick(f.key, logEntry, false) * 14.5038).toFixed(2);
+				if (t.readOnly) {
+					expectedPressure = `${ expectedPressure }psi`;
+				}
+				expect(displayedPressure).to.equal(expectedPressure);
+			});
+		});
+
+		[
+			{ label: 'Surface temperature', key: 'temperature.surface' },
+			{ label: 'Water temperature', key: 'temperature.water' },
+			{ label: 'Thermocline', key: 'temperature.thermoclines[0].temperature' }
+		].forEach(f => {
+			it(`${ f.label } can be rendered in °F in ${ t.mode }`, async () => {
+				const auth = {
+					...exampleUser,
+					temperatureUnit: 'f'
+				};
+				const logEntry = {
+					...logEntries[0],
+					readOnly: t.readOnly
+				};
+
+				authStub = sinon.stub(mockApis, 'getAuthMe');
+				authStub.callsFake((req, res) => {
+					res.json(auth);
+				});
+
+				stub = sinon.stub(mockApis, 'getUsersUsernameLogsLogId');
+				stub.callsFake((req, res) => {
+					res.json(logEntry);
+				});
+
+				await refreshPage(EntryUrl);
+				const tempElement = await driver.findElement(By.id(f.key));
+				const displayedTemp = t.readOnly
+					? await tempElement.getText()
+					: await tempElement.getAttribute('value');
+
+				let expectedTemp = (dot.pick(f.key, logEntry, false) * 9 / 5 + 32).toFixed(2);
+				if (t.readOnly) {
+					expectedTemp = `${ expectedTemp }°F`;
+				}
+				expect(displayedTemp).to.equal(expectedTemp);
+			});
 		});
 	});
 
@@ -223,7 +299,7 @@ describe('Loading and Submitting Log Entries', () => {
 
 		await refreshPage(NewEntryUrl);
 		await fillInRequiredFields();
-		await driver.findElement(By.id('weight_amount')).sendKeys('6');
+		await driver.findElement(By.id('weight.amount')).sendKeys('6');
 		await driver.findElement(By.id('btn-save')).click();
 
 		expect(spy.called).to.be.true;
@@ -259,8 +335,58 @@ describe('Loading and Submitting Log Entries', () => {
 		expect(maxDepth).to.equal(24.6888);
 	});
 
-	it.skip('Temperature can be submitted in °F', async () => {
-		// TODO: Add some fields to record temperature so we can test this.
+	it('Temperature can be submitted in °F', async () => {
+		const auth = {
+			...exampleUser,
+			temperatureUnit: 'f'
+		};
+
+		authStub = sinon.stub(mockApis, 'getAuthMe');
+		authStub.callsFake((req, res) => {
+			res.json(auth);
+		});
+
+		spy = sinon.spy(mockApis, 'postUsersUsernameLogs');
+
+		await refreshPage(NewEntryUrl);
+		await fillInRequiredFields();
+		await driver.findElement(By.id('temperature.surface')).sendKeys('75');
+		await driver.findElement(By.id('temperature.water')).sendKeys('65');
+		await driver.findElement(By.id('temperature.thermoclines[0].temperature')).sendKeys('48');
+
+		await driver.findElement(By.id('btn-save')).click();
+
+		expect(spy.called).to.be.true;
+		const { surface, water, thermoclines } = spy.getCall(0).args[0].body[0].temperature;
+		expect(surface).to.equal(23.88888888888889);
+		expect(water).to.equal(18.333333333333336);
+		expect(thermoclines[0].temperature).to.equal(8.88888888888889);
+	});
+
+	it('Pressure can be submitted in psi', async () => {
+		const auth = {
+			...exampleUser,
+			pressureUnit: 'psi'
+		};
+
+		authStub = sinon.stub(mockApis, 'getAuthMe');
+		authStub.callsFake((req, res) => {
+			res.json(auth);
+		});
+
+		spy = sinon.spy(mockApis, 'postUsersUsernameLogs');
+
+		await refreshPage(NewEntryUrl);
+		await fillInRequiredFields();
+		await driver.findElement(By.id('air.in')).sendKeys('3000');
+		await driver.findElement(By.id('air.out')).sendKeys('650');
+
+		await driver.findElement(By.id('btn-save')).click();
+
+		expect(spy.called).to.be.true;
+		const [ { air } ] = spy.getCall(0).args[0].body;
+		expect(air.in).to.equal(206.84279999999998);
+		expect(air.out).to.equal(44.81594);
 	});
 
 	it('Page redirects to Not Found page if entry is not found', async () => {

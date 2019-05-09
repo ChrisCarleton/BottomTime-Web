@@ -38,6 +38,24 @@ addValidationRule('isGreaterThanOrEqual', (values, value, min) => {
 	return true;
 });
 
+addValidationRule('isLessThan', (values, value, min) => {
+	if (typeof value === 'string' && value.length > 0) {
+		const parsed = parseFloat(value);
+		return isNaN(parsed) ? false : parsed < min;
+	}
+
+	return true;
+});
+
+addValidationRule('isLessThanOrEqual', (values, value, min) => {
+	if (typeof value === 'string' && value.length > 0) {
+		const parsed = parseFloat(value);
+		return isNaN(parsed) ? false : parsed <= min;
+	}
+
+	return true;
+});
+
 addValidationRule('isGreaterThanOrEqualToField', (values, value, field) => {
 	if (!values[field] || values[field].length === 0) {
 		return true;

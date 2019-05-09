@@ -60,6 +60,7 @@ class EditProfile extends React.Component {
 				CurrentUserActions.updateUser({
 					logsVisibility: model.logsVisibility,
 					distanceUnit: model.distanceUnit,
+					pressureUnit: model.pressureUnit,
 					temperatureUnit: model.temperatureUnit,
 					weightUnit: model.weightUnit
 				});
@@ -137,6 +138,7 @@ class EditProfile extends React.Component {
 					value={ moment(this.props.profile.memberSince).fromNow() }
 				/>
 				<TextBox
+					autoFocus
 					controlId="firstName"
 					label="First name"
 					name="firstName"
@@ -382,7 +384,7 @@ class EditProfile extends React.Component {
 							value: 'bar'
 						},
 						{
-							text: 'psi',
+							text: 'PSI',
 							value: 'psi'
 						}
 					] }

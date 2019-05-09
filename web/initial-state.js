@@ -8,6 +8,7 @@ export default {
 			isAnonymous: true,
 			isLockedOut: false,
 			distanceUnit: 'm',
+			pressureUnit: 'bar',
 			weightUnit: 'kg',
 			temperatureUnit: 'c'
 		}

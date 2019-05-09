@@ -15,7 +15,7 @@ const NotFound = lazy(() => import('./not-found'));
 const Profile = lazy(() => import('../users/components/profile'));
 const SignUp = lazy(() => import('../users/components/sign-up'));
 
-const spinner = <LoadingSpinner message="Loading..." />;
+const spinner = <LoadingSpinner message="Loading page..." />;
 
 class App extends React.Component {
 	render() {

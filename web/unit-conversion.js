@@ -3,6 +3,10 @@ export const ToPreferredUnits = {
 		m: d => d,
 		ft: d => 3.28084 * d
 	},
+	Pressure: {
+		bar: p => p,
+		psi: p => 14.5038 * p
+	},
 	Temperature: {
 		c: t => t,
 		f: t => (9 / 5) * t + 32
@@ -17,6 +21,10 @@ export const FromPreferredUnits = {
 	Distance: {
 		m: d => d,
 		ft: d => 0.3048 * d
+	},
+	Pressure: {
+		bar: p => p,
+		psi: p => 0.0689476 * p
 	},
 	Temperature: {
 		c: t => t,
