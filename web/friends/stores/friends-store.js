@@ -3,7 +3,8 @@ import FriendsActions from '../actions/friends-actions';
 
 class FriendsStore {
 	constructor() {
-		this.isLoading = false;
+		this.isLoadingFriends = false;
+		this.isLoadingRequests = false;
 		this.friendsList = [];
 		this.myRequests = [];
 		this.requestsToMe = [];
@@ -11,10 +12,12 @@ class FriendsStore {
 		this.profileCard = '';
 
 		this.bindListeners({
-			handleFinishLoading: FriendsActions.FINISH_LOADING,
+			handleFinishLoadingFriends: FriendsActions.FINISH_LOADING_FRIENDS,
+			handleFinishLoadingRequests: FriendsActions.FINISH_LOADING_REQUESTS,
 			handleSetFriendsList: FriendsActions.SET_FRIENDS_LIST,
 			handleSetRequestsList: FriendsActions.SET_REQUESTS_LIST,
-			handleStartLoading: FriendsActions.BEGIN_LOADING,
+			handleStartLoadingFriends: FriendsActions.BEGIN_LOADING_FRIENDS,
+			handleStartLoadingRequests: FriendsActions.BEGIN_LOADING_REQUESTS,
 			handleNewFriendRequestVisiblityChanged: FriendsActions.SET_NEW_FRIEND_REQUEST_DIALOG_VISIBLE,
 			handleCheckAllRequests: FriendsActions.CHECK_ALL_REQUESTS,
 			handleUncheckAllRequests: FriendsActions.UNCHECK_ALL_REQUESTS,
@@ -23,10 +26,12 @@ class FriendsStore {
 			handleHideProfileCard: FriendsActions.HIDE_PROFILE_CARD
 		});
 
-		this.handleFinishLoading = this.handleFinishLoading.bind(this);
+		this.handleFinishLoadingFriends = this.handleFinishLoadingFriends.bind(this);
+		this.handleFinishLoadingRequests = this.handleFinishLoadingRequests.bind(this);
 		this.handleSetFriendsList = this.handleSetFriendsList.bind(this);
 		this.handleSetRequestsList = this.handleSetRequestsList.bind(this);
-		this.handleStartLoading = this.handleStartLoading.bind(this);
+		this.handleStartLoadingFriends = this.handleStartLoadingFriends.bind(this);
+		this.handleStartLoadingRequests = this.handleStartLoadingRequests.bind(this);
 		this.handleNewFriendRequestVisiblityChanged
 			= this.handleNewFriendRequestVisiblityChanged.bind(this);
 		this.handleCheckAllRequests = this.handleCheckAllRequests.bind(this);
@@ -36,8 +41,12 @@ class FriendsStore {
 		this.handleHideProfileCard = this.handleHideProfileCard.bind(this);
 	}
 
-	handleFinishLoading() {
-		this.isLoading = false;
+	handleFinishLoadingFriends() {
+		this.isLoadingFriends = false;
+	}
+
+	handleFinishLoadingRequests() {
+		this.isLoadingRequests = false;
 	}
 
 	handleSetFriendsList(friends) {
@@ -48,8 +57,12 @@ class FriendsStore {
 		this.requestsToMe = requests;
 	}
 
-	handleStartLoading() {
-		this.isLoading = true;
+	handleStartLoadingFriends() {
+		this.isLoadingFriends = true;
+	}
+
+	handleStartLoadingRequests() {
+		this.isLoadingRequests = true;
 	}
 
 	handleNewFriendRequestVisiblityChanged(isVisible) {
@@ -57,17 +70,15 @@ class FriendsStore {
 	}
 
 	handleCheckAllRequests() {
-		this.requestsToMe = this.requestsToMe.map(r => ({
-			...r,
-			checked: true
-		}));
+		for (let i = 0; i < this.requestsToMe.length; i++) {
+			this.requestsToMe[i].checked = true;
+		}
 	}
 
 	handleUncheckAllRequests() {
-		this.requestsToMe = this.requestsToMe.map(r => ({
-			...r,
-			checked: false
-		}));
+		for (let i = 0; i < this.requestsToMe.length; i++) {
+			this.requestsToMe[i].checked = false;
+		}
 	}
 
 	handleShowReasonBox({ index, isVisible }) {

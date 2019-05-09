@@ -1,4 +1,3 @@
-import agent from '../../agent';
 import {
 	Breadcrumb,
 	Modal,
@@ -9,10 +8,9 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import FriendsActions from '../actions/friends-actions';
 import FriendsStore from '../stores/friends-store';
-import handleError from '../../handle-error';
+import FriendsUtilities from '../util/friends-utilities';
 import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
-import NewFriendRequestDialog from './new-friend-request-dialog';
 import PageTitle from '../../components/page-title';
 import ProfileCard from '../../users/components/profile-card';
 import PropTypes from 'prop-types';
@@ -20,6 +18,7 @@ import React, { lazy, Suspense } from 'react';
 import RequireUser from '../../components/require-user';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
+const NewFriendRequestDialog = lazy(() => import('./new-friend-request-dialog'));
 const FriendsList = lazy(() => import('./friends-list'));
 const FriendRequests = lazy(() => import('./friend-requests'));
 const Spinner = <LoadingSpinner message="Loading..." />;
@@ -38,44 +37,35 @@ class Friends extends React.Component {
 
 	componentDidMount() {
 		setTimeout(async () => {
-			const url = `/api/users/${ this.props.currentUser.username }/friends`;
-			try {
-				const [ friendsResponse, requestsResponse ] = await Promise.all([
-					agent.get(url).query({ type: 'friends' }),
-					agent.get(url).query({ type: 'requests-incoming' })
-				]);
-				FriendsActions.setFriendsList(friendsResponse.body);
-				FriendsActions.setRequestsList(requestsResponse.body);
-				FriendsActions.finishLoading();
-			} catch (err) {
-				FriendsActions.finishLoading();
-				handleError(err, this.props.history);
-			}
+			const { currentUser, history } = this.props;
+
+			await Promise.all([
+				FriendsUtilities.refreshFriends(history, currentUser.username),
+				FriendsUtilities.refreshFriendRequests(history, currentUser.username)
+			]);
 		}, 0);
 	}
 
-	renderNewFriendRequestDialog() {
-		if (this.props.showNewFriendRequestDialog) {
-			return <NewFriendRequestDialog />;
-		}
-
-		return null;
-	}
-
 	render() {
-		if (this.props.currentUser.isAnonymous) {
+		const {
+			currentUser,
+			profileCard,
+			showNewFriendRequestDialog
+		} = this.props;
+
+		if (currentUser.isAnonymous) {
 			return <RequireUser />;
 		}
 
 		return (
 			<div>
-				{ this.renderNewFriendRequestDialog() }
-				<Modal show={ this.props.profileCard !== '' } onHide={ FriendsActions.hideProfileCard }>
+				{ showNewFriendRequestDialog ? <NewFriendRequestDialog /> : null }
+				<Modal show={ profileCard !== '' } onHide={ FriendsActions.hideProfileCard }>
 					<Modal.Header closeButton>
-						<Modal.Title>{ this.props.profileCard }</Modal.Title>
+						<Modal.Title>{ profileCard }</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
-						<ProfileCard username={ this.props.profileCard } />
+						<ProfileCard username={ profileCard } />
 					</Modal.Body>
 				</Modal>
 				<Breadcrumb>

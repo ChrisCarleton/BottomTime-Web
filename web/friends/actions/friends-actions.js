@@ -1,11 +1,19 @@
 import alt from '../../alt';
 
 class FriendsActions {
-	beginLoading() {
+	beginLoadingFriends() {
 		return true;
 	}
 
-	finishLoading() {
+	finishLoadingFriends() {
+		return true;
+	}
+
+	beginLoadingRequests() {
+		return true;
+	}
+
+	finishLoadingRequests() {
 		return true;
 	}
 
