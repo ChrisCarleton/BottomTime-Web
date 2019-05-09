@@ -31,7 +31,7 @@ class ViewProfile extends React.Component {
 		}
 
 		return (
-			<Formsy className="form-horizontal">
+			<Formsy>
 				<h4>Personal Info</h4>
 				<StaticField
 					controlId="memberSince"

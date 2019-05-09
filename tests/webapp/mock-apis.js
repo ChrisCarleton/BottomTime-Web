@@ -99,6 +99,10 @@ const mockApis = {
 		});
 	},
 
+	getUsersUsernameFriends(req, res) {
+		res.json([]);
+	},
+
 	getUsersUsernameLogs(req, res) {
 		return res.json(logEntries);
 	},

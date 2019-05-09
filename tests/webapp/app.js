@@ -15,6 +15,8 @@ app.post(
 	(req, res) => mockApis.postUsersUsernameChangePassword(req, res)
 );
 
+app.get('/api/users/:username/friends', (req, res) => mockApis.getUsersUsernameFriends(req, res));
+
 app.get('/api/users/:username/logs', (req, res) => mockApis.getUsersUsernameLogs(req, res));
 app.get('/api/users/:username/logs/:logId', (req, res) => mockApis.getUsersUsernameLogsLogId(req, res));
 app.post('/api/users/:username/logs', (req, res) => mockApis.postUsersUsernameLogs(req, res));
