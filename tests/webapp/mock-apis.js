@@ -76,7 +76,11 @@ for (let i = 0; i < logEntries.length; i++) {
 			longitude: faker.random.number({ min: -180, max: 180 })
 		},
 		weight: {
-			amount: faker.random.number({ min: 0, max: 12 }),
+			belt: faker.random.number({ min: 0, max: 4 }),
+			integrated: faker.random.number({ min: 0, max: 4 }),
+			backplate: faker.random.number({ min: 0, max: 4 }),
+			ankles: faker.random.number({ min: 0, max: 4 }),
+			other: faker.random.number({ min: 0, max: 4 }),
 			correctness: faker.random.arrayElement([ 'good', 'too much', 'too little' ]),
 			trim: faker.random.arrayElement([ 'good', 'feet up', 'feet down' ])
 		},

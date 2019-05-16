@@ -329,16 +329,18 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('err-air.volume'));
 		});
 
-		it('Weight amount must be a number', async () => {
-			await driver.findElement(By.id('weight.amount')).sendKeys('lol');
-			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-weight.amount'));
-		});
+		[ 'belt', 'integrated', 'backplate', 'ankles', 'other' ].forEach(w => {
+			it(`${ w } weight must be a number`, async () => {
+				await driver.findElement(By.id(`weight.${ w }`)).sendKeys('lol');
+				await driver.findElement(By.id('btn-save')).click();
+				await driver.findElement(By.id(`err-weight.${ w }`));
+			});
 
-		it('Weight amount must be positive', async () => {
-			await driver.findElement(By.id('weight.amount')).sendKeys('-0.1');
-			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-weight.amount'));
+			it(`${ w } weight must be positive`, async () => {
+				await driver.findElement(By.id(`weight.${ w }`)).sendKeys('-0.1');
+				await driver.findElement(By.id('btn-save')).click();
+				await driver.findElement(By.id(`err-weight.${ w }`));
+			});
 		});
 
 		it('Comments cannot be more than 1000 characters', async () => {
@@ -518,7 +520,7 @@ describe('Editing Log Entries', () => {
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
 				driver.findElement(By.id('averageDepth')),
-				driver.findElement(By.id('weight.amount'))
+				driver.findElement(By.id('weight.belt'))
 			]);
 
 			await location.clear();
@@ -527,7 +529,7 @@ describe('Editing Log Entries', () => {
 
 			await location.sendKeys('Cozumel');
 			await averageDepth.sendKeys('17.6');
-			await weightAmount.sendKeys('4.8');
+			await weightAmount.sendKeys('2.6');
 
 			await driver.findElement(By.id('btn-reset')).click();
 			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
@@ -537,12 +539,12 @@ describe('Editing Log Entries', () => {
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
 				driver.findElement(By.id('averageDepth')).getAttribute('value'),
-				driver.findElement(By.id('weight.amount')).getAttribute('value')
+				driver.findElement(By.id('weight.belt')).getAttribute('value')
 			]);
 
 			expect(locationValue).to.equal(logEntries[0].location);
 			expect(parseFloat(averageDepthValue)).to.equal(logEntries[0].averageDepth);
-			expect(parseFloat(weightAmountValue)).to.equal(logEntries[0].weight.amount);
+			expect(parseFloat(weightAmountValue)).to.equal(logEntries[0].weight.belt);
 		});
 
 		it('Will restore a new entry back to a blank document', async () => {
@@ -550,7 +552,7 @@ describe('Editing Log Entries', () => {
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
 				driver.findElement(By.id('averageDepth')),
-				driver.findElement(By.id('weight.amount'))
+				driver.findElement(By.id('weight.integrated'))
 			]);
 
 			await location.clear();
@@ -559,7 +561,7 @@ describe('Editing Log Entries', () => {
 
 			await location.sendKeys('Cozumel');
 			await averageDepth.sendKeys('17.6');
-			await weightAmount.sendKeys('4.8');
+			await weightAmount.sendKeys('2.2');
 
 			await driver.findElement(By.id('btn-reset')).click();
 			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
@@ -569,7 +571,7 @@ describe('Editing Log Entries', () => {
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
 				driver.findElement(By.id('averageDepth')).getAttribute('value'),
-				driver.findElement(By.id('weight.amount')).getAttribute('value')
+				driver.findElement(By.id('weight.integrated')).getAttribute('value')
 			]);
 
 			expect(locationValue).to.equal('');
@@ -586,7 +588,7 @@ describe('Editing Log Entries', () => {
 			const [ location, averageDepth, weightAmount ] = await Promise.all([
 				driver.findElement(By.id('location')),
 				driver.findElement(By.id('averageDepth')),
-				driver.findElement(By.id('weight.amount'))
+				driver.findElement(By.id('weight.backplate'))
 			]);
 
 			await location.clear();
@@ -604,7 +606,7 @@ describe('Editing Log Entries', () => {
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),
 				driver.findElement(By.id('averageDepth')).getAttribute('value'),
-				driver.findElement(By.id('weight.amount')).getAttribute('value')
+				driver.findElement(By.id('weight.backplate')).getAttribute('value')
 			]);
 
 			expect(locationValue).to.equal(expectedLocation);
