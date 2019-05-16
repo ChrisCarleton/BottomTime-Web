@@ -60,10 +60,62 @@ class DiveInfo extends React.Component {
 						/>
 						<strong>Weight</strong>
 						<TextBox
-							name="weight.amount"
-							controlId="weight.amount"
-							label="Amount worn"
-							value={ LogEntryUtilities.renderWeight(weight.amount, weightUnit) }
+							name="weight.belt"
+							controlId="weight.belt"
+							label="Weight belt"
+							value={ LogEntryUtilities.renderWeight(weight.belt, weightUnit) }
+							units={ weightUnit }
+							validations={ {
+								isGreaterThanOrEqual: 0
+							} }
+							validationErrors={ {
+								isGreaterThanOrEqual: 'Amount worn cannot be a negative number.'
+							} }
+						/>
+						<TextBox
+							name="weight.integrated"
+							controlId="weight.integrated"
+							label="Integrated pockets"
+							value={ LogEntryUtilities.renderWeight(weight.integrated, weightUnit) }
+							units={ weightUnit }
+							validations={ {
+								isGreaterThanOrEqual: 0
+							} }
+							validationErrors={ {
+								isGreaterThanOrEqual: 'Amount worn cannot be a negative number.'
+							} }
+						/>
+						<TextBox
+							name="weight.backplate"
+							controlId="weight.backplate"
+							label="Backplate/Trim"
+							value={ LogEntryUtilities.renderWeight(weight.backplate, weightUnit) }
+							units={ weightUnit }
+							validations={ {
+								isGreaterThanOrEqual: 0
+							} }
+							validationErrors={ {
+								isGreaterThanOrEqual: 'Amount worn cannot be a negative number.'
+							} }
+						/>
+						<TextBox
+							name="weight.ankles"
+							controlId="weight.ankles"
+							label="Ankle weights"
+							value={ LogEntryUtilities.renderWeight(weight.ankles, weightUnit) }
+							units={ weightUnit }
+							validations={ {
+								isGreaterThanOrEqual: 0
+							} }
+							validationErrors={ {
+								isGreaterThanOrEqual: 'Amount worn cannot be a negative number.'
+							} }
+						/>
+						<TextBox
+							name="weight.other"
+							controlId="weight.other"
+							label="Other weights"
+							value={ LogEntryUtilities.renderWeight(weight.other, weightUnit) }
 							units={ weightUnit }
 							validations={ {
 								isGreaterThanOrEqual: 0

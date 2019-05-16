@@ -220,11 +220,39 @@ class ViewLogEntry extends React.Component {
 							/>
 							<strong>Weight</strong>
 							<StaticField
-								controlId="weight.amount"
-								name="weight.amount"
-								label="Amount worn"
+								controlId="weight.belt"
+								name="weight.belt"
+								label="Weight belt"
 								default={ Unspecified }
-								value={ this.renderWeight(weight.amount) }
+								value={ this.renderWeight(weight.belt) }
+							/>
+							<StaticField
+								controlId="weight.integrated"
+								name="weight.integrated"
+								label="Integrated pockets"
+								default={ Unspecified }
+								value={ this.renderWeight(weight.integrated) }
+							/>
+							<StaticField
+								controlId="weight.backplate"
+								name="weight.backplate"
+								label="Backplate/Trim"
+								default={ Unspecified }
+								value={ this.renderWeight(weight.backplate) }
+							/>
+							<StaticField
+								controlId="weight.ankles"
+								name="weight.ankles"
+								label="Ankle weights"
+								default={ Unspecified }
+								value={ this.renderWeight(weight.ankles) }
+							/>
+							<StaticField
+								controlId="weight.other"
+								name="weight.other"
+								label="Other weight"
+								default={ Unspecified }
+								value={ this.renderWeight(weight.other) }
 							/>
 							<StaticField
 								controlId="weight.correctness"

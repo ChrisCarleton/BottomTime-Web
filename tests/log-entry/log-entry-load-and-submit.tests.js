@@ -63,7 +63,7 @@ describe('Loading and Submitting Log Entries', () => {
 		});
 
 		await refreshPage(EntryUrl);
-		await driver.wait(until.elementLocated(By.id('weight.amount')));
+		await driver.wait(until.elementLocated(By.id('weight.belt')));
 		expect(async () => {
 			await driver.findElement(By.id('btn-save'));
 		}).to.throw;
@@ -82,7 +82,7 @@ describe('Loading and Submitting Log Entries', () => {
 				...logEntries[0],
 				readOnly: t.readOnly
 			};
-			logEntry.weight.amount = logEntry.weight.amount || 1.5;
+			logEntry.weight.belt = logEntry.weight.belt || 1.5;
 
 			authStub = sinon.stub(mockApis, 'getAuthMe');
 			authStub.callsFake((req, res) => {
@@ -95,11 +95,11 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 
 			await refreshPage(EntryUrl);
-			const weightElement = await driver.findElement(By.id('weight.amount'));
+			const weightElement = await driver.findElement(By.id('weight.belt'));
 			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
-			let expectedWeight = (logEntry.weight.amount * 2.20462).toFixed(2);
+			let expectedWeight = (logEntry.weight.belt * 2.20462).toFixed(2);
 			if (t.readOnly) {
 				expectedWeight = `${ expectedWeight }lbs`;
 			}
@@ -115,7 +115,7 @@ describe('Loading and Submitting Log Entries', () => {
 				...logEntries[0],
 				readOnly: t.readOnly
 			};
-			logEntry.weight.amount = 0;
+			logEntry.weight.integrated = 0;
 
 			authStub = sinon.stub(mockApis, 'getAuthMe');
 			authStub.callsFake((req, res) => {
@@ -128,7 +128,7 @@ describe('Loading and Submitting Log Entries', () => {
 			});
 
 			await refreshPage(EntryUrl);
-			const weightElement = await driver.findElement(By.id('weight.amount'));
+			const weightElement = await driver.findElement(By.id('weight.integrated'));
 			const displayedWeight = t.readOnly
 				? await weightElement.getText()
 				: await weightElement.getAttribute('value');
@@ -284,27 +284,29 @@ describe('Loading and Submitting Log Entries', () => {
 		});
 	});
 
-	it('Weight can be submitted in lbs', async () => {
-		const auth = {
-			...exampleUser,
-			weightUnit: 'lbs'
-		};
+	[ 'belt', 'integrated', 'backplate', 'ankles', 'other' ].forEach(w => {
+		it(`${ w } weight can be submitted in lbs`, async () => {
+			const auth = {
+				...exampleUser,
+				weightUnit: 'lbs'
+			};
 
-		authStub = sinon.stub(mockApis, 'getAuthMe');
-		authStub.callsFake((req, res) => {
-			res.json(auth);
+			authStub = sinon.stub(mockApis, 'getAuthMe');
+			authStub.callsFake((req, res) => {
+				res.json(auth);
+			});
+
+			spy = sinon.spy(mockApis, 'postUsersUsernameLogs');
+
+			await refreshPage(NewEntryUrl);
+			await fillInRequiredFields();
+			await driver.findElement(By.id(`weight.${ w }`)).sendKeys('6');
+			await driver.findElement(By.id('btn-save')).click();
+
+			expect(spy.called).to.be.true;
+			const [ { weight } ] = spy.getCall(0).args[0].body;
+			expect(weight[w]).to.equal(2.721552);
 		});
-
-		spy = sinon.spy(mockApis, 'postUsersUsernameLogs');
-
-		await refreshPage(NewEntryUrl);
-		await fillInRequiredFields();
-		await driver.findElement(By.id('weight.amount')).sendKeys('6');
-		await driver.findElement(By.id('btn-save')).click();
-
-		expect(spy.called).to.be.true;
-		const [ { weight } ] = spy.getCall(0).args[0].body;
-		expect(weight.amount).to.equal(2.721552);
 	});
 
 	it('Depth can be submitted in ft', async () => {
