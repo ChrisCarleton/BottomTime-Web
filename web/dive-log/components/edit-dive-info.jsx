@@ -14,7 +14,8 @@ class DiveInfo extends React.Component {
 	render() {
 		const { currentEntry, distanceUnit, pressureUnit, weightUnit } = this.props;
 		const weight = currentEntry.weight || {};
-		const air = currentEntry.air || {};
+		const air = currentEntry.air || [];
+		air[0] = air[0] || {};
 		const decoStops = currentEntry.decoStops || [];
 		decoStops[0] = decoStops[0] || {};
 
@@ -181,14 +182,14 @@ class DiveInfo extends React.Component {
 					<Col md={ 6 } sm={ 12 }>
 						<strong>Air</strong>
 						<TextBox
-							name="air.in"
-							controlId="air.in"
+							name="air[0].in"
+							controlId="air[0].in"
 							label="Start pressure"
-							value={ LogEntryUtilities.renderPressure(air.in, pressureUnit) }
+							value={ LogEntryUtilities.renderPressure(air[0].in, pressureUnit) }
 							units={ pressureUnit }
 							validations={ {
 								isGreaterThan: 0,
-								isGreaterThanOrEqualToField: 'air.out'
+								isGreaterThanOrEqualToField: 'air[0].out'
 							} }
 							validationErrors={ {
 								isGreaterThan: 'Starting pressure must be a positive number.',
@@ -196,10 +197,10 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<TextBox
-							name="air.out"
-							controlId="air.out"
+							name="air[0].out"
+							controlId="air[0].out"
 							label="End pressure"
-							value={ LogEntryUtilities.renderPressure(air.out, pressureUnit) }
+							value={ LogEntryUtilities.renderPressure(air[0].out, pressureUnit) }
 							units={ pressureUnit }
 							validations={ {
 								isGreaterThanOrEqual: 0
@@ -209,45 +210,48 @@ class DiveInfo extends React.Component {
 							} }
 						/>
 						<TextBox
-							name="air.volume"
-							controlId="air.volume"
+							name="air[0].size"
+							controlId="air[0].size"
 							label="Tank volume"
-							value={ air.volume || '' }
+							value={ air[0].size || '' }
+							units="L"
 							validations={ {
 								isGreaterThan: 0
 							} }
 							validationErrors={ {
-								isGreaterThan: 'Tank volume must be a positive number.'
+								isGreaterThan: 'Tank size must be a positive number.'
+							} }
+						/>
+						<TextBox
+							name="air[0].workingPressure"
+							controlId="air[0].workingPressure"
+							label="Working pressure"
+							value={ LogEntryUtilities.renderPressure(air[0].workingPressure, pressureUnit) }
+							units={ pressureUnit }
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Working pressure must be a positive number.'
 							} }
 						/>
 						<RadioList
-							controlId="air.volumeUnit"
-							name="air.volumeUnit"
-							value={ air.volumeUnit || '' }
-							inline
-						>
-							{ [
-								{ text: 'L', value: 'l' },
-								{ text: 'cf', value: 'cf' }
-							] }
-						</RadioList>
-						<RadioList
-							controlId="air.material"
-							name="air.material"
+							controlId="air[0].material"
+							name="air[0].material"
 							label="Tanks"
-							value={ air.material || '' }
+							value={ air[0].material || '' }
 							inline
 						>
 							{ [
-								{ text: 'Aluminum', value: 'aluminum' },
-								{ text: 'Steel', value: 'steel' }
+								{ text: 'Aluminum', value: 'al' },
+								{ text: 'Steel', value: 'fe' }
 							] }
 						</RadioList>
 						<TextBox
-							name="air.oxygen"
-							controlId="air.oxygen"
+							name="air[0].oxygen"
+							controlId="air[0].oxygen"
 							label="Oxygen content"
-							value={ air.oxygen || '' }
+							value={ air[0].oxygen || '' }
 							units={ '%' }
 							validations={ {
 								isGreaterThanOrEqual: 1,

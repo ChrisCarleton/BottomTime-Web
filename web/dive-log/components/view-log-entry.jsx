@@ -30,24 +30,8 @@ class ViewLogEntry extends React.Component {
 		return value || value === 0 ? `${ value }${ unit }` : null;
 	}
 
-	renderTankInfo(air) {
-		const tankMaterial = air.material
-			? `${ air.material[0].toUpperCase() }${ air.material.slice(1) }`
-			: null;
-		let tankVolume = null;
-		if (air.volume && air.volumeUnit) {
-			tankVolume = `${ air.volume }${ air.volumeUnit }`;
-		}
-
-		if (tankVolume && tankMaterial) {
-			return `${ tankMaterial } / ${ tankVolume }`;
-		} else if (tankVolume) {
-			return tankVolume;
-		} else if (tankMaterial) {
-			return tankMaterial;
-		}
-
-		return null;
+	renderTankSize(size) {
+		return size || size === 0 ? `${ size }L` : null;
 	}
 
 	renderDepth(value) {
@@ -99,7 +83,9 @@ class ViewLogEntry extends React.Component {
 		const { currentEntry } = this.props;
 		const gps = currentEntry.gps || {};
 		const weight = currentEntry.weight || {};
-		const air = currentEntry.air || {};
+
+		const air = currentEntry.air || [];
+		air[0] = air[0] || {};
 
 		const temperature = currentEntry.temperature || {};
 		temperature.thermoclines = temperature.thermoclines || [];
@@ -287,32 +273,39 @@ class ViewLogEntry extends React.Component {
 						<Col md={ 6 } sm={ 12 }>
 							<strong>Air</strong>
 							<StaticField
-								controlId="air.in"
-								name="air.in"
+								controlId="air[0].in"
+								name="air[0].in"
 								label="Start pressure"
 								default={ Unspecified }
-								value={ this.renderPressure(air.in) }
+								value={ this.renderPressure(air[0].in) }
 							/>
 							<StaticField
-								controlId="air.out"
-								name="air.out"
+								controlId="air[0].out"
+								name="air[0].out"
 								label="End pressure"
 								default={ Unspecified }
-								value={ this.renderPressure(air.out) }
+								value={ this.renderPressure(air[0].out) }
 							/>
 							<StaticField
-								controlId="air.volume"
-								name="air.volume"
+								controlId="air[0].size"
+								name="air[0].size"
 								label="Tank info"
 								default={ Unspecified }
-								value={ this.renderTankInfo(air) }
+								value={ this.renderTankSize(air[0].size) }
 							/>
 							<StaticField
-								controlId="air.oxygen"
-								name="air.oxygen"
+								controlId="air[0].workingPressure"
+								name="air[0].workingPressure"
+								label="Tank info"
+								default={ Unspecified }
+								value={ this.renderPressure(air[0].workingPressure) }
+							/>
+							<StaticField
+								controlId="air[0].oxygen"
+								name="air[0].oxygen"
 								label="Oxygen content"
 								default={ Unspecified }
-								value={ this.renderValueWithUnit(air.oxygen, '%') }
+								value={ this.renderValueWithUnit(air[0].oxygen, '%') }
 							/>
 						</Col>
 					</Row>
