@@ -1,12 +1,10 @@
 /* eslint max-statements: 0 */
 
 import { By, until } from 'selenium-webdriver';
-import config from '../../web/config';
 import driver from '../web-driver';
 import { expect } from 'chai';
 import faker from 'faker';
 import mockApis, { exampleUser, logEntries } from '../webapp/mock-apis';
-import moment from 'moment';
 import sinon from 'sinon';
 
 const NewEntryUrl = 'http://localhost:8081/logs/jake_smith/new';
@@ -15,14 +13,6 @@ const EntryUrl = `http://localhost:8081/logs/jake_smith/${ logEntries[0].entryId
 async function refreshPage(url) {
 	await driver.navigate().to(url);
 	await driver.wait(until.elementLocated(By.id('location')));
-}
-
-async function fillInRequiredFields() {
-	await driver.findElement(By.id('location')).sendKeys(logEntries[0].location);
-	await driver.findElement(By.id('site')).sendKeys(logEntries[0].site);
-	await driver.findElement(By.id('entryTime')).sendKeys(moment().format(config.entryTimeFormat));
-	await driver.findElement(By.id('maxDepth')).sendKeys(logEntries[0].maxDepth);
-	await driver.findElement(By.id('bottomTime')).sendKeys(logEntries[0].bottomTime);
 }
 
 describe('Editing Log Entries', () => {
@@ -271,62 +261,58 @@ describe('Editing Log Entries', () => {
 		});
 
 		it('Start pressure must be a number', async () => {
-			await driver.findElement(By.id('air.in')).sendKeys('seven');
+			await driver.findElement(By.id('air[0].in')).sendKeys('seven');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.in'));
+			await driver.findElement(By.id('err-air[0].in'));
 		});
 
 		it('Start pressure must be positive', async () => {
-			await driver.findElement(By.id('air.in')).sendKeys('0');
+			await driver.findElement(By.id('air[0].in')).sendKeys('0');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.in'));
+			await driver.findElement(By.id('err-air[0].in'));
 		});
 
 		it('End pressure must be a number', async () => {
-			await driver.findElement(By.id('air.out')).sendKeys('seven');
+			await driver.findElement(By.id('air[0].out')).sendKeys('seven');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.out'));
+			await driver.findElement(By.id('err-air[0].out'));
 		});
 
 		it('End pressure cannot be negative', async () => {
-			await driver.findElement(By.id('air.out')).sendKeys('-1');
+			await driver.findElement(By.id('air[0].out')).sendKeys('-1');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.out'));
+			await driver.findElement(By.id('err-air[0].out'));
 		});
 
 		it('End pressure cannot be greater than start pressure', async () => {
-			await driver.findElement(By.id('air.in')).sendKeys('200');
-			await driver.findElement(By.id('air.out')).sendKeys('210');
+			await driver.findElement(By.id('air[0].in')).sendKeys('200');
+			await driver.findElement(By.id('air[0].out')).sendKeys('210');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.in'));
+			await driver.findElement(By.id('err-air[0].in'));
 		});
 
-		it('Tank volume must be a number', async () => {
-			await driver.findElement(By.id('air.volume')).sendKeys('seven');
-			await driver.findElement(By.id('air.volumeUnit_cf')).click();
+		it('Tank size must be a number', async () => {
+			await driver.findElement(By.id('air[0].size')).sendKeys('seven');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.volume'));
+			await driver.findElement(By.id('err-air[0].size'));
 		});
 
-		it('Tank volume must be positive', async () => {
-			await driver.findElement(By.id('air.volume')).sendKeys('0');
-			await driver.findElement(By.id('air.volumeUnit_cf')).click();
+		it('Tank size must be positive', async () => {
+			await driver.findElement(By.id('air[0].size')).sendKeys('0');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.volume'));
+			await driver.findElement(By.id('err-air[0].size'));
 		});
 
-		it('Tank volume is required if volume unit is supplied', async () => {
-			await fillInRequiredFields();
-			await driver.findElement(By.id('air.volume')).sendKeys('80');
+		it('Working pressure must be a number', async () => {
+			await driver.findElement(By.id('air[0].workingPressure')).sendKeys('seven');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.volumeUnit'));
+			await driver.findElement(By.id('err-air[0].workingPressure'));
 		});
 
-		it('Tank volume unit is required if volume is supplied', async () => {
-			await fillInRequiredFields();
-			await driver.findElement(By.id('air.volumeUnit_l')).click();
+		it('Working pressure must be positive', async () => {
+			await driver.findElement(By.id('air[0].workingPressure')).sendKeys('0');
 			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air.volume'));
+			await driver.findElement(By.id('err-air[0].workingPressure'));
 		});
 
 		[ 'belt', 'integrated', 'backplate', 'ankles', 'other' ].forEach(w => {

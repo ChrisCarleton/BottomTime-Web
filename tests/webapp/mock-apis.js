@@ -56,15 +56,18 @@ for (let i = 0; i < logEntries.length; i++) {
 		site: faker.fake('{{address.cityPrefix}} {{name.lastName}}'),
 		averageDepth,
 		maxDepth: averageDepth + faker.random.number({ min: 1, max: 10 }),
-		air: {
-			in: faker.random.number({ min: 198, max: 212 }),
-			out: faker.random.number({ min: 32, max: 104 }),
-			doubles: false,
-			volume: 12,
-			volumeUnit: 'L',
-			material: faker.random.arrayElement([ 'steel', 'aluminum' ]),
-			oxygen: faker.random.number({ min: 21, max: 40 })
-		},
+		air: [
+			{
+				in: faker.random.number({ min: 198, max: 212 }),
+				out: faker.random.number({ min: 32, max: 104 }),
+				count: faker.random.arrayElement([ 1, 2 ]),
+				name: '',
+				size: 12,
+				workingPressure: 237,
+				material: faker.random.arrayElement([ 'fe', 'al' ]),
+				oxygen: faker.random.number({ min: 21, max: 40 })
+			}
+		],
 		decoStops: [
 			{
 				depth: faker.random.number({ min: 2, max: 5 }),
