@@ -1,8 +1,15 @@
-import config from '../../config';
-import CurrentUserStore from '../../users/stores/current-user-store';
 import Dot from 'dot-object';
-import { FromPreferredUnits, ToPreferredUnits } from '../../unit-conversion';
-import moment from 'moment';
+import {
+	nullIfEmpty,
+	toDepth,
+	toISOString,
+	toNumber,
+	toPressure,
+	toTemperature,
+	toWeight,
+	trim
+} from '../../transform-functions';
+import { ToPreferredUnits } from '../../unit-conversion';
 
 const dot = new Dot();
 dot.override = true;
@@ -51,59 +58,6 @@ function validateTankVolume(model, invalidateForm) {
 	return true;
 }
 
-function trim(str) {
-	if (typeof str === 'string') {
-		return str.trim();
-	}
-
-	return str;
-}
-
-function toISOString(str) {
-	if (typeof str === 'string') {
-		return moment(str, config.entryTimeFormat).utc().toISOString();
-	}
-
-	return str;
-}
-
-function toNumber(str) {
-	const float = parseFloat(str);
-	return isNaN(float) ? null : float;
-}
-
-function toDepth(str) {
-	const { distanceUnit } = CurrentUserStore.getState().currentUser;
-	const value = parseFloat(str);
-	return isNaN(value) ? null : FromPreferredUnits.Distance[distanceUnit](value);
-}
-
-function toPressure(str) {
-	const { pressureUnit } = CurrentUserStore.getState().currentUser;
-	const value = parseFloat(str);
-	return isNaN(value) ? null : FromPreferredUnits.Pressure[pressureUnit](value);
-}
-
-function toTemperature(str) {
-	const { temperatureUnit } = CurrentUserStore.getState().currentUser;
-	const value = parseFloat(str);
-	return isNaN(value) ? null : FromPreferredUnits.Temperature[temperatureUnit](value);
-}
-
-function toWeight(str) {
-	const { weightUnit } = CurrentUserStore.getState().currentUser;
-	const value = parseFloat(str);
-	return isNaN(value) ? null : FromPreferredUnits.Weight[weightUnit](value);
-}
-
-function nullIfEmpty(str) {
-	if (str === '') {
-		return null;
-	}
-
-	return str;
-}
-
 const FormMods = {
 	'diveNumber': nullIfEmpty,
 	'location': trim,
@@ -125,12 +79,12 @@ const FormMods = {
 	'weight.trim': nullIfEmpty,
 	'decoStops[0].depth': toDepth,
 	'decoStops[0].duration': toNumber,
-	'air[0].in': toPressure,
-	'air[0].out': toPressure,
-	'air[0].size': toNumber,
-	'air[0].workingPressure': toPressure,
+	'air[0].in': [ nullIfEmpty, toPressure ],
+	'air[0].out': [ nullIfEmpty, toPressure ],
+	'air[0].size': [ nullIfEmpty, toNumber ],
+	'air[0].workingPressure': [ nullIfEmpty, toNumber ],
 	'air[0].material': nullIfEmpty,
-	'air[0].oxygen': toNumber,
+	'air[0].oxygen': [ nullIfEmpty, toNumber ],
 	'temperature.surface': [ nullIfEmpty, toTemperature ],
 	'temperature.water': [ nullIfEmpty, toTemperature ],
 	'temperature.thermoclines[0].temperature': [ nullIfEmpty, toTemperature ],

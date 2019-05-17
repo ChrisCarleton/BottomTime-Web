@@ -7,21 +7,26 @@ import config from './config';
 import initialState from './initial-state';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TanksActions from './tanks/actions/tanks-actions';
 
 require('./validators');
 require('./styles/main.less');
 require('./img/loading-spinner.gif');
 // require('./img/reef-background.jpg');
 
+require('./users/stores/current-user-store');
+require('./tanks/stores/tanks-store');
+
 (async () => {
 	try {
-		const result = await agent.get('/api/auth/me');
+		const authResult = await agent.get('/api/auth/me');
 		alt.bootstrap(JSON.stringify({
 			...initialState,
 			CurrentUserStore: {
-				currentUser: result.body
+				currentUser: authResult.body
 			}
 		}));
+		TanksActions.refreshTanks();
 	} catch (err) {
 		if (err.response && err.response.status === 401) {
 			agent.clearAuthToken();

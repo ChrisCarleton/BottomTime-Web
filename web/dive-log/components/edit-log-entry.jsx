@@ -2,12 +2,9 @@ import agent from '../../agent';
 import {
 	Button,
 	Col,
-	Glyphicon,
-	Modal,
-	Nav,
-	NavItem,
 	Row
 } from 'react-bootstrap';
+import ConfirmDialog from '../../components/confirm-dialog';
 import Conditions from './edit-conditions';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentLogEntryActions from '../actions/current-log-entry-actions';
@@ -119,7 +116,7 @@ class EditLogEntry extends React.Component {
 				this.props.history.push(`/logs/${ username }/${ response.body[0].entryId }`);
 			}
 
-			ErrorActions.showSuccess('Record was saved succesfully.');
+			ErrorActions.showSuccess('Log entry was saved succesfully.');
 		} catch (err) {
 			handleError(err, this.props.history);
 		}
@@ -130,89 +127,55 @@ class EditLogEntry extends React.Component {
 		const { distanceUnit, pressureUnit, temperatureUnit, weightUnit } = currentUser;
 
 		return (
-			<div>
-				<Col smHidden md={ 2 }>
-					<Nav bsStyle="pills" activeKey={ 0 } stacked>
-						<NavItem eventKey={ 0 }>
-							<Glyphicon glyph="map-marker" />&nbsp;&nbsp;Time and Place
-						</NavItem>
-						<NavItem eventKey={ 1 }>
-							<Glyphicon glyph="dashboard" />&nbsp;&nbsp;Dive Info
-						</NavItem>
-						<NavItem eventKey={ 2 }>
-							<Glyphicon glyph="sunglasses" />&nbsp;&nbsp;Conditions
-						</NavItem>
-						<NavItem eventKey={ 3 }>
-							<Glyphicon glyph="pencil" />&nbsp;&nbsp;Notes
-						</NavItem>
-					</Nav>
-				</Col>
-				<Col sm={ 12 } md={ 10 }>
-					<Formsy
-						onValidSubmit={ this.handleSubmit }
-						onInvalidSubmit={ this.handleInvalidSubmit }
-						mapping={ LogEntryUtilities.mapFormValues }
-						className="form-horizontal"
-						ref={ this.form }
-					>
-						<Modal show={ this.state.showConfirmReset }>
-							<Modal.Header>
-								<Modal.Title>Confirm Reset</Modal.Title>
-							</Modal.Header>
-							<Modal.Body>
-								<p>
-									Are you sure you want to discard all of the changes you have made?
-								</p>
-							</Modal.Body>
-							<Modal.Footer>
-								<Button
-									id="btn-confirm-discard"
-									bsStyle="primary"
-									onClick={ this.handleDiscardChanges }
-								>
-									Yes
-								</Button>
-								&nbsp;
-								<Button id="btn-cancel-discard" onClick={ this.handleCancelDiscardChanges }>No</Button>
-							</Modal.Footer>
-						</Modal>
-						<Row>
-							<Col sm={ 12 } md={ 6 }>
-								<TextBox
-									autoFocus
-									name="diveNumber"
-									controlId="diveNumber"
-									label="Dive number"
-									value={ currentEntry.diveNumber || '' }
-									validations={ {
-										isInt: true,
-										isGreaterThan: 0
-									} }
-									validationErrors={ {
-										isInt: 'Dive number must be an integer.',
-										isGreaterThan: 'Dive number must be positive.'
-									} }
-								/>
-							</Col>
-						</Row>
-						<TimeAndPlace currentEntry={ currentEntry } />
-						<DiveInfo
-							currentEntry={ currentEntry }
-							distanceUnit={ distanceUnit }
-							pressureUnit={ pressureUnit }
-							weightUnit={ weightUnit }
+			<Formsy
+				onValidSubmit={ this.handleSubmit }
+				onInvalidSubmit={ this.handleInvalidSubmit }
+				mapping={ LogEntryUtilities.mapFormValues }
+				className="form-horizontal"
+				ref={ this.form }
+			>
+				<ConfirmDialog
+					show={ this.state.showConfirmReset }
+					title="Confirm Reset"
+					message="Are you sure you want to discard all of the changes you have made?"
+					onConfirm={ this.handleDiscardChanges }
+					onCancel={ this.handleCancelDiscardChanges }
+				/>
+				<Row>
+					<Col sm={ 12 } md={ 6 }>
+						<TextBox
+							autoFocus
+							name="diveNumber"
+							controlId="diveNumber"
+							label="Dive number"
+							value={ currentEntry.diveNumber || '' }
+							validations={ {
+								isInt: true,
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isInt: 'Dive number must be an integer.',
+								isGreaterThan: 'Dive number must be positive.'
+							} }
 						/>
-						<Conditions
-							temperatureUnit={ temperatureUnit }
-							currentEntry={ currentEntry }
-						/>
-						<OtherInfo currentEntry={ currentEntry } />
-						<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
-						&nbsp;
-						<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
-					</Formsy>
-				</Col>
-			</div>
+					</Col>
+				</Row>
+				<TimeAndPlace currentEntry={ currentEntry } />
+				<DiveInfo
+					currentEntry={ currentEntry }
+					distanceUnit={ distanceUnit }
+					pressureUnit={ pressureUnit }
+					weightUnit={ weightUnit }
+				/>
+				<Conditions
+					temperatureUnit={ temperatureUnit }
+					currentEntry={ currentEntry }
+				/>
+				<OtherInfo currentEntry={ currentEntry } />
+				<Button id="btn-save" bsStyle="primary" type="submit">Save</Button>
+				&nbsp;
+				<Button id="btn-reset" onClick={ this.handleConfirmDiscardChanges }>Discard Changes</Button>
+			</Formsy>
 		);
 	}
 }
