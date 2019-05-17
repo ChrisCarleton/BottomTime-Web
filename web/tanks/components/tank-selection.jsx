@@ -62,11 +62,10 @@ class TankSelection extends React.Component {
 	}
 
 	handleEditTankProfile() {
-		const editValue = this.props.tanks[this.props.getValue()];
 		this.setState({
 			...this.state,
 			showEditDialog: true,
-			editValue
+			editValue: this.props.tanks[this.props.getValue()]
 		});
 	}
 
@@ -164,6 +163,12 @@ class TankSelection extends React.Component {
 		}
 	}
 
+	renderPressure(pressure, unit) {
+		return pressure
+			? `${ LogEntryUtilities.renderPressure(pressure, unit) }${ unit }`
+			: '';
+	}
+
 	getCurrentValue() {
 		const { air } = this.props;
 		const selected = this.props.tanks[this.props.getValue()];
@@ -184,10 +189,6 @@ class TankSelection extends React.Component {
 	render() {
 		const currentValue = this.getCurrentValue();
 		const { pressureUnit } = this.props;
-		const pressureString = currentValue.workingPressure
-			? `${ LogEntryUtilities.renderPressure(currentValue.workingPressure, pressureUnit) }${ pressureUnit }`
-			: '';
-
 		const validationState = this.props.isPristine() ? null : 'success';
 
 		return (
@@ -264,7 +265,7 @@ class TankSelection extends React.Component {
 					<dt>Size</dt>
 					<dd>{ this.renderSize(currentValue.size) }</dd>
 					<dt>Working pressure</dt>
-					<dd>{ pressureString }</dd>
+					<dd>{ this.renderPressure(currentValue.workingPressure, pressureUnit) }</dd>
 					<dt>Material</dt>
 					<dd>{ this.renderMaterial(currentValue.material) }</dd>
 				</dl>

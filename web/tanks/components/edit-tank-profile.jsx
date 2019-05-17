@@ -38,10 +38,6 @@ class EditTankProfile extends React.Component {
 		}
 	}
 
-	nullIfEmpty(value) {
-		return value || null;
-	}
-
 	mapping(model) {
 		const mods = {
 			'name': trim,
@@ -49,8 +45,7 @@ class EditTankProfile extends React.Component {
 			'workingPressure': [ nullIfEmpty, toPressure ],
 			'material': nullIfEmpty
 		};
-		const mapped = dot.object(model, mods);
-		return mapped;
+		return dot.object(model, mods);
 	}
 
 	render() {
@@ -61,79 +56,79 @@ class EditTankProfile extends React.Component {
 			<Modal show={ show } onHide={ this.handleCancel }>
 				<Modal.Header closeButton>
 					<Modal.Title>Edit Tank Profile</Modal.Title>
-					<Modal.Body>
-						<Formsy
-							ref={ this.formRef }
-							className="form-horizontal"
-							onValidSubmit={ this.handleSave }
-							mapping={ this.mapping }
-						>
-							<HiddenField
-								id="tank-profile-id"
-								name="tankId"
-								value={ value.tankId || '' }
-							/>
-							<HiddenField
-								id="tank-profile-oldName"
-								name="oldName"
-								value={ value.name }
-							/>
-							<TextBox
-								autoFocus
-								controlId="tank-profile-name"
-								name="name"
-								label="Name"
-								value={ value.name || '' }
-								placeholder="E.g. My Steel 100"
-								required
-								maxLength={ 100 }
-							/>
-							<TextBox
-								controlId="tank-profile-size"
-								name="size"
-								label="Size"
-								value={ value.size || '' }
-								units="L"
-								validations={ {
-									isGreaterThan: 0
-								} }
-								validationErrors={ {
-									isGreaterThan: 'Size must be a positive number.'
-								} }
-							/>
-							<TextBox
-								controlId="tank-profile-workingPressure"
-								name="workingPressure"
-								label="Working pressure"
-								value={ LogEntryUtilities.renderPressure(value.workingPressure, pressureUnit) }
-								units={ pressureUnit }
-								validations={ {
-									isGreaterThan: 0
-								} }
-								validationErrors={ {
-									isGreaterThan: 'Working pressure must be a positive number.'
-								} }
-							/>
-							<RadioList
-								controlId="material"
-								name="material"
-								label="Material"
-								value={ value.material || '' }
-								inline
-							>
-								{ [
-									{ text: 'Aluminum', value: 'al' },
-									{ text: 'Steel', value: 'fe' }
-								] }
-							</RadioList>
-						</Formsy>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button bsStyle="primary" onClick={ () => this.formRef.current.submit() }>Save</Button>
-						&nbsp;
-						<Button onClick={ this.handleCancel }>Cancel</Button>
-					</Modal.Footer>
 				</Modal.Header>
+				<Modal.Body>
+					<Formsy
+						ref={ this.formRef }
+						className="form-horizontal"
+						onValidSubmit={ this.handleSave }
+						mapping={ this.mapping }
+					>
+						<HiddenField
+							id="tank-profile-id"
+							name="tankId"
+							value={ value.tankId || '' }
+						/>
+						<HiddenField
+							id="tank-profile-oldName"
+							name="oldName"
+							value={ value.name }
+						/>
+						<TextBox
+							autoFocus
+							controlId="tank-profile-name"
+							name="name"
+							label="Name"
+							value={ value.name || '' }
+							placeholder="E.g. My Steel 100"
+							required
+							maxLength={ 100 }
+						/>
+						<TextBox
+							controlId="tank-profile-size"
+							name="size"
+							label="Size"
+							value={ value.size || '' }
+							units="L"
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Size must be a positive number.'
+							} }
+						/>
+						<TextBox
+							controlId="tank-profile-workingPressure"
+							name="workingPressure"
+							label="Working pressure"
+							value={ LogEntryUtilities.renderPressure(value.workingPressure, pressureUnit) }
+							units={ pressureUnit }
+							validations={ {
+								isGreaterThan: 0
+							} }
+							validationErrors={ {
+								isGreaterThan: 'Working pressure must be a positive number.'
+							} }
+						/>
+						<RadioList
+							controlId="material"
+							name="material"
+							label="Material"
+							value={ value.material || '' }
+							inline
+						>
+							{ [
+								{ text: 'Aluminum', value: 'al' },
+								{ text: 'Steel', value: 'fe' }
+							] }
+						</RadioList>
+					</Formsy>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button bsStyle="primary" onClick={ () => this.formRef.current.submit() }>Save</Button>
+					&nbsp;
+					<Button onClick={ this.handleCancel }>Cancel</Button>
+				</Modal.Footer>
 			</Modal>
 		);
 	}
