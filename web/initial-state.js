@@ -17,5 +17,8 @@ export default {
 		display: 'none',
 		message: '',
 		details: ''
+	},
+	TankStore: {
+		userTanks: []
 	}
 };

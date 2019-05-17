@@ -208,8 +208,7 @@ describe('Loading and Submitting Log Entries', () => {
 
 		[
 			{ label: 'Start pressure', key: 'air[0].in' },
-			{ label: 'End pressure', key: 'air[0].out' },
-			{ label: 'Working pressure', key: 'air[0].workingPressure' }
+			{ label: 'End pressure', key: 'air[0].out' }
 		].forEach(f => {
 			it(`${ f.label } can be rendered in psi in ${ t.mode }`, async () => {
 				const auth = {
@@ -383,7 +382,6 @@ describe('Loading and Submitting Log Entries', () => {
 		await fillInRequiredFields();
 		await driver.findElement(By.id('air[0].in')).sendKeys('3000');
 		await driver.findElement(By.id('air[0].out')).sendKeys('650');
-		await driver.findElement(By.id('air[0].workingPressure')).sendKeys('3000');
 
 		await driver.findElement(By.id('btn-save')).click();
 
@@ -391,7 +389,6 @@ describe('Loading and Submitting Log Entries', () => {
 		const [ { air } ] = spy.getCall(0).args[0].body;
 		expect(air[0].in).to.equal(206.84279999999998);
 		expect(air[0].out).to.equal(44.81594);
-		expect(air[0].workingPressure).to.equal(206.84279999999998);
 	});
 
 	it('Page redirects to Not Found page if entry is not found', async () => {

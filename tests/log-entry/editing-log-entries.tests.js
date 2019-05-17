@@ -291,30 +291,6 @@ describe('Editing Log Entries', () => {
 			await driver.findElement(By.id('err-air[0].in'));
 		});
 
-		it('Tank size must be a number', async () => {
-			await driver.findElement(By.id('air[0].size')).sendKeys('seven');
-			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air[0].size'));
-		});
-
-		it('Tank size must be positive', async () => {
-			await driver.findElement(By.id('air[0].size')).sendKeys('0');
-			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air[0].size'));
-		});
-
-		it('Working pressure must be a number', async () => {
-			await driver.findElement(By.id('air[0].workingPressure')).sendKeys('seven');
-			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air[0].workingPressure'));
-		});
-
-		it('Working pressure must be positive', async () => {
-			await driver.findElement(By.id('air[0].workingPressure')).sendKeys('0');
-			await driver.findElement(By.id('btn-save')).click();
-			await driver.findElement(By.id('err-air[0].workingPressure'));
-		});
-
 		[ 'belt', 'integrated', 'backplate', 'ankles', 'other' ].forEach(w => {
 			it(`${ w } weight must be a number`, async () => {
 				await driver.findElement(By.id(`weight.${ w }`)).sendKeys('lol');
@@ -518,8 +494,8 @@ describe('Editing Log Entries', () => {
 			await weightAmount.sendKeys('2.6');
 
 			await driver.findElement(By.id('btn-reset')).click();
-			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
-			await driver.findElement(By.id('btn-confirm-discard')).click();
+			await driver.wait(until.elementLocated(By.id('btn-confirm')));
+			await driver.findElement(By.id('btn-confirm')).click();
 			await driver.wait(until.elementLocated(By.id('global-error-bar')));
 
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
@@ -550,8 +526,8 @@ describe('Editing Log Entries', () => {
 			await weightAmount.sendKeys('2.2');
 
 			await driver.findElement(By.id('btn-reset')).click();
-			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
-			await driver.findElement(By.id('btn-confirm-discard')).click();
+			await driver.wait(until.elementLocated(By.id('btn-confirm')));
+			await driver.findElement(By.id('btn-confirm')).click();
 			await driver.wait(until.elementLocated(By.id('global-error-bar')));
 
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
@@ -586,8 +562,8 @@ describe('Editing Log Entries', () => {
 			await weightAmount.sendKeys(expectedWeightAmount);
 
 			await driver.findElement(By.id('btn-reset')).click();
-			await driver.wait(until.elementLocated(By.id('btn-confirm-discard')));
-			await driver.findElement(By.id('btn-cancel-discard')).click();
+			await driver.wait(until.elementLocated(By.id('btn-confirm')));
+			await driver.findElement(By.id('btn-cancel')).click();
 
 			const [ locationValue, averageDepthValue, weightAmountValue ] = await Promise.all([
 				driver.findElement(By.id('location')).getAttribute('value'),

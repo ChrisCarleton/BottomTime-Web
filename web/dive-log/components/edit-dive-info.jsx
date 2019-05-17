@@ -7,6 +7,7 @@ import LogEntryUtilities from './log-entry-utilities';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
 import React from 'react';
+import TankSelection from '../../tanks/components/tank-selection';
 import TextBox from '../../components/text-box';
 
 class DiveInfo extends React.Component {
@@ -209,44 +210,13 @@ class DiveInfo extends React.Component {
 								isGreaterThanOrEqual: 'Ending pressure must be a positive number.'
 							} }
 						/>
-						<TextBox
-							name="air[0].size"
-							controlId="air[0].size"
-							label="Tank volume"
-							value={ air[0].size || '' }
-							units="L"
-							validations={ {
-								isGreaterThan: 0
-							} }
-							validationErrors={ {
-								isGreaterThan: 'Tank size must be a positive number.'
-							} }
+						<TankSelection
+							controlId="tankProfileId"
+							name="air[0].name"
+							label="Tank profile"
+							value={ air[0].name || '' }
+							air={ air[0] }
 						/>
-						<TextBox
-							name="air[0].workingPressure"
-							controlId="air[0].workingPressure"
-							label="Working pressure"
-							value={ LogEntryUtilities.renderPressure(air[0].workingPressure, pressureUnit) }
-							units={ pressureUnit }
-							validations={ {
-								isGreaterThan: 0
-							} }
-							validationErrors={ {
-								isGreaterThan: 'Working pressure must be a positive number.'
-							} }
-						/>
-						<RadioList
-							controlId="air[0].material"
-							name="air[0].material"
-							label="Tanks"
-							value={ air[0].material || '' }
-							inline
-						>
-							{ [
-								{ text: 'Aluminum', value: 'al' },
-								{ text: 'Steel', value: 'fe' }
-							] }
-						</RadioList>
 						<TextBox
 							name="air[0].oxygen"
 							controlId="air[0].oxygen"
