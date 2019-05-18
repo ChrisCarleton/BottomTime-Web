@@ -14,7 +14,16 @@ class Slider extends React.Component {
 	}
 
 	render() {
-		const { controlId, getValue, isPristine, label, max, min } = this.props;
+		const {
+			controlId,
+			getValue,
+			highEndCaption,
+			isPristine,
+			label,
+			lowEndCaption,
+			max,
+			min
+		} = this.props;
 		const validationState = isPristine() ? null : 'success';
 
 		return (
@@ -23,6 +32,10 @@ class Slider extends React.Component {
 				label={ label }
 				validationState={ validationState }
 			>
+				<div className="slider-caption">
+					<span>{ lowEndCaption }</span>
+					<span className="slider-caption-right">{ highEndCaption }</span>
+				</div>
 				<input
 					type="range"
 					className="slider"
@@ -38,6 +51,8 @@ class Slider extends React.Component {
 
 Slider.propTypes = {
 	...formsyProps,
+	highEndCaption: PropTypes.string,
+	lowEndCaption: PropTypes.string,
 	max: PropTypes.number,
 	min: PropTypes.number
 };
