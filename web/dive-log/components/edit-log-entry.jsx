@@ -17,6 +17,7 @@ import LogEntryUtilities from './log-entry-utilities';
 import OtherInfo from './edit-other-info';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Slider from '../../components/slider';
 import TextBox from '../../components/text-box';
 import TimeAndPlace from './edit-time-place';
 import { withRouter } from 'react-router-dom';
@@ -159,6 +160,27 @@ class EditLogEntry extends React.Component {
 							} }
 						/>
 					</Col>
+					<Col sm={ 12 } md={ 6 }>
+						<Slider
+							controlId="rating"
+							name="rating"
+							label="Dive rating"
+							min={ 1 }
+							max={ 5 }
+							value={ currentEntry.rating }
+							lowEndCaption="Terrible"
+							highEndCaption="Amazing!!"
+							captions={
+								[
+									{ threshold: 1, caption: 'I don\'t wanna talk about it' },
+									{ threshold: 2, caption: 'Meh' },
+									{ threshold: 3, caption: 'Good dive' },
+									{ threshold: 4, caption: 'Great dive!' },
+									{ threshold: 5, caption: 'Freakin\' epic!!' }
+								]
+							}
+						/>
+					</Col>
 				</Row>
 				<TimeAndPlace currentEntry={ currentEntry } />
 				<DiveInfo
@@ -168,6 +190,7 @@ class EditLogEntry extends React.Component {
 					weightUnit={ weightUnit }
 				/>
 				<Conditions
+					distanceUnit={ distanceUnit }
 					temperatureUnit={ temperatureUnit }
 					currentEntry={ currentEntry }
 				/>

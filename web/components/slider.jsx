@@ -1,4 +1,5 @@
 import FormGroup from './/form-group';
+import { HelpBlock } from 'react-bootstrap';
 import { propTypes as formsyProps, withFormsy } from 'formsy-react';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -17,6 +18,7 @@ class Slider extends React.Component {
 		const {
 			controlId,
 			getValue,
+			captions,
 			highEndCaption,
 			isPristine,
 			label,
@@ -25,6 +27,21 @@ class Slider extends React.Component {
 			min
 		} = this.props;
 		const validationState = isPristine() ? null : 'success';
+
+		const currentValue = getValue();
+		let caption = null;
+
+		if (captions && currentValue) {
+			for (let i = 0; i < captions.length; i++) {
+				if (captions[i].threshold <= currentValue) {
+					/* eslint-disable prefer-destructuring */
+					caption = captions[i].caption;
+					/* eslint-enable prefer-destructuring */
+				} else {
+					break;
+				}
+			}
+		}
 
 		return (
 			<FormGroup
@@ -42,8 +59,9 @@ class Slider extends React.Component {
 					onChange={ this.handleSlide }
 					min={ min }
 					max={ max }
-					value={ getValue() || '' }
+					value={ currentValue || '' }
 				/>
+				<HelpBlock>{ caption }</HelpBlock>
 			</FormGroup>
 		);
 	}
@@ -51,6 +69,7 @@ class Slider extends React.Component {
 
 Slider.propTypes = {
 	...formsyProps,
+	captions: PropTypes.array,
 	highEndCaption: PropTypes.string,
 	lowEndCaption: PropTypes.string,
 	max: PropTypes.number,

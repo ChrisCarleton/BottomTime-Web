@@ -60,6 +60,7 @@ function validateTankVolume(model, invalidateForm) {
 
 const FormMods = {
 	'diveNumber': nullIfEmpty,
+	'rating': toNumber,
 	'location': trim,
 	'site': trim,
 	'entryTime': toISOString,
@@ -89,6 +90,10 @@ const FormMods = {
 	'temperature.water': [ nullIfEmpty, toTemperature ],
 	'temperature.thermoclines[0].temperature': [ nullIfEmpty, toTemperature ],
 	'temperature.thermoclines[0].depth': [ nullIfEmpty, toNumber ],
+	'visibility': toNumber,
+	'wind': toNumber,
+	'current': toNumber,
+	'waterChoppiness': toNumber,
 	'comments': [ trim, nullIfEmpty ]
 };
 
