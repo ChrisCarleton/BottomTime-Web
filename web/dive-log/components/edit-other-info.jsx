@@ -58,11 +58,6 @@ class OtherInfo extends React.Component {
 							value={ comments || '' }
 							maxLength={ 1000 }
 						/>
-						<ul>
-							<li>Buddy/Instructor Signatures</li>
-							<li>Location stamps</li>
-							<li>Badges and shit</li>
-						</ul>
 					</Col>
 				</Row>
 			</div>

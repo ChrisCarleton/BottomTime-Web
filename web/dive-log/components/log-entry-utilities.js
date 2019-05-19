@@ -94,6 +94,8 @@ const FormMods = {
 	'wind': toNumber,
 	'current': toNumber,
 	'waterChoppiness': toNumber,
+	'weather': [ trim, nullIfEmpty ],
+	'suit': [ trim, nullIfEmpty ],
 	'comments': [ trim, nullIfEmpty ]
 };
 

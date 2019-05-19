@@ -39,63 +39,6 @@ class Conditions extends React.Component {
 				</Row>
 				<Row>
 					<Col sm={ 12 } md={ 6 }>
-						<TextBox
-							name="temperature.surface"
-							controlId="temperature.surface"
-							label="Surface temp"
-							value={ LogEntryUtilities.renderTemperature(temperature.surface, temperatureUnit) || '' }
-							units={ temperatureUnitString }
-							validations={ {
-								isNumeric: true,
-								isGreaterThanOrEqual: temperatureLowerBound,
-								isLessThanOrEqual: temperatureUpperBound
-							} }
-							validationErrors={ {
-								isNumeric: 'Temperature must be a number',
-								isGreaterThanOrEqual: temperatureLowerBoundError,
-								isLessThanOrEqual: temperatureUpperBoundError
-							} }
-						/>
-						<TextBox
-							name="temperature.water"
-							controlId="temperature.water"
-							label="Water temp"
-							value={ LogEntryUtilities.renderTemperature(temperature.water, temperatureUnit) || '' }
-							units={ temperatureUnitString }
-							validations={ {
-								isNumeric: true,
-								isGreaterThanOrEqual: temperatureLowerBound,
-								isLessThanOrEqual: temperatureUpperBound
-							} }
-							validationErrors={ {
-								isNumeric: 'Temperature must be a number',
-								isGreaterThanOrEqual: temperatureLowerBoundError,
-								isLessThanOrEqual: temperatureUpperBoundError
-							} }
-						/>
-						<TextBox
-							name="temperature.thermoclines[0].temperature"
-							controlId="temperature.thermoclines[0].temperature"
-							label="Thermocline"
-							value={
-								LogEntryUtilities.renderTemperature(
-									temperature.thermoclines[0].temperature,
-									temperatureUnit) || ''
-							}
-							units={ temperatureUnitString }
-							validations={ {
-								isNumeric: true,
-								isGreaterThanOrEqual: temperatureLowerBound,
-								isLessThanOrEqual: temperatureUpperBound
-							} }
-							validationErrors={ {
-								isNumeric: 'Temperature must be a number',
-								isGreaterThanOrEqual: temperatureLowerBoundError,
-								isLessThanOrEqual: temperatureUpperBoundError
-							} }
-						/>
-					</Col>
-					<Col sm={ 12 } md={ 6 }>
 						<Slider
 							controlId="visibility"
 							name="visibility"
@@ -180,10 +123,81 @@ class Conditions extends React.Component {
 								]
 							}
 						/>
-						<ul>
-							<li>Weather?</li>
-							<li>Exposure gear?</li>
-						</ul>
+					</Col>
+					<Col sm={ 12 } md={ 6 }>
+						<strong>Temperature</strong>
+						<TextBox
+							name="temperature.surface"
+							controlId="temperature.surface"
+							label="Surface temp"
+							value={ LogEntryUtilities.renderTemperature(temperature.surface, temperatureUnit) || '' }
+							units={ temperatureUnitString }
+							validations={ {
+								isNumeric: true,
+								isGreaterThanOrEqual: temperatureLowerBound,
+								isLessThanOrEqual: temperatureUpperBound
+							} }
+							validationErrors={ {
+								isNumeric: 'Temperature must be a number',
+								isGreaterThanOrEqual: temperatureLowerBoundError,
+								isLessThanOrEqual: temperatureUpperBoundError
+							} }
+						/>
+						<TextBox
+							name="temperature.water"
+							controlId="temperature.water"
+							label="Water temp"
+							value={ LogEntryUtilities.renderTemperature(temperature.water, temperatureUnit) || '' }
+							units={ temperatureUnitString }
+							validations={ {
+								isNumeric: true,
+								isGreaterThanOrEqual: temperatureLowerBound,
+								isLessThanOrEqual: temperatureUpperBound
+							} }
+							validationErrors={ {
+								isNumeric: 'Temperature must be a number',
+								isGreaterThanOrEqual: temperatureLowerBoundError,
+								isLessThanOrEqual: temperatureUpperBoundError
+							} }
+						/>
+						<TextBox
+							name="temperature.thermoclines[0].temperature"
+							controlId="temperature.thermoclines[0].temperature"
+							label="Thermocline"
+							value={
+								LogEntryUtilities.renderTemperature(
+									temperature.thermoclines[0].temperature,
+									temperatureUnit) || ''
+							}
+							units={ temperatureUnitString }
+							validations={ {
+								isNumeric: true,
+								isGreaterThanOrEqual: temperatureLowerBound,
+								isLessThanOrEqual: temperatureUpperBound
+							} }
+							validationErrors={ {
+								isNumeric: 'Temperature must be a number',
+								isGreaterThanOrEqual: temperatureLowerBoundError,
+								isLessThanOrEqual: temperatureUpperBoundError
+							} }
+						/>
+						<strong>Other</strong>
+						<TextBox
+							controlId="weather"
+							name="weather"
+							label="Weather"
+							value={ currentEntry.weather }
+							maxLength={ 100 }
+							placeholder="E.g. Sunny, Rainy, Cold, etc."
+						/>
+						<TextBox
+							controlId="suit"
+							name="suit"
+							label="Exposure suit"
+							value={ currentEntry.suit }
+							maxLength={ 100 }
+							placeholder="E.g. Shorty, 5mm wetsuit, Drysuit, etc."
+						/>
 					</Col>
 				</Row>
 			</div>
