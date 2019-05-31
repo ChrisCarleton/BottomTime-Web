@@ -1,4 +1,4 @@
-import { Checkbox, Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import Map from '../../components/map';
 import PageTitle from '../../components/page-title';
@@ -20,7 +20,7 @@ class DiveSites extends React.Component {
 							width="100%"
 						/>
 					</Col>
-					<Col sm={ 12 } md={ 6 }></Col>
+					<Col sm={ 12 } md={ 6 } />
 				</Row>
 			</div>
 		);
