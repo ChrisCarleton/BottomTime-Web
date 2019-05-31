@@ -1,4 +1,4 @@
-import { Checkbox } from 'react-bootstrap';
+import { Checkbox, Col, Row } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import Map from '../../components/map';
 import PageTitle from '../../components/page-title';
@@ -12,12 +12,16 @@ class DiveSites extends React.Component {
 				<PageTitle title="Dive Sites" />
 				<Formsy className="form-horizontal">
 					<SearchBox controlId="search" />
-					<Checkbox>Just My Dive Sites</Checkbox>
 				</Formsy>
-				<Map
-					height="300px"
-					width="400px"
-				/>
+				<Row>
+					<Col sm={ 12 } md={ 6 }>
+						<Map
+							height="450px"
+							width="100%"
+						/>
+					</Col>
+					<Col sm={ 12 } md={ 6 }></Col>
+				</Row>
 			</div>
 		);
 	}

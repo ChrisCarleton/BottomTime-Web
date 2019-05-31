@@ -6,15 +6,16 @@ import React from 'react';
 class WorldMap extends React.Component {
 	render() {
 		const style = {
-			width: '600px',
-			height: '450px',
+			width: this.props.width,
+			height: this.props.height,
 			position: 'relative'
 		};
 		return (
 			<div style={ style }>
 				<Map
+					centerAroundCurrentLocation
 					google={ this.props.google }
-					zoom={ 14 }
+					zoom={ 13 }
 					streetViewControl={ false }
 					fullscreenControl={ false }
 				/>
@@ -24,7 +25,9 @@ class WorldMap extends React.Component {
 }
 
 WorldMap.propTypes = {
-	google: PropTypes.object.isRequired
+	google: PropTypes.object.isRequired,
+	height: PropTypes.string,
+	width: PropTypes.string
 };
 
 export default GoogleApiWrapper({
