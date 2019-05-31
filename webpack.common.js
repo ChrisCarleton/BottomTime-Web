@@ -1,3 +1,4 @@
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -73,6 +74,7 @@ module.exports = {
 		extensions: [ '.js', '.jsx', '.html' ]
 	},
 	plugins: [
+		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			template: 'web/index.html',
 			favicon: 'web/img/favicon.ico'

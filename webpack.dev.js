@@ -1,6 +1,5 @@
 /* eslint-disable no-process-env */
 
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const merge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
@@ -17,9 +16,10 @@ module.exports = merge(common, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			'process.env.BT_API_URL': process.env.BT_API_URL
+			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+			'process.env.BT_API_URL': JSON.stringify(process.env.BT_API_URL),
+			'process.env.BT_GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.BT_GOOGLE_MAPS_API_KEY)
 		}),
-		new CleanWebpackPlugin(),
 		new webpack.HotModuleReplacementPlugin()
 	]
 });

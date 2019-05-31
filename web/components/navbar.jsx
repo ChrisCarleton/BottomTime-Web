@@ -100,6 +100,9 @@ class AppNavBar extends React.Component {
 									</LinkContainer>
 								]
 						}
+						<LinkContainer to="/diveSites">
+							<NavItem>Dive Sites</NavItem>
+						</LinkContainer>
 					</Nav>
 					{ this.renderRightNav() }
 				</Navbar.Collapse>
