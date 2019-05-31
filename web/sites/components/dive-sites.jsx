@@ -14,7 +14,10 @@ class DiveSites extends React.Component {
 					<SearchBox controlId="search" />
 					<Checkbox>Just My Dive Sites</Checkbox>
 				</Formsy>
-				<Map />
+				<Map
+					height="300px"
+					width="400px"
+				/>
 			</div>
 		);
 	}
