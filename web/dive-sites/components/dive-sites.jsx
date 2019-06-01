@@ -1,5 +1,12 @@
-import { Col, Row } from 'react-bootstrap';
+import {
+	Breadcrumb,
+	Button,
+	ButtonToolbar,
+	Col,
+	Row
+} from 'react-bootstrap';
 import Formsy from 'formsy-react';
+import { LinkContainer } from 'react-router-bootstrap';
 import Map from '../../components/map';
 import PageTitle from '../../components/page-title';
 import React from 'react';
@@ -9,8 +16,19 @@ class DiveSites extends React.Component {
 	render() {
 		return (
 			<div>
+				<Breadcrumb>
+					<LinkContainer to="/">
+						<Breadcrumb.Item>Home</Breadcrumb.Item>
+					</LinkContainer>
+					<Breadcrumb.Item active>Dive Sites</Breadcrumb.Item>
+				</Breadcrumb>
 				<PageTitle title="Dive Sites" />
-				<Formsy className="form-horizontal">
+				<ButtonToolbar>
+					<LinkContainer to="/diveSites/new">
+						<Button bsStyle="primary">Create New Dive Site</Button>
+					</LinkContainer>
+				</ButtonToolbar>
+				<Formsy>
 					<SearchBox controlId="search" />
 				</Formsy>
 				<Row>

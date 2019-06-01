@@ -60,7 +60,6 @@ class EditTankProfile extends React.Component {
 				<Modal.Body>
 					<Formsy
 						ref={ this.formRef }
-						className="form-horizontal"
 						onValidSubmit={ this.handleSave }
 						mapping={ this.mapping }
 					>

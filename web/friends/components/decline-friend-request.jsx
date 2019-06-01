@@ -30,7 +30,7 @@ class DeclineFriendRequest extends React.Component {
 					<p>
 						{ 'You can optionally give a reason for declining the buddy request. (You don\'t have to!)' }
 					</p>
-					<Formsy onValidSubmit={ this.handleSubmitDecline } className="form-horizontal">
+					<Formsy onValidSubmit={ this.handleSubmitDecline }>
 						<TextBox
 							autoFocus
 							controlId={ `reason_${ index }` }

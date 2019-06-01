@@ -93,7 +93,6 @@ class SignUpPage extends React.Component {
 				<Formsy
 					onValidSubmit={ this.handleSubmit }
 					onInvalidSubmit={ this.handleInvalidSubmit }
-					className="form-horizontal"
 				>
 					<TextBox
 						autoFocus

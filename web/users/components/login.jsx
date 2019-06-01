@@ -59,7 +59,7 @@ class Login extends React.Component {
 				<Row>
 					<Col smHidden mdOffset={ 2 } />
 					<Col sm={ 12 } md={ 6 }>
-						<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
+						<Formsy onValidSubmit={ this.handleSubmit }>
 							<TextBox
 								autoFocus
 								controlId="username"

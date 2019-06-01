@@ -5,7 +5,8 @@ import NavBar from './navbar';
 import React, { lazy, Suspense } from 'react';
 
 const ChangePassword = lazy(() => import('../users/components/change-password'));
-const DiveSites = lazy(() => import('../sites/components/dive-sites'));
+const DiveSite = lazy(() => import('../dive-sites/components/dive-site'));
+const DiveSites = lazy(() => import('../dive-sites/components/dive-sites'));
 const Forbidden = lazy(() => import('./forbidden'));
 const Friends = lazy(() => import('../friends/components/friends'));
 const Home = lazy(() => import('./home'));
@@ -32,6 +33,8 @@ class App extends React.Component {
 								<Route path="/signup" exact component={ SignUp } />
 								<Route path="/login" exact component={ Login } />
 								<Route path="/diveSites" exact component={ DiveSites } />
+								<Route path="/diveSites/new" exact component={ DiveSite } />
+								<Route path="/diveSites/:siteId" exact component={ DiveSite } />
 								<Route path="/friends" exact component={ Friends } />
 								<Route path="/friendRequests" exact component={ Friends } />
 								<Route path="/changePassword" exact component={ ChangePassword } />

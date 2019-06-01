@@ -64,7 +64,7 @@ class ChangePassword extends React.Component {
 				<RequireUser />
 				<PageTitle title="Change Password" />
 
-				<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
+				<Formsy onValidSubmit={ this.handleSubmit }>
 					{
 						hasPassword
 							? (

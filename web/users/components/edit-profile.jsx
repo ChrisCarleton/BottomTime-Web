@@ -106,7 +106,6 @@ class EditProfile extends React.Component {
 
 		return (
 			<Formsy
-				className="form-horizontal"
 				onValidSubmit={ this.handleSubmit }
 				onInvalidSubmit={ this.handleInvalidSubmit }
 			>
