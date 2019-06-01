@@ -3,6 +3,7 @@ import { Breadcrumb } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentDiveSiteActions from '../actions/current-site-actions';
 import CurrentDiveSiteStore from '../stores/current-site-store';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import EditDiveSite from './edit-dive-site';
 import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -10,15 +11,19 @@ import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ViewDiveSite from './view-dive-site';
 import { withRouter } from 'react-router-dom';
 
 class DiveSite extends React.Component {
 	static getStores() {
-		return [ CurrentDiveSiteStore ];
+		return [ CurrentDiveSiteStore, CurrentUserStore ];
 	}
 
 	static getPropsFromStores() {
-		return CurrentDiveSiteStore.getState();
+		return {
+			currentUser: CurrentUserStore.getState().currentUser,
+			...CurrentDiveSiteStore.getState()
+		};
 	}
 
 	constructor(props) {
@@ -26,10 +31,10 @@ class DiveSite extends React.Component {
 
 		const { siteId } = this.props.match.params;
 		this.state = {
-			isLoading: typeof siteId === 'string',
-			title: siteId ? 'Edit Dive Site' : 'New Dive Site'
+			isLoading: typeof siteId === 'string'
 		};
 
+		this.isReadOnly = this.isReadOnly.bind(this);
 		this.renderForm = this.renderForm.bind(this);
 	}
 
@@ -57,11 +62,47 @@ class DiveSite extends React.Component {
 		}, 0);
 	}
 
+	isReadOnly() {
+		const {
+			currentDiveSite,
+			currentUser
+		} = this.props;
+
+		if (currentUser.isAnonymous) {
+			return true;
+		}
+
+		if (!currentDiveSite.siteId) {
+			return false;
+		}
+
+		if (currentUser.role === 'admin' || currentDiveSite.owner === currentUser.username) {
+			return false;
+		}
+
+		return true;
+	}
+
 	renderForm() {
-		return <EditDiveSite currentDiveSite={ this.props.currentDiveSite } />;
+		return this.isReadOnly()
+			? <ViewDiveSite currentDiveSite={ this.props.currentDiveSite } />
+			: <EditDiveSite currentDiveSite={ this.props.currentDiveSite } />;
 	}
 
 	render() {
+		const { siteId } = this.props.match.params;
+		let title = null;
+
+		if (siteId) {
+			if (this.isReadOnly()) {
+				title = this.props.currentDiveSite.name || 'View Dive Site';
+			} else {
+				title = 'Edit Dive Site';
+			}
+		} else {
+			title = 'New Dive Site';
+		}
+
 		return (
 			<div>
 				<Breadcrumb>
@@ -71,9 +112,9 @@ class DiveSite extends React.Component {
 					<LinkContainer to="/diveSites">
 						<Breadcrumb.Item>Dive Sites</Breadcrumb.Item>
 					</LinkContainer>
-					<Breadcrumb.Item active>New Dive Site</Breadcrumb.Item>
+					<Breadcrumb.Item active>{ title }</Breadcrumb.Item>
 				</Breadcrumb>
-				<PageTitle title={ this.state.title } />
+				<PageTitle title={ title } />
 				{
 					this.state.isLoading
 						? <LoadingSpinner message="Loading dive site..." />
@@ -86,6 +127,7 @@ class DiveSite extends React.Component {
 
 DiveSite.propTypes = {
 	currentDiveSite: PropTypes.object.isRequired,
+	currentUser: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired
 };

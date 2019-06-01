@@ -14,6 +14,7 @@ import handleError from '../../handle-error';
 import Map, { Marker } from '../../components/map';
 import PropTypes from 'prop-types';
 import React from 'react';
+import RequireUser from '../../components/require-user';
 import Tags from '../../components/tags';
 import TextArea from '../../components/text-area';
 import TextBox from '../../components/text-box';
@@ -82,6 +83,7 @@ class EditDiveSite extends React.Component {
 				onInvalidSubmit={ this.handleInvalidSubmit }
 				ref={ this.formRef }
 			>
+				<RequireUser />
 				<Row>
 					<Col sm={ 12 } md={ 6 }>
 						<h4>Site Details</h4>
