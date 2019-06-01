@@ -33,13 +33,13 @@ class WorldMap extends React.Component {
 				lng: initialCenter.lon
 			};
 		} else {
-			initialCenter = null;
+			initialCenter = undefined;
 		}
 
 		return (
 			<div style={ style }>
 				<Map
-					centerAroundCurrentLocation={ initialCenter === null }
+					centerAroundCurrentLocation={ initialCenter === undefined }
 					google={ this.props.google }
 					zoom={ 12 }
 					initialCenter={ initialCenter }

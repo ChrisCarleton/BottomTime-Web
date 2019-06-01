@@ -28,7 +28,7 @@ class SearchBox extends React.Component {
 						onChange={ this.handleTextChanged }
 					/>
 					<InputGroup.Button>
-						<Button>
+						<Button type="submit">
 							<Glyphicon glyph="search" />
 						</Button>
 					</InputGroup.Button>

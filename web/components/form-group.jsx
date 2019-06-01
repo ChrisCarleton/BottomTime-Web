@@ -10,7 +10,6 @@ class CustomFormGroup extends React.Component {
 	render() {
 		return (
 			<FormGroup
-				bsSize="small"
 				controlId={ this.props.controlId }
 				validationState={ this.props.validationState }
 			>
