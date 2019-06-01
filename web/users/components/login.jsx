@@ -4,7 +4,6 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
-import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
 import PageTitle from '../../components/page-title';
@@ -74,9 +73,7 @@ class Login extends React.Component {
 								password
 								required
 							/>
-							<FormButtonGroup>
-								<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
-							</FormButtonGroup>
+							<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
 						</Formsy>
 					</Col>
 				</Row>

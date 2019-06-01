@@ -4,7 +4,6 @@ import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
-import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
 import PageTitle from '../../components/page-title';
@@ -108,16 +107,14 @@ class ChangePassword extends React.Component {
 						required
 						password
 					/>
-					<FormButtonGroup>
-						<Button
-							id="btn-change"
-							bsStyle="primary"
-							type="submit"
-							disabled={ this.state.isWaiting }
-						>
-							Change Password
-						</Button>
-					</FormButtonGroup>
+					<Button
+						id="btn-change"
+						bsStyle="primary"
+						type="submit"
+						disabled={ this.state.isWaiting }
+					>
+						Change Password
+					</Button>
 				</Formsy>
 			</div>
 		);

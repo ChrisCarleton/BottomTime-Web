@@ -29,7 +29,7 @@ class DiveSites extends React.Component {
 					</LinkContainer>
 				</ButtonToolbar>
 				<Formsy>
-					<SearchBox controlId="search" />
+					<SearchBox autoFocus controlId="search" name="search" />
 				</Formsy>
 				<Row>
 					<Col sm={ 12 } md={ 6 }>

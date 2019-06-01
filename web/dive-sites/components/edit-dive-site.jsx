@@ -2,8 +2,6 @@ import {
 	Button,
 	ButtonGroup,
 	ButtonToolbar,
-	ControlLabel,
-	FormControl,
 	Col,
 	Row
 } from 'react-bootstrap';
@@ -75,12 +73,20 @@ class EditDiveSite extends React.Component {
 						<h4>Location</h4>
 						<Row>
 							<Col sm={ 6 }>
-								<ControlLabel>Latitude:</ControlLabel>
-								<FormControl value={ gps.lat || '' } />
+								<TextBox
+									controlId="lat"
+									name="lat"
+									label="Latitude"
+									value={ gps.lat || '' }
+								/>
 							</Col>
 							<Col sm={ 6 }>
-								<ControlLabel>Longitude:</ControlLabel>
-								<FormControl value={ gps.lon || '' } />
+								<TextBox
+									controlId="lon"
+									name="lon"
+									label="Longitude"
+									value={ gps.lon || '' }
+								/>
 							</Col>
 						</Row>
 						<Map
