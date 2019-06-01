@@ -73,7 +73,7 @@ class Tags extends React.Component {
 					inputAttributes={ { maxLength: 50 } }
 					maxSuggestionsLength={ 12 }
 					minQueryLength={ 1 }
-					placeholder="Type new tag and press &quot;Tab&quot;"
+					placeholder="Type new tag and press &quot;,&quot;"
 					classNames={ {
 						root: 'react-tags__form-control',
 						rootFocused: 'react-tags__form-control',

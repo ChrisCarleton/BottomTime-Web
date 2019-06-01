@@ -1,3 +1,4 @@
+import agent from '../../agent';
 import {
 	Button,
 	ButtonGroup,
@@ -6,15 +7,63 @@ import {
 	Row
 } from 'react-bootstrap';
 import CurrentDiveSiteActions from '../actions/current-site-actions';
+import DiveSiteUtils from '../utils/dive-site-utils';
+import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
+import handleError from '../../handle-error';
 import Map, { Marker } from '../../components/map';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tags from '../../components/tags';
 import TextArea from '../../components/text-area';
 import TextBox from '../../components/text-box';
+import { withRouter } from 'react-router-dom';
 
 class EditDiveSite extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.formRef = React.createRef();
+		this.submitBehavior = 'new';
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	async handleSubmit(model, resetForm, invalidateForm) {
+		if (!DiveSiteUtils.postSubmitValidation(model, invalidateForm)) {
+			return;
+		}
+
+		const successfulSaveMessage = 'Dive site info has been saved.';
+		const { siteId } = this.props.match.params;
+
+		try {
+			if (siteId) {
+				await agent
+					.put(`/api/diveSites/${ siteId }`)
+					.send(model);
+				CurrentDiveSiteActions.updateCurrentDiveSite(model);
+				ErrorActions.showSuccess(successfulSaveMessage);
+			} else {
+				const { body } = await agent
+					.post('/api/diveSites')
+					.send([ model ]);
+				CurrentDiveSiteActions.updateCurrentDiveSite(body[0]);
+				ErrorActions.showSuccess(successfulSaveMessage);
+				this.props.history.push(`/diveSites/${ body[0].siteId }`);
+			}
+		} catch (err) {
+			handleError(err, this.props.history);
+		}
+	}
+
+	handleInvalidSubmit() {
+		ErrorActions.showError(
+			'There is a problem with one or more of your values',
+			'Check below for the error.'
+		);
+	}
+
 	handleMapClicked(latLng) {
 		CurrentDiveSiteActions.updateGpsCoords(latLng);
 	}
@@ -27,7 +76,12 @@ class EditDiveSite extends React.Component {
 		const gps = currentDiveSite.gps || {};
 
 		return (
-			<Formsy>
+			<Formsy
+				mapping={ DiveSiteUtils.mapFormValues }
+				onValidSubmit={ this.handleSubmit }
+				onInvalidSubmit={ this.handleInvalidSubmit }
+				ref={ this.formRef }
+			>
 				<Row>
 					<Col sm={ 12 } md={ 6 }>
 						<h4>Site Details</h4>
@@ -74,16 +128,16 @@ class EditDiveSite extends React.Component {
 						<Row>
 							<Col sm={ 6 }>
 								<TextBox
-									controlId="lat"
-									name="lat"
+									controlId="gps.lat"
+									name="gps.lat"
 									label="Latitude"
 									value={ gps.lat || '' }
 								/>
 							</Col>
 							<Col sm={ 6 }>
 								<TextBox
-									controlId="lon"
-									name="lon"
+									controlId="gps.lon"
+									name="gps.lon"
 									label="Longitude"
 									value={ gps.lon || '' }
 								/>
@@ -93,6 +147,7 @@ class EditDiveSite extends React.Component {
 							onClick={ this.handleMapClicked }
 							width="100%"
 							height="350px"
+							initialCenter={ gps }
 						>
 							{
 								gps.lat && gps.lon
@@ -111,7 +166,10 @@ class EditDiveSite extends React.Component {
 				</Row>
 				<ButtonToolbar>
 					<ButtonGroup>
-						<Button bsStyle="primary" type="submit">Save</Button>
+						<Button bsStyle="primary" type="submit">Save and New</Button>
+					</ButtonGroup>
+					<ButtonGroup>
+						<Button>Save</Button>
 					</ButtonGroup>
 					<ButtonGroup>
 						<Button>Cancel</Button>
@@ -124,7 +182,9 @@ class EditDiveSite extends React.Component {
 }
 
 EditDiveSite.propTypes = {
-	currentDiveSite: PropTypes.object.isRequired
+	currentDiveSite: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
+	match: PropTypes.object.isRequired
 };
 
-export default EditDiveSite;
+export default withRouter(EditDiveSite);

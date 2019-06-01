@@ -6,10 +6,16 @@ class CurrentDiveSiteStore {
 		this.currentDiveSite = {};
 
 		this.bindListeners({
+			handleUpdateCurrentDiveSite: CurrentDiveSiteActions.UPDATE_CURRENT_DIVE_SITE,
 			handleUpdateGpsCoords: CurrentDiveSiteActions.UPDATE_GPS_COORDS
 		});
 
+		this.handleUpdateCurrentDiveSite = this.handleUpdateCurrentDiveSite.bind(this);
 		this.handleUpdateGpsCoords = this.handleUpdateGpsCoords.bind(this);
+	}
+
+	handleUpdateCurrentDiveSite(diveSite) {
+		this.currentDiveSite = diveSite || {};
 	}
 
 	handleUpdateGpsCoords(latLon) {

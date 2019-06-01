@@ -25,24 +25,40 @@ class WorldMap extends React.Component {
 			height: this.props.height,
 			position: 'relative'
 		};
+
+		let { initialCenter } = this.props;
+		if (initialCenter && initialCenter.lat && initialCenter.lon) {
+			initialCenter = {
+				lat: initialCenter.lat,
+				lng: initialCenter.lon
+			};
+		} else {
+			initialCenter = null;
+		}
+
 		return (
 			<div style={ style }>
 				<Map
-					centerAroundCurrentLocation
+					centerAroundCurrentLocation={ initialCenter === null }
 					google={ this.props.google }
-					zoom={ 13 }
+					zoom={ 12 }
+					initialCenter={ initialCenter }
 					streetViewControl={ false }
 					fullscreenControl={ false }
 					onClick={ this.handleMapClicked }
-				/>
+				>
+					{ this.props.children }
+				</Map>
 			</div>
 		);
 	}
 }
 
 WorldMap.propTypes = {
+	children: PropTypes.node,
 	google: PropTypes.object.isRequired,
 	height: PropTypes.string,
+	initialCenter: PropTypes.object,
 	onClick: PropTypes.func,
 	width: PropTypes.string
 };
