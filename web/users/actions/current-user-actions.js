@@ -8,7 +8,7 @@ class CurrentUserActions {
 		return async dispatch => {
 			dispatch();
 			try {
-				const result = await agent
+				const { body } = await agent
 					.put(`/api/users/${ model.username }`)
 					.send({
 						email: model.email,
@@ -19,7 +19,7 @@ class CurrentUserActions {
 
 				ErrorActions.showSuccess('Success!', 'Your new account has been created.');
 				done();
-				return this.loginSucceeded(result);
+				return this.loginSucceeded(body);
 			} catch (err) {
 				return done(err);
 			}
@@ -38,16 +38,13 @@ class CurrentUserActions {
 				/* eslint-disable no-console */
 				console.error(err);
 				/* eslint-enable no-console */
-			} finally {
-				agent.clearAuthToken();
 			}
 		};
 	}
 
-	loginSucceeded(result) {
-		agent.setAuthToken(result.body.token);
+	loginSucceeded(user) {
 		TanksActions.refreshTanks();
-		return result.body.user;
+		return user;
 	}
 
 	updateUser(update) {
