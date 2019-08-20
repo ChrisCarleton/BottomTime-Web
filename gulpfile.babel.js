@@ -1,5 +1,6 @@
 /* eslint no-process-env: 0 */
 
+import chalk from 'chalk';
 import eslint from 'gulp-eslint';
 import gulp from 'gulp';
 import log from 'fancy-log';
@@ -72,7 +73,7 @@ function serve(mode, done) {
 				return done(err);
 			}
 
-			log('Dev server started on port 8080.');
+			log(`Dev server started at ${ chalk.bold.magenta('http://localhost:8080/') }`);
 			return done();
 		});
 }

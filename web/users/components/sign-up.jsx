@@ -28,7 +28,7 @@ class SignUpPage extends React.Component {
 
 	async handleSubmit(model, resetForm, invalidateForm) {
 		try {
-			const result = await agent
+			const { body } = await agent
 				.put(`/api/users/${ model.username }`)
 				.send({
 					email: model.email,
@@ -38,7 +38,7 @@ class SignUpPage extends React.Component {
 
 
 			ErrorActions.showSuccess('Success!', 'Your new account has been created.');
-			CurrentUserActions.loginSucceeded(result);
+			CurrentUserActions.loginSucceeded(body);
 			return resetForm();
 		} catch (err) {
 			if (err.response && err.response.status === 409) {
