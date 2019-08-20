@@ -29,9 +29,9 @@ class Login extends React.Component {
 
 	async handleSubmit(model, resetForm) {
 		try {
-			const result = await agent.post('/api/auth/login').send(model);
+			const { body } = await agent.post('/api/auth/login').send(model);
 			resetForm();
-			CurrentUserActions.loginSucceeded(result);
+			CurrentUserActions.loginSucceeded(body);
 		} catch (err) {
 			if (err.response && err.response.status === 401) {
 				ErrorActions.showError(

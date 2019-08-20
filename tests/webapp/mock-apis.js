@@ -126,20 +126,17 @@ const mockApis = {
 
 	putUsersUsername(req, res) {
 		res.status(201).json({
-			user: {
-				username: req.params.username,
-				email: `${ req.params.username }@gmail.com`,
-				createdAt: moment().toISOString(),
-				role: 'user',
-				isAnonymous: false,
-				isLockedOut: false,
-				hasPassword: true,
-				distanceUnit: 'm',
-				weightUnit: 'kg',
-				temperatureUnit: 'c',
-				pressureUnit: 'bar'
-			},
-			token: 'la.di.da'
+			username: req.params.username,
+			email: `${ req.params.username }@gmail.com`,
+			createdAt: moment().toISOString(),
+			role: 'user',
+			isAnonymous: false,
+			isLockedOut: false,
+			hasPassword: true,
+			distanceUnit: 'm',
+			weightUnit: 'kg',
+			temperatureUnit: 'c',
+			pressureUnit: 'bar'
 		});
 	},
 
