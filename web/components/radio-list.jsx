@@ -54,24 +54,26 @@ class RadioList extends React.Component {
 				validationState={ validationState }
 				errorMessage={ errorMessage }
 			>
-				{
-					this.props.children.map(
-						c => (
-							<Radio
-								id={ `${ this.props.name }_${ c.value }` }
-								key={ c.value }
-								name={ this.props.name }
-								inline={ this.props.inline }
-								value={ c.value }
-								checked={ value === c.value }
-								onChange={ this.handleChecked }
-								title={ c.title }
-							>
-								{ c.text || c.value }
-							</Radio>
+				<div>
+					{
+						this.props.children.map(
+							c => (
+								<Radio
+									id={ `${ this.props.name }_${ c.value }` }
+									key={ c.value }
+									name={ this.props.name }
+									inline={ this.props.inline }
+									value={ c.value }
+									checked={ value === c.value }
+									onChange={ this.handleChecked }
+									title={ c.title }
+								>
+									{ c.text || c.value }
+								</Radio>
+							)
 						)
-					)
-				}
+					}
+				</div>
 			</FormGroup>
 		);
 	}

@@ -13,6 +13,22 @@ class Slider extends React.Component {
 		this.props.setValue(e.target.value);
 	}
 
+	renderValue(value) {
+		switch (typeof value) {
+		case 'undefined':
+			return 'Unspecified';
+
+		case 'number':
+			return value.toFixed(1);
+
+		case 'string':
+			return parseFloat(value).toFixed(1);
+
+		default:
+			return value;
+		}
+	}
+
 	render() {
 		const {
 			controlId,
@@ -22,9 +38,11 @@ class Slider extends React.Component {
 			label,
 			lowEndCaption,
 			max,
-			min
+			min,
+			step
 		} = this.props;
 		const validationState = isPristine() ? null : 'success';
+		const value = getValue();
 
 		return (
 			<FormGroup
@@ -42,8 +60,12 @@ class Slider extends React.Component {
 					onChange={ this.handleSlide }
 					min={ min }
 					max={ max }
-					value={ getValue() || '' }
+					step={ step || 0.1 }
+					value={ value || '' }
 				/>
+				<span style={ { paddingTop: '4px', float: 'right' } }>
+					<em>{ this.renderValue(value) }</em>
+				</span>
 			</FormGroup>
 		);
 	}
@@ -54,7 +76,8 @@ Slider.propTypes = {
 	highEndCaption: PropTypes.string,
 	lowEndCaption: PropTypes.string,
 	max: PropTypes.number,
-	min: PropTypes.number
+	min: PropTypes.number,
+	step: PropTypes.number
 };
 
 export default withFormsy(Slider);

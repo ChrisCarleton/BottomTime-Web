@@ -67,13 +67,14 @@ class DiveSite extends React.Component {
 			currentDiveSite,
 			currentUser
 		} = this.props;
+		const { siteId } = this.props.match.params;
+
+		if (!siteId) {
+			return false;
+		}
 
 		if (currentUser.isAnonymous) {
 			return true;
-		}
-
-		if (!currentDiveSite.siteId) {
-			return false;
 		}
 
 		if (currentUser.role === 'admin' || currentDiveSite.owner === currentUser.username) {

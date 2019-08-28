@@ -13,12 +13,15 @@ import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
 import Map, { Marker } from '../../components/map';
 import PropTypes from 'prop-types';
+import RadioList from '../../components/radio-list';
 import React from 'react';
 import RequireUser from '../../components/require-user';
+import Slider from '../../components/slider';
 import Tags from '../../components/tags';
 import TextArea from '../../components/text-area';
 import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
+import { isBoolean } from 'util';
 
 class EditDiveSite extends React.Component {
 	constructor(props) {
@@ -75,6 +78,9 @@ class EditDiveSite extends React.Component {
 			currentDiveSite
 		} = this.props;
 		const gps = currentDiveSite.gps || {};
+		const entryFee = isBoolean(currentDiveSite.entryFee)
+			? currentDiveSite.entryFee.toString()
+			: null;
 
 		return (
 			<Formsy
@@ -110,6 +116,58 @@ class EditDiveSite extends React.Component {
 							label="Country"
 							maxLength={ 100 }
 							value={ currentDiveSite.country || '' }
+						/>
+						<RadioList
+							controlId="water"
+							name="water"
+							label="Type of water"
+							inline
+							value={ currentDiveSite.water }
+						>
+							{
+								[
+									{ text: 'Fresh water', value: 'fresh' },
+									{ text: 'Salt water', value: 'salt' }
+								]
+							}
+						</RadioList>
+						<RadioList
+							controlId="entryFee"
+							name="entryFee"
+							label="Entry fee"
+							inline
+							value={ entryFee }
+						>
+							{
+								[
+									{ text: 'Fee required', value: 'true' },
+									{ text: 'Free to dive', value: 'false' }
+								]
+							}
+						</RadioList>
+						<RadioList
+							controlId="accessibility"
+							name="accessibility"
+							label="Accessibility"
+							inline
+							value={ currentDiveSite.accessibility }
+						>
+							{
+								[
+									{ text: 'Shore dive', value: 'shore' },
+									{ text: 'Boat dive', value: 'boat' }
+								]
+							}
+						</RadioList>
+						<Slider
+							controlId="difficulty"
+							name="difficulty"
+							label="Difficulty"
+							value={ currentDiveSite.difficulty }
+							min={ 1.0 }
+							max={ 5.0 }
+							lowEndCaption="Easy / Novice"
+							highEndCaption="Technical / Extremely Challenging"
 						/>
 						<Tags
 							controlId="tags"
@@ -168,10 +226,7 @@ class EditDiveSite extends React.Component {
 				</Row>
 				<ButtonToolbar>
 					<ButtonGroup>
-						<Button bsStyle="primary" type="submit">Save and New</Button>
-					</ButtonGroup>
-					<ButtonGroup>
-						<Button>Save</Button>
+						<Button bsStyle="primary" type="submit">Save</Button>
 					</ButtonGroup>
 					<ButtonGroup>
 						<Button>Cancel</Button>

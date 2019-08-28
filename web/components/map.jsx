@@ -1,3 +1,5 @@
+/* eslint no-undefined: 0 */
+
 import config from '../config';
 import { GoogleApiWrapper, Map, Marker as MapMarker } from 'google-maps-react';
 import PropTypes from 'prop-types';

@@ -18,9 +18,9 @@ class DiveSitesList extends React.Component {
 					<p>
 						<Glyphicon glyph="info-sign" />
 						&nbsp;
-						You have no dive sites to show.
-						Click <strong>Create New Dive Site</strong> above to add dive sites or search for
-						existing sites.
+						No dive sites match your search criteria.
+						Click <strong>Create New Dive Site</strong> above to add dive sites or modify your
+						search criteria.
 					</p>
 				</Alert>
 			);

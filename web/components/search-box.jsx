@@ -9,10 +9,15 @@ class SearchBox extends React.Component {
 		super(props);
 
 		this.handleTextChanged = this.handleTextChanged.bind(this);
+		this.handleClearButtonClicked = this.handleClearButtonClicked.bind(this);
 	}
 
 	handleTextChanged(e) {
 		this.props.setValue(e.target.value);
+	}
+
+	handleClearButtonClicked() {
+		this.props.setValue('');
 	}
 
 	render() {
@@ -30,6 +35,11 @@ class SearchBox extends React.Component {
 					<InputGroup.Button>
 						<Button type="submit">
 							<Glyphicon glyph="search" />
+						</Button>
+					</InputGroup.Button>
+					<InputGroup.Button>
+						<Button onClick={ this.handleClearButtonClicked }>
+							<Glyphicon glyph="remove" />
 						</Button>
 					</InputGroup.Button>
 				</InputGroup>

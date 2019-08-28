@@ -1,8 +1,8 @@
 import FormGroup from './form-group';
 import { propTypes as formsyProps, withFormsy } from 'formsy-react';
 import PropTypes from 'prop-types';
+import Ratings from './rating-control';
 import React from 'react';
-import ReactStarRating from 'react-star-rating';
 
 class StarRating extends React.Component {
 	constructor(props) {
@@ -10,8 +10,8 @@ class StarRating extends React.Component {
 		this.handleRatingChanged = this.handleRatingChanged.bind(this);
 	}
 
-	handleRatingChanged(e, data) {
-		this.props.setValue(data.rating);
+	handleRatingChanged(rating) {
+		this.props.setValue(rating);
 	}
 
 	render() {
@@ -24,11 +24,10 @@ class StarRating extends React.Component {
 				label={ label }
 				validationState={ validationState }
 			>
-				<ReactStarRating
-					caption={ label }
-					rating={ getValue() || 0 }
-					disabled={ readOnly }
-					onRatingClick={ this.handleRatingChanged }
+				<Ratings
+					rating={ getValue() }
+					changeRating={ this.handleRatingChanged }
+					readOnly={ readOnly }
 				/>
 			</FormGroup>
 		);
