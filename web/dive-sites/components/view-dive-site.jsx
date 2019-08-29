@@ -1,4 +1,6 @@
 import { Col, Row } from 'react-bootstrap';
+import DiveSiteDetails from './dive-site-details';
+import FormGroup from '../../components/form-group';
 import Formsy from 'formsy-react';
 import Map, { Marker } from '../../components/map';
 import PropTypes from 'prop-types';
@@ -28,6 +30,13 @@ class ViewDiveSite extends React.Component {
 							label="Country"
 							value={ currentDiveSite.country }
 						/>
+						<FormGroup
+							controlId="details"
+							name="details"
+							label="Site details"
+						>
+							<DiveSiteDetails diveSite={ currentDiveSite } />
+						</FormGroup>
 						<TagsList
 							controlId="tags"
 							name="tags"

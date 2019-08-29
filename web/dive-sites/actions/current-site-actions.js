@@ -8,6 +8,22 @@ class CurrentDiveSiteActions {
 	updateGpsCoords(latLon) {
 		return latLon;
 	}
+
+	beginLoadingRatings() {
+		return true;
+	}
+
+	endLoadingRatings() {
+		return true;
+	}
+
+	loadRatings(ratings) {
+		return ratings;
+	}
+
+	addRating(rating) {
+		return rating;
+	}
 }
 
 export default alt.createActions(CurrentDiveSiteActions);

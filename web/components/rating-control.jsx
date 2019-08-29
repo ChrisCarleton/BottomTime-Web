@@ -4,7 +4,7 @@ import React from 'react';
 
 class RatingControl extends React.Component {
 	render() {
-		const { changeRating, rating, readOnly } = this.props;
+		const { changeRating, large, rating, readOnly } = this.props;
 
 		return (
 			<Ratings
@@ -16,7 +16,7 @@ class RatingControl extends React.Component {
 						: changeRating
 					/* eslint-enable no-empty-function */
 				}
-				widgetDimensions="14px"
+				widgetDimensions={ large ? '30px' : '14px' }
 				widgetSpacing="2px"
 				widgetRatedColors="rgb(255, 0, 0)"
 			>
@@ -32,6 +32,7 @@ class RatingControl extends React.Component {
 
 RatingControl.propTypes = {
 	changeRating: PropTypes.func,
+	large: PropTypes.bool,
 	rating: PropTypes.number,
 	readOnly: PropTypes.bool
 };

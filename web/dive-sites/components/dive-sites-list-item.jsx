@@ -1,4 +1,5 @@
 import { Badge, Checkbox, Glyphicon, Media } from 'react-bootstrap';
+import DiveSiteDetails from './dive-site-details';
 import GpsPopover from './dive-site-gps-popover';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -31,72 +32,6 @@ class DiveSitesListItem extends React.Component {
 				&nbsp;
 				{ locationString || <em>Unspecified</em> }
 				{ this.renderGpsPopover(`gps_${ diveSite.siteId }`, diveSite.gps) }
-			</dd>
-		);
-	}
-
-	renderDetails(diveSite) {
-		const details = [];
-
-		if (diveSite.water) {
-			details.push(
-				<li key="water">
-					<Glyphicon title="Water" glyph="tint" />
-					&nbsp;
-					{
-						diveSite.water === 'salt'
-							? 'Salt water'
-							: 'Fresh water'
-					}
-				</li>
-			);
-		}
-
-		if (diveSite.accessibility) {
-			details.push(
-				<li key="accessibility">
-					<Glyphicon title="Accessibility" glyph="transfer" />
-					&nbsp;
-					{
-						diveSite.accessibility === 'shore'
-							? 'Shore dive'
-							: 'Boat dive'
-					}
-				</li>
-			);
-		}
-
-		if (diveSite.entryFee || diveSite.entryFee === false) {
-			details.push(
-				<li key="entryFee">
-					<Glyphicon title="Entry fee" glyph="piggy-bank" />
-					&nbsp;
-					{
-						diveSite.entryFee ? 'Entry fee required' : 'Free to dive'
-					}
-				</li>
-			);
-		}
-
-		if (diveSite.difficulty) {
-			details.push(
-				<li key="difficulty">
-					<Glyphicon glyph="alert" />
-					&nbsp;
-					<span>Difficulty: <em>{ diveSite.difficulty.toFixed(1) }</em> / 5.0</span>
-				</li>
-			);
-		}
-
-		if (details.length === 0) {
-			return <dd><em>None</em></dd>;
-		}
-
-		return (
-			<dd>
-				<ul className="list-inline">
-					{ details }
-				</ul>
 			</dd>
 		);
 	}
@@ -154,7 +89,7 @@ class DiveSitesListItem extends React.Component {
 						{ this.renderLocation(diveSite) }
 
 						<dt>Site details:</dt>
-						{ this.renderDetails(diveSite) }
+						<dd><DiveSiteDetails diveSite={ diveSite } /></dd>
 
 						<dt>Average rating:</dt>
 						{ this.renderRatings(diveSite) }
