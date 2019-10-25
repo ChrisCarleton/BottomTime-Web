@@ -16,8 +16,7 @@ class RatingControl extends React.Component {
 						: changeRating
 					/* eslint-enable no-empty-function */
 				}
-				widgetDimensions={ large ? '30px' : '14px' }
-				widgetSpacing="2px"
+				widgetDimensions={ large ? '30px' : '11px' }
 				widgetRatedColors="rgb(255, 0, 0)"
 			>
 				<Ratings.Widget />

@@ -12,6 +12,7 @@ class CustomFormGroup extends React.Component {
 			<FormGroup
 				controlId={ this.props.controlId }
 				validationState={ this.props.validationState }
+				bsSize={ this.props.small ? 'small' : null }
 			>
 				{
 					this.props.label
@@ -40,6 +41,7 @@ CustomFormGroup.propTypes = {
 	errorMessage: PropTypes.string,
 	label: PropTypes.string,
 	required: PropTypes.bool,
+	small: PropTypes.bool,
 	validationState: PropTypes.oneOf([ 'success', 'warning', 'error' ])
 };
 
