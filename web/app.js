@@ -12,7 +12,7 @@ import TanksActions from './tanks/actions/tanks-actions';
 require('./validators');
 require('./styles/main.less');
 require('./img/loading-spinner.gif');
-// require('./img/reef-background.jpg');
+require('./img/reef-background.jpg');
 
 require('./users/stores/current-user-store');
 require('./tanks/stores/tanks-store');
@@ -27,6 +27,9 @@ require('./tanks/stores/tanks-store');
 			}
 		}));
 		TanksActions.refreshTanks();
+		document.body.style.background = 'url("/img/reef-background.jpg") center fixed no-repeat';
+		document.body.style.backgroundSize = '100%,auto';
+		document.body.style.backgroundColor = 'black';
 	} catch (err) {
 		if (err.response && err.response.status === 401) {
 			agent.clearAuthToken();
