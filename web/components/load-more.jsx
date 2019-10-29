@@ -1,5 +1,4 @@
 import { Button } from 'react-bootstrap';
-import errorHandler from './error-handler';
 import LoadingSpinner from './loading-spinner';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -18,7 +17,6 @@ class LoadMore extends React.Component {
 		this.setState({ isLoading: true });
 		this.props.load(err => {
 			this.setState({ isLoading: false });
-
 			this.props.handleError(err);
 		});
 	}
@@ -44,4 +42,4 @@ LoadMore.propTypes = {
 	load: PropTypes.func.isRequired
 };
 
-export default errorHandler(LoadMore);
+export default LoadMore;
