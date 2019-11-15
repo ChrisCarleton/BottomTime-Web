@@ -135,7 +135,7 @@ class DiveSiteRatings extends React.Component {
 									controlId="comments"
 									name="comments"
 									label="Review this site"
-									placeholder="Comment on the site here."
+									placeholder="Type your review here. Maximum 1000 characters."
 									maxLength={ 1000 }
 								/>
 							</Col>

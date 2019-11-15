@@ -3,6 +3,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const HidePopoverDelay = 3000;
+
 class GpsPopover extends React.Component {
 	constructor(props) {
 		super(props);
@@ -27,7 +29,7 @@ class GpsPopover extends React.Component {
 				...this.state,
 				showLatitudeCopied: false
 			});
-		}, 3000);
+		}, HidePopoverDelay);
 	}
 
 	onLongitudeCopied() {
@@ -41,7 +43,7 @@ class GpsPopover extends React.Component {
 				...this.state,
 				showLongitudeCopied: false
 			});
-		}, 3000);
+		}, HidePopoverDelay);
 	}
 
 	render() {

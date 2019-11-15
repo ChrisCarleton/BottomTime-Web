@@ -16,6 +16,7 @@ import DiveSitesStore from '../stores/dive-sites-store';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
+import { mapQueryParameters } from '../utils/dive-site-utils';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
@@ -30,9 +31,7 @@ class DiveSites extends React.Component {
 	}
 
 	static getPropsFromStores() {
-		return {
-			...DiveSitesStore.getState()
-		};
+		return DiveSitesStore.getState();
 	}
 
 	constructor(props) {
@@ -62,45 +61,7 @@ class DiveSites extends React.Component {
 		}, 0);
 	}
 
-	mapQueryFields(model) {
-		const query = {};
-
-		if (model.accessibility) {
-			query.accessibility = model.accessibility;
-		}
-
-		if (model.water) {
-			query.water = model.water;
-		}
-
-		if (model.query) {
-			query.query = model.query;
-		}
-
-		if (model.minRating > 1.0) {
-			query.minRating = model.minRating;
-		}
-
-		if (model.maxDifficulty < 5.0) {
-			query.maxDifficulty = model.maxDifficulty;
-		}
-
-		if (model.avoidEntryFee) {
-			query.avoidEntryFee = true;
-		}
-
-		if (model.onlyMine) {
-			// TODO: Get username
-		}
-
-		// TODO: Get closeTo and distance parameters
-		// TODO: Include sortOrder and sortBy
-
-		return query;
-	}
-
 	async handleSearch(model) {
-		console.log(model);
 		DiveSitesActions.beginLoadingSites();
 		try {
 			const { body } = await agent
@@ -118,6 +79,101 @@ class DiveSites extends React.Component {
 			...this.state,
 			searchExpanded: !this.state.searchExpanded
 		});
+	}
+
+	renderSearchForm() {
+		return (
+			<Formsy onValidSubmit={ this.handleSearch } mapping={ mapQueryParameters }>
+				<SearchBox autoFocus controlId="query" name="query" />
+				<Panel.Toggle componentClass="a">
+					{
+						this.state.searchExpanded
+							? 'Show fewer search options'
+							: 'Show more search options'
+					}
+				</Panel.Toggle>
+				<Panel.Collapse>
+					<Row>
+						<Col sm={ 12 } md={ 6 } lg={ 4 }>
+							<RadioList
+								controlId="water"
+								name="water"
+								label="Type of water"
+								inline
+								value=""
+							>
+								{
+									[
+										{ text: 'Any', value: '' },
+										{ text: 'Salt water', value: 'salt' },
+										{ text: 'Fresh water', value: 'fresh' }
+									]
+								}
+							</RadioList>
+						</Col>
+						<Col sm={ 12 } md={ 6 } lg={ 4 }>
+							<RadioList
+								controlId="accessibility"
+								name="accessibility"
+								label="Accessibiliity"
+								inline
+								value=""
+							>
+								{
+									[
+										{ text: 'Any', value: '' },
+										{ text: 'Shore dives', value: 'shore' },
+										{ text: 'Boat dives', value: 'boat' }
+									]
+								}
+							</RadioList>
+						</Col>
+						<Col sm={ 12 } md={ 6 } lg={ 4 }>
+							<Slider
+								controlId="minRating"
+								name="minRating"
+								label="Minimum rating"
+								min={ 1.0 }
+								max={ 5.0 }
+								step={ 0.5 }
+								value={ 1.0 }
+								lowEndCaption="Any rating"
+								highEndCaption="5 stars"
+							/>
+						</Col>
+						<Col sm={ 12 } md={ 6 } lg={ 4 }>
+							<Slider
+								controlId="maxDifficulty"
+								name="maxDifficulty"
+								label="Maximum difficulty"
+								min={ 1.0 }
+								max={ 5.0 }
+								step={ 0.5 }
+								value={ 5.0 }
+								lowEndCaption="1.0"
+								highEndCaption="Any difficulty"
+							/>
+						</Col>
+						<Col sm={ 12 } md={ 6 } lg={ 4 }>
+							<CheckBox
+								controlId="avoidEntryFee"
+								name="avoidEntryFee"
+								label="Avoid entry fees"
+								value={ false }
+							/>
+						</Col>
+						<Col sm={ 12 } md={ 6 } lg={ 4 }>
+							<CheckBox
+								controlId="owner"
+								name="owner"
+								label="Show only my dive sites"
+								value={ false }
+							/>
+						</Col>
+					</Row>
+				</Panel.Collapse>
+			</Formsy>
+		);
 	}
 
 	render() {
@@ -138,98 +194,7 @@ class DiveSites extends React.Component {
 					</ButtonGroup>
 				</ButtonToolbar>
 				<Panel expanded={ this.state.searchExpanded } onToggle={ this.searchPanelToggle }>
-					<Panel.Body>
-						<Formsy onValidSubmit={ this.handleSearch } mapping={ this.mapQueryFields }>
-							<SearchBox autoFocus controlId="query" name="query" />
-							<Panel.Toggle componentClass="a">
-								{
-									this.state.searchExpanded
-										? 'Show fewer search options'
-										: 'Show more search options'
-								}
-							</Panel.Toggle>
-							<Panel.Collapse>
-								<Row>
-									<Col sm={ 12 } md={ 6 } lg={ 4 }>
-										<RadioList
-											controlId="water"
-											name="water"
-											label="Type of water"
-											inline
-											value=""
-										>
-											{
-												[
-													{ text: 'Any', value: '' },
-													{ text: 'Salt water', value: 'salt' },
-													{ text: 'Fresh water', value: 'fresh' }
-												]
-											}
-										</RadioList>
-									</Col>
-									<Col sm={ 12 } md={ 6 } lg={ 4 }>
-										<RadioList
-											controlId="accessibility"
-											name="accessibility"
-											label="Accessibiliity"
-											inline
-											value=""
-										>
-											{
-												[
-													{ text: 'Any', value: '' },
-													{ text: 'Shore dives', value: 'shore' },
-													{ text: 'Boat dives', value: 'boat' }
-												]
-											}
-										</RadioList>
-									</Col>
-									<Col sm={ 12 } md={ 6 } lg={ 4 }>
-										<Slider
-											controlId="minRating"
-											name="minRating"
-											label="Minimum rating"
-											min={ 1.0 }
-											max={ 5.0 }
-											step={ 0.5 }
-											value={ 1.0 }
-											lowEndCaption="Any rating"
-											highEndCaption="5 stars"
-										/>
-									</Col>
-									<Col sm={ 12 } md={ 6 } lg={ 4 }>
-										<Slider
-											controlId="maxDifficulty"
-											name="maxDifficulty"
-											label="Maximum difficulty"
-											min={ 1.0 }
-											max={ 5.0 }
-											step={ 0.5 }
-											value={ 5.0 }
-											lowEndCaption="1.0"
-											highEndCaption="Any difficulty"
-										/>
-									</Col>
-									<Col sm={ 12 } md={ 6 } lg={ 4 }>
-										<CheckBox
-											controlId="avoidEntryFee"
-											name="avoidEntryFee"
-											label="Avoid entry fees"
-											value={ false }
-										/>
-									</Col>
-									<Col sm={ 12 } md={ 6 } lg={ 4 }>
-										<CheckBox
-											controlId="onlyMine"
-											name="onlyMine"
-											label="Show only my dive sites"
-											value={ false }
-										/>
-									</Col>
-								</Row>
-							</Panel.Collapse>
-						</Formsy>
-					</Panel.Body>
+					<Panel.Body>{ this.renderSearchForm() }</Panel.Body>
 				</Panel>
 				<DiveSitesList
 					diveSites={ this.props.diveSites }

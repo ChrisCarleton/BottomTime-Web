@@ -1,6 +1,7 @@
 import Dot from 'dot-object';
 import {
 	nullIfEmpty,
+	toCurrentUserName,
 	toNumber,
 	trim
 } from '../../transform-functions';
@@ -17,9 +18,25 @@ const FormMods = {
 	'gps.lon': [ nullIfEmpty, toNumber ]
 };
 
+const QueryMods = {
+	'accessibility': [ trim, nullIfEmpty ],
+	'water': [ trim, nullIfEmpty ],
+	'query': [ trim, nullIfEmpty ],
+	'minRating': [ nullIfEmpty, toNumber ],
+	'maxDifficulty': [ nullIfEmpty, toNumber ],
+	'owner': [ toCurrentUserName ],
+	'closeTo[0]': [ nullIfEmpty, toNumber ],
+	'closeTo[1]': [ nullIfEmpty, toNumber ],
+	'distance': [ nullIfEmpty, toNumber ]
+};
+
 export default {
 	mapFormValues(formData) {
 		return dot.object(formData, FormMods);
+	},
+
+	mapQueryParameters(queryParams) {
+		return dot.object(queryParams, QueryMods);
 	},
 
 	postSubmitValidation(model, invalidateForm) {

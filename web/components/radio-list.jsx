@@ -19,6 +19,25 @@ class RadioList extends React.Component {
 		}
 	}
 
+	renderRadioButtons(radios, value) {
+		return radios.map(
+			c => (
+				<Radio
+					id={ `${ this.props.name }_${ c.value }` }
+					key={ c.value }
+					name={ this.props.name }
+					inline={ this.props.inline }
+					value={ c.value }
+					checked={ value === c.value }
+					onChange={ this.handleChecked }
+					title={ c.title }
+				>
+					{ c.text || c.value }
+				</Radio>
+			)
+		);
+	}
+
 	render() {
 		const value = this.props.getValue();
 		let errorMessage = null;
@@ -55,24 +74,7 @@ class RadioList extends React.Component {
 				errorMessage={ errorMessage }
 			>
 				<div>
-					{
-						this.props.children.map(
-							c => (
-								<Radio
-									id={ `${ this.props.name }_${ c.value }` }
-									key={ c.value }
-									name={ this.props.name }
-									inline={ this.props.inline }
-									value={ c.value }
-									checked={ value === c.value }
-									onChange={ this.handleChecked }
-									title={ c.title }
-								>
-									{ c.text || c.value }
-								</Radio>
-							)
-						)
-					}
+					{ this.renderRadioButtons(this.props.children, value) }
 				</div>
 			</FormGroup>
 		);

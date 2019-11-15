@@ -15,7 +15,15 @@ class StarRating extends React.Component {
 	}
 
 	render() {
-		const { controlId, getValue, isPristine, label, readOnly, required, showRequired } = this.props;
+		const {
+			controlId,
+			getValue,
+			isPristine,
+			label,
+			readOnly,
+			required,
+			showRequired
+		} = this.props;
 		let validationState = null;
 		let errorMessage = null;
 

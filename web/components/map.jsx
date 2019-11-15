@@ -8,7 +8,6 @@ import React from 'react';
 class WorldMap extends React.Component {
 	constructor(props) {
 		super(props);
-
 		this.handleMapClicked = this.handleMapClicked.bind(this);
 	}
 
@@ -45,7 +44,7 @@ class WorldMap extends React.Component {
 					google={ this.props.google }
 					zoom={ 12 }
 					initialCenter={ initialCenter }
-					streetViewControl={ false }
+					streetViewControl
 					fullscreenControl={ false }
 					onClick={ this.handleMapClicked }
 				>
@@ -63,6 +62,11 @@ WorldMap.propTypes = {
 	initialCenter: PropTypes.object,
 	onClick: PropTypes.func,
 	width: PropTypes.string
+};
+
+WorldMap.defaultProps = {
+	height: '350px',
+	width: '100%'
 };
 
 export default GoogleApiWrapper({

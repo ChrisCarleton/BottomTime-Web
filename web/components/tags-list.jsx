@@ -10,7 +10,10 @@ class TagsList extends React.Component {
 		const badges = [];
 		tags.forEach((tag, i) => {
 			badges.push(<Badge key={ tag }>{ tag }</Badge>);
-			badges.push(<span key={ i }>{ ' ' }</span>);
+
+			if (i < tags.length - 1) {
+				badges.push(<span key={ i }>{ ' ' }</span>);
+			}
 		});
 
 		return (

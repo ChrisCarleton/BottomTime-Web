@@ -22,7 +22,6 @@ import Tags from '../../components/tags';
 import TextArea from '../../components/text-area';
 import TextBox from '../../components/text-box';
 import { withRouter } from 'react-router-dom';
-import { isBoolean } from 'util';
 
 class EditDiveSite extends React.Component {
 	constructor(props) {
@@ -73,158 +72,166 @@ class EditDiveSite extends React.Component {
 		CurrentDiveSiteActions.updateGpsCoords(latLng);
 	}
 
-	/* eslint-disable complexity */
-	render() {
-		const {
-			currentDiveSite
-		} = this.props;
-		const gps = currentDiveSite.gps || {};
-		const entryFee = isBoolean(currentDiveSite.entryFee)
+	renderSiteDetailsSection(currentDiveSite) {
+		const entryFee = typeof currentDiveSite.entryFee === 'boolean'
 			? currentDiveSite.entryFee.toString()
 			: null;
 
 		return (
+			<Col sm={ 12 } md={ 6 }>
+				<h4>Site Details</h4>
+				<TextBox
+					autoFocus
+					controlId="name"
+					name="name"
+					label="Site name"
+					required
+					maxLength={ 200 }
+					value={ currentDiveSite.name || '' }
+				/>
+				<TextBox
+					controlId="location"
+					name="location"
+					label="Location"
+					placeholder="E.g. city, region, or area where the site is located."
+					maxLength={ 100 }
+					value={ currentDiveSite.location || '' }
+				/>
+				<TextBox
+					controlId="country"
+					name="country"
+					label="Country"
+					maxLength={ 100 }
+					value={ currentDiveSite.country || '' }
+				/>
+				<RadioList
+					controlId="water"
+					name="water"
+					label="Type of water"
+					inline
+					value={ currentDiveSite.water }
+				>
+					{
+						[
+							{ text: 'Fresh water', value: 'fresh' },
+							{ text: 'Salt water', value: 'salt' }
+						]
+					}
+				</RadioList>
+				<RadioList
+					controlId="entryFee"
+					name="entryFee"
+					label="Entry fee"
+					inline
+					value={ entryFee }
+				>
+					{
+						[
+							{ text: 'Fee required', value: 'true' },
+							{ text: 'Free to dive', value: 'false' }
+						]
+					}
+				</RadioList>
+				<RadioList
+					controlId="accessibility"
+					name="accessibility"
+					label="Accessibility"
+					inline
+					value={ currentDiveSite.accessibility }
+				>
+					{
+						[
+							{ text: 'Shore dive', value: 'shore' },
+							{ text: 'Boat dive', value: 'boat' }
+						]
+					}
+				</RadioList>
+				<Slider
+					controlId="difficulty"
+					name="difficulty"
+					label="Difficulty"
+					value={ currentDiveSite.difficulty }
+					min={ 1.0 }
+					max={ 5.0 }
+					lowEndCaption="Easy / Novice"
+					highEndCaption="Technical / Extremely Challenging"
+				/>
+				<Tags
+					controlId="tags"
+					name="tags"
+					label="Tags"
+					value={ currentDiveSite.tags || [] }
+				/>
+				<TextArea
+					controlId="description"
+					name="description"
+					label="Description"
+					maxLength={ 1000 }
+					value={ currentDiveSite.description || '' }
+				/>
+			</Col>
+		);
+	}
+
+	renderLocationSection(currentDiveSite) {
+		const gps = currentDiveSite.gps || {};
+		return (
+			<Col sm={ 12 } md={ 6 }>
+				<h4>Location</h4>
+				<Row>
+					<Col sm={ 6 }>
+						<TextBox
+							controlId="gps.lat"
+							name="gps.lat"
+							label="Latitude"
+							value={ gps.lat || '' }
+						/>
+					</Col>
+					<Col sm={ 6 }>
+						<TextBox
+							controlId="gps.lon"
+							name="gps.lon"
+							label="Longitude"
+							value={ gps.lon || '' }
+						/>
+					</Col>
+				</Row>
+				<Map
+					onClick={ this.handleMapClicked }
+					initialCenter={ gps }
+				>
+					{
+						gps.lat && gps.lon
+							? (
+								<Marker
+									position={ {
+										lat: gps.lat,
+										lng: gps.lon
+									} }
+								/>
+							)
+							: null
+					}
+				</Map>
+			</Col>
+		);
+	}
+
+	render() {
+		const { currentDiveSite } = this.props;
+
+		return (
 			<div>
+				<RequireUser />
 				<Formsy
 					mapping={ DiveSiteUtils.mapFormValues }
 					onValidSubmit={ this.handleSubmit }
 					onInvalidSubmit={ this.handleInvalidSubmit }
 					ref={ this.formRef }
 				>
-					<RequireUser />
 					<Row>
-						<Col sm={ 12 } md={ 6 }>
-							<h4>Site Details</h4>
-							<TextBox
-								autoFocus
-								controlId="name"
-								name="name"
-								label="Site name"
-								required
-								maxLength={ 200 }
-								value={ currentDiveSite.name || '' }
-							/>
-							<TextBox
-								controlId="location"
-								name="location"
-								label="Location"
-								placeholder="E.g. city, region, or area where the site is located."
-								maxLength={ 100 }
-								value={ currentDiveSite.location || '' }
-							/>
-							<TextBox
-								controlId="country"
-								name="country"
-								label="Country"
-								maxLength={ 100 }
-								value={ currentDiveSite.country || '' }
-							/>
-							<RadioList
-								controlId="water"
-								name="water"
-								label="Type of water"
-								inline
-								value={ currentDiveSite.water }
-							>
-								{
-									[
-										{ text: 'Fresh water', value: 'fresh' },
-										{ text: 'Salt water', value: 'salt' }
-									]
-								}
-							</RadioList>
-							<RadioList
-								controlId="entryFee"
-								name="entryFee"
-								label="Entry fee"
-								inline
-								value={ entryFee }
-							>
-								{
-									[
-										{ text: 'Fee required', value: 'true' },
-										{ text: 'Free to dive', value: 'false' }
-									]
-								}
-							</RadioList>
-							<RadioList
-								controlId="accessibility"
-								name="accessibility"
-								label="Accessibility"
-								inline
-								value={ currentDiveSite.accessibility }
-							>
-								{
-									[
-										{ text: 'Shore dive', value: 'shore' },
-										{ text: 'Boat dive', value: 'boat' }
-									]
-								}
-							</RadioList>
-							<Slider
-								controlId="difficulty"
-								name="difficulty"
-								label="Difficulty"
-								value={ currentDiveSite.difficulty }
-								min={ 1.0 }
-								max={ 5.0 }
-								lowEndCaption="Easy / Novice"
-								highEndCaption="Technical / Extremely Challenging"
-							/>
-							<Tags
-								controlId="tags"
-								name="tags"
-								label="Tags"
-								value={ currentDiveSite.tags || [] }
-							/>
-							<TextArea
-								controlId="description"
-								name="description"
-								label="Description"
-								maxLength={ 1000 }
-								value={ currentDiveSite.description || '' }
-							/>
-						</Col>
-						<Col sm={ 12 } md={ 6 }>
-							<h4>Location</h4>
-							<Row>
-								<Col sm={ 6 }>
-									<TextBox
-										controlId="gps.lat"
-										name="gps.lat"
-										label="Latitude"
-										value={ gps.lat || '' }
-									/>
-								</Col>
-								<Col sm={ 6 }>
-									<TextBox
-										controlId="gps.lon"
-										name="gps.lon"
-										label="Longitude"
-										value={ gps.lon || '' }
-									/>
-								</Col>
-							</Row>
-							<Map
-								onClick={ this.handleMapClicked }
-								width="100%"
-								height="350px"
-								initialCenter={ gps }
-							>
-								{
-									gps.lat && gps.lon
-										? (
-											<Marker
-												position={ {
-													lat: gps.lat,
-													lng: gps.lon
-												} }
-											/>
-										)
-										: null
-								}
-							</Map>
-						</Col>
+						{ this.renderSiteDetailsSection(currentDiveSite) }
+						{ this.renderLocationSection(currentDiveSite) }
 					</Row>
 					<ButtonToolbar>
 						<ButtonGroup>
@@ -243,7 +250,6 @@ class EditDiveSite extends React.Component {
 			</div>
 		);
 	}
-	/* eslint-enable complexity */
 }
 
 EditDiveSite.propTypes = {

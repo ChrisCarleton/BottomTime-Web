@@ -30,6 +30,7 @@ class Slider extends React.Component {
 	}
 
 	render() {
+		const valueTextStyle = { paddingTop: '4px', float: 'right' };
 		const {
 			controlId,
 			getValue,
@@ -63,7 +64,7 @@ class Slider extends React.Component {
 					step={ step || 0.1 }
 					value={ value || '' }
 				/>
-				<span style={ { paddingTop: '4px', float: 'right' } }>
+				<span style={ valueTextStyle }>
 					<em>{ this.renderValue(value) }</em>
 				</span>
 			</FormGroup>
