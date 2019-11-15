@@ -1,40 +1,54 @@
+import {
+	Checkbox,
+	Glyphicon,
+	ListGroupItem
+} from 'react-bootstrap';
+import config from '../../config';
 import { Link } from 'react-router-dom';
+import LogEntryActions from '../actions/log-entry-actions';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Well } from 'react-bootstrap';
-
-const DateFormat = 'MMMM Do YYYY - h:mma';
+import { ToPreferredUnits } from '../../unit-conversion';
 
 class LogsListItem extends React.Component {
+	renderDepth(value, unit) {
+		return `${ ToPreferredUnits.Distance[unit](value).toFixed(2) }${ unit }`;
+	}
+
 	render() {
+		const { depthUnit, entry, index, username } = this.props;
+
 		return (
-			<Well bsSize="sm">
-				<h4>
-					<Link to={ `/logs/${ this.props.username }/${ this.props.entry.entryId }` }>
-						{ moment(this.props.entry.entryTime).local().format(DateFormat) }
-					</Link>
-				</h4>
-				<dl className="dl-horizontal">
-					<dt>Location:</dt>
-					<dd>{ this.props.entry.location }</dd>
-
-					<dt>Site:</dt>
-					<dd>{ this.props.entry.site }</dd>
-
-					<dt>Max depth:</dt>
-					<dd>{ this.props.entry.maxDepth }ft</dd>
-
-					<dt>Bottom time:</dt>
-					<dd>{ this.props.entry.bottomTime }min</dd>
-				</dl>
-			</Well>
+			<ListGroupItem>
+				<Link to={ `/logs/${ username }/${ entry.entryId }` }>
+					<h4>{ moment(entry.entryTime).local().format(config.entryTimeFormat) }</h4>
+				</Link>
+				<Checkbox
+					onChange={ () => LogEntryActions.toggleCheckedEntry(index) }
+					checked={ entry.checked || false }
+				>
+					<span title="Location">
+						<Glyphicon glyph="map-marker" />&nbsp;{ entry.location }, { entry.site }
+					</span>
+					{ ' | ' }
+					<span title="Max depth">
+						<Glyphicon glyph="dashboard" />&nbsp;{ this.renderDepth(entry.maxDepth, depthUnit) }
+					</span>
+					{ ' | ' }
+					<span title="Bottom time">
+						<Glyphicon glyph="time" />&nbsp;{ entry.bottomTime }min
+					</span>
+				</Checkbox>
+			</ListGroupItem>
 		);
 	}
 }
 
 LogsListItem.propTypes = {
+	depthUnit: PropTypes.string.isRequired,
 	entry: PropTypes.object.isRequired,
+	index: PropTypes.number.isRequired,
 	username: PropTypes.string.isRequired
 };
 

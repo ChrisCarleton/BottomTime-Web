@@ -5,10 +5,8 @@ import LogsListItem from './logs-list-item';
 
 import {
 	Alert,
-	Clearfix,
 	Col,
-	Grid,
-	Row
+	ListGroup
 } from 'react-bootstrap';
 
 class LogsListGrid extends React.Component {
@@ -27,36 +25,28 @@ class LogsListGrid extends React.Component {
 			);
 		}
 
-		const elements = [];
-		for (let i = 0; i < this.props.listEntries.length; i++) {
-			const entry = this.props.listEntries[i];
-			elements.push(
-				<Clearfix
-					key={ `clfx_${ entry.entryId }` }
-					visibleSmBlock
-					visibleMdBlock={ i % 2 === 0 }
-					visibleLgBlock={ i % 3 === 0 }
+		const { listEntries } = this.props;
+		const elements = listEntries.map((entry, i) => (
+			<Col key={ `entry_${ i }` } sm={ 12 } md={ 6 } lg={ 4 }>
+				<LogsListItem
+					depthUnit={ this.props.depthUnit }
+					index={ i }
+					username={ this.props.username }
+					entry={ entry }
 				/>
-			);
-			elements.push(
-				<Col key={ entry.entryId } sm={ 12 } md={ 6 } lg={ 4 }>
-					<LogsListItem
-						username={ this.props.username }
-						entry={ entry }
-					/>
-				</Col>
-			);
-		}
+			</Col>
+		));
 
 		return (
-			<Grid id="log-entries-grid">
-				<Row>{ elements }</Row>
-			</Grid>
+			<ListGroup id="log-entries-grid">
+				{ elements }
+			</ListGroup>
 		);
 	}
 }
 
 LogsListGrid.propTypes = {
+	depthUnit: PropTypes.string.isRequired,
 	listEntries: PropTypes.array,
 	isSearching: PropTypes.bool.isRequired,
 	username: PropTypes.string.isRequired
