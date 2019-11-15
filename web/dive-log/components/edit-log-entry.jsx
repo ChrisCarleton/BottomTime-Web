@@ -131,7 +131,6 @@ class EditLogEntry extends React.Component {
 				onValidSubmit={ this.handleSubmit }
 				onInvalidSubmit={ this.handleInvalidSubmit }
 				mapping={ LogEntryUtilities.mapFormValues }
-				className="form-horizontal"
 				ref={ this.form }
 			>
 				<ConfirmDialog

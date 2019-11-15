@@ -5,7 +5,6 @@ import CurrentUserActions from '../../users/actions/current-user-actions';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import DatePicker from '../../components/date-picker';
 import ErrorActions from '../../actions/error-actions';
-import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
 import moment from 'moment';
@@ -106,7 +105,6 @@ class EditProfile extends React.Component {
 
 		return (
 			<Formsy
-				className="form-horizontal"
 				onValidSubmit={ this.handleSubmit }
 				onInvalidSubmit={ this.handleInvalidSubmit }
 			>
@@ -427,11 +425,9 @@ class EditProfile extends React.Component {
 						}
 					] }
 				</RadioList>
-				<FormButtonGroup>
-					<Button id="btn-save" bsStyle="primary" type="submit">Save Changes</Button>
-					{ ' ' }
-					<Button id="btn-reset" onClick={ this.handleDiscardChanges }>Discard Changes</Button>
-				</FormButtonGroup>
+				<Button id="btn-save" bsStyle="primary" type="submit">Save Changes</Button>
+				{ ' ' }
+				<Button id="btn-reset" onClick={ this.handleDiscardChanges }>Discard Changes</Button>
 			</Formsy>
 		);
 	}

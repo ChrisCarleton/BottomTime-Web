@@ -11,6 +11,14 @@ export function trim(str) {
 	return str;
 }
 
+export function toCurrentUserName(str) {
+	if (str) {
+		return CurrentUserStore.getState().currentUser.username;
+	}
+
+	return null;
+}
+
 export function toISOString(str) {
 	if (typeof str === 'string') {
 		return moment(str, config.entryTimeFormat).utc().toISOString();

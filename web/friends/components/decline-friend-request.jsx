@@ -3,7 +3,6 @@ import {
 	Col,
 	Row
 } from 'react-bootstrap';
-import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import FriendsActions from '../actions/friends-actions';
 import PropTypes from 'prop-types';
@@ -30,7 +29,7 @@ class DeclineFriendRequest extends React.Component {
 					<p>
 						{ 'You can optionally give a reason for declining the buddy request. (You don\'t have to!)' }
 					</p>
-					<Formsy onValidSubmit={ this.handleSubmitDecline } className="form-horizontal">
+					<Formsy onValidSubmit={ this.handleSubmitDecline }>
 						<TextBox
 							autoFocus
 							controlId={ `reason_${ index }` }
@@ -38,11 +37,9 @@ class DeclineFriendRequest extends React.Component {
 							label="Reason"
 							maxLength={ 250 }
 						/>
-						<FormButtonGroup>
-							<Button type="submit" bsStyle="primary">Ok</Button>
-							&nbsp;
-							<Button onClick={ () => FriendsActions.showReasonBox(index, false) }>Cancel</Button>
-						</FormButtonGroup>
+						<Button type="submit" bsStyle="primary">Ok</Button>
+						&nbsp;
+						<Button onClick={ () => FriendsActions.showReasonBox(index, false) }>Cancel</Button>
 					</Formsy>
 				</Col>
 			</Row>

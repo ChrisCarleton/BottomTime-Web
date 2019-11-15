@@ -103,7 +103,7 @@ class ViewLogEntry extends React.Component {
 
 		return (
 			<div>
-				<Formsy className="form-horizontal">
+				<Formsy>
 					<Row>
 						<Col sm={ 12 } md={ 6 }>
 							<StaticField

@@ -63,7 +63,7 @@ class NewFriendRequestDialog extends React.Component {
 	render() {
 		return (
 			<Modal.Dialog>
-				<Formsy onValidSubmit={ this.handleSubmit } className="form-horizontal">
+				<Formsy onValidSubmit={ this.handleSubmit }>
 					<Modal.Header>
 						<Modal.Title>New Dive Buddy Request</Modal.Title>
 					</Modal.Header>

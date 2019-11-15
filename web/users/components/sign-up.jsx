@@ -5,7 +5,6 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
-import FormButtonGroup from '../../components/form-button-group';
 import Formsy from 'formsy-react';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
@@ -93,7 +92,6 @@ class SignUpPage extends React.Component {
 				<Formsy
 					onValidSubmit={ this.handleSubmit }
 					onInvalidSubmit={ this.handleInvalidSubmit }
-					className="form-horizontal"
 				>
 					<TextBox
 						autoFocus
@@ -159,15 +157,13 @@ class SignUpPage extends React.Component {
 						password
 						required
 					/>
-					<FormButtonGroup>
-						<Button
-							id="btn-sign-up"
-							bsStyle="primary"
-							type="submit"
-						>
-							Sign Me Up!
-						</Button>
-					</FormButtonGroup>
+					<Button
+						id="btn-sign-up"
+						bsStyle="primary"
+						type="submit"
+					>
+						Sign Me Up!
+					</Button>
 				</Formsy>
 			</div>
 		);
