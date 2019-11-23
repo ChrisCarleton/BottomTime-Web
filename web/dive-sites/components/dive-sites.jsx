@@ -13,10 +13,10 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import DiveSitesActions from '../actions/dive-sites-actions';
 import DiveSitesList from './dive-sites-list';
 import DiveSitesStore from '../stores/dive-sites-store';
+import DiveSiteUtils from '../utils/dive-site-utils';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
 import { LinkContainer } from 'react-router-bootstrap';
-import { mapQueryParameters } from '../utils/dive-site-utils';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
@@ -83,7 +83,7 @@ class DiveSites extends React.Component {
 
 	renderSearchForm() {
 		return (
-			<Formsy onValidSubmit={ this.handleSearch } mapping={ mapQueryParameters }>
+			<Formsy onValidSubmit={ this.handleSearch } mapping={ DiveSiteUtils.mapQueryParameters }>
 				<SearchBox autoFocus controlId="query" name="query" />
 				<Panel.Toggle componentClass="a">
 					{
