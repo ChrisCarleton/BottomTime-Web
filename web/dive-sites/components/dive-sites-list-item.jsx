@@ -3,7 +3,7 @@ import DiveSiteDetails from './dive-site-details';
 import GpsPopover from './dive-site-gps-popover';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import TagsList from '../../components/tags-list';
+import TagsListControl from '../../components/tags-list-control';
 import Ratings from '../../components/rating-control';
 import React from 'react';
 
@@ -41,7 +41,7 @@ class DiveSitesListItem extends React.Component {
 		if (diveSite.tags && diveSite.tags.length) {
 			return (
 				<dd>
-					<TagsList value={ diveSite.tags } />
+					<TagsListControl tags={ diveSite.tags } />
 				</dd>
 			);
 		}

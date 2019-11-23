@@ -1,27 +1,19 @@
-import { Badge, FormControl } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
 import FormGroup from './form-group';
 import { propTypes as formsyProps, withFormsy } from 'formsy-react';
 import React from 'react';
+import TagsListControl from './tags-list-control';
 
 class TagsList extends React.Component {
 	render() {
-		const tags = this.props.getValue() || [];
-
-		const badges = [];
-		tags.forEach((tag, i) => {
-			badges.push(<Badge key={ tag }>{ tag }</Badge>);
-
-			if (i < tags.length - 1) {
-				badges.push(<span key={ i }>{ ' ' }</span>);
-			}
-		});
-
 		return (
 			<FormGroup
 				label={ this.props.label }
 				controlId={ this.props.controlId }
 			>
-				<FormControl.Static>{ badges }</FormControl.Static>
+				<FormControl.Static>
+					<TagsListControl tags={ this.props.getValue() } />
+				</FormControl.Static>
 			</FormGroup>
 		);
 	}
