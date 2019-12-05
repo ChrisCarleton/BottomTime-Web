@@ -17,7 +17,6 @@ module.exports = merge(common, {
 	plugins: [
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-			'process.env.BT_API_URL': JSON.stringify(process.env.BT_API_URL),
 			'process.env.BT_GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.BT_GOOGLE_MAPS_API_KEY)
 		}),
 		new webpack.HotModuleReplacementPlugin()
