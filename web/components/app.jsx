@@ -5,6 +5,7 @@ import NavBar from './navbar';
 import React, { lazy, Suspense } from 'react';
 
 const ChangePassword = lazy(() => import('../users/components/change-password'));
+// TODO: const CompleteRegistration = lazy(() => import('../users/components/complete-registration'));
 const DiveSite = lazy(() => import('../dive-sites/components/dive-site'));
 const DiveSites = lazy(() => import('../dive-sites/components/dive-sites'));
 const Forbidden = lazy(() => import('./forbidden'));
@@ -18,6 +19,8 @@ const Profile = lazy(() => import('../users/components/profile'));
 const SignUp = lazy(() => import('../users/components/sign-up'));
 
 const spinner = <LoadingSpinner message="Loading page..." />;
+
+// TODO: <Route path="/completeRegistration" exact component={ CompleteRegistration } />
 
 class App extends React.Component {
 	render() {
