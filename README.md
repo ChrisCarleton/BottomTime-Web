@@ -135,8 +135,10 @@ then change the command above to reflect that.
 #### 3) Whitelist the Tunnel URL
 The tunnel URL will need to be whitelisted with your chosen SSO provider or else requests will be denied.
 
-#### 4) Configure the Web Application
+#### 4) Configure and Build the Web Application
+Ensure that the `BT_WEB_URL` environment variable is set to the URL for your ngrok tunnel. Then bundle the application and serve it up in the Webpack dev server:
 
-
-
-
+```
+gulp package-dev
+gulp serve-dev
+```
