@@ -10,14 +10,14 @@ class Forbidden extends React.Component {
 		return (
 			<div id="forbidden-page">
 				<PageTitle title="403 - Forbidden!" hidden />
-				<h1>{ 'Sorry, but you don\'t have access to this page' }</h1>
+				<h1>Sorry, but you don&apos;t have access to this page</h1>
 
 				<p>
-					{ 'You\'re not authorized to view the page you requested. Try clicking ' }
+					You&apos;re not authorized to view the page you requested. Try clicking
 					<Link to="/">here</Link>
-					{ ' to return home. If you think you should have access try clicking ' }
+					to return home. If you think you should have access try clicking
 					<Link to="/login">here</Link>
-					{ ' to login.' }
+					to login.
 				</p>
 
 				<Image src="/img/forbidden-sign.jpg" rounded />
