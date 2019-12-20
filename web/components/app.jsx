@@ -8,6 +8,7 @@ const ChangePassword = lazy(() => import('../users/components/change-password'))
 // TODO: const CompleteRegistration = lazy(() => import('../users/components/complete-registration'));
 const DiveSite = lazy(() => import('../dive-sites/components/dive-site'));
 const DiveSites = lazy(() => import('../dive-sites/components/dive-sites'));
+const EmailTaken = lazy(() => import('../home/components/email-taken'));
 const Forbidden = lazy(() => import('./forbidden'));
 const Friends = lazy(() => import('../friends/components/friends'));
 const Home = lazy(() => import('./home'));
@@ -16,6 +17,7 @@ const LogEntry = lazy(() => import('../dive-log/components/log-entry'));
 const LogsList = lazy(() => import('../dive-log/components/logs-list'));
 const NotFound = lazy(() => import('./not-found'));
 const Profile = lazy(() => import('../users/components/profile'));
+const ServerError = lazy(() => import('../home/components/server-error'));
 const SignUp = lazy(() => import('../users/components/sign-up'));
 
 const spinner = <LoadingSpinner message="Loading page..." />;
@@ -49,6 +51,8 @@ class App extends React.Component {
 								<Route path="/logs/:username/:logId" exact component={ LogEntry } />
 								<Route path="/forbidden" exact component={ Forbidden } />
 								<Route path="/notFound" exact component={ NotFound } />
+								<Route path="/emailTaken/:provider" exact component={ EmailTaken } />
+								<Route path="/serverError" exact component={ ServerError } />
 								<Route path="*" component={ NotFound } />
 							</Switch>
 						</Suspense>
