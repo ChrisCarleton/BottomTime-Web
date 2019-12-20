@@ -26,6 +26,9 @@ The application has a small number of environment variables that can be set to c
 These variables should be set in the terminal used to package the project because Webpack will hard-code
 them into the bundle at build time.
 
+* **BT_ADMIN_EMAIL** - The e-mail address users should use to contact an administrator. (This address
+is displayed in several spots in the application, including some error pages.) The default value is
+`admin@bottomtime.ca`.
 * **BT_API_URL** - This environment variable is only used by the Webpack dev server when testing locally.
 It can be used to override the URL to the API backend. The default value is `http://localhost:29201/`.
 * **BT_GOOGLE_MAPS_API_KEY** - The Google Maps component used in the application requires an API key to
