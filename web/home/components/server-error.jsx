@@ -8,7 +8,7 @@ import '../../img/server-error.jpg';
 class ServerError extends React.Component {
 	render() {
 		return (
-			<div>
+			<div id="server-error-page">
 				<PageTitle title="500 - Server Error" hidden />
 				<h1>Uh Oh! Something Went Wrong On Our End</h1>
 

@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
-import PageTitle from './page-title';
+import PageTitle from '../../components/page-title';
 import React from 'react';
 
-require('../img/forbidden-sign.jpg');
+require('../../img/forbidden-sign.jpg');
 
 class Forbidden extends React.Component {
 	render() {
@@ -14,9 +14,9 @@ class Forbidden extends React.Component {
 
 				<p>
 					You&apos;re not authorized to view the page you requested. Try clicking
-					<Link to="/">here</Link>
+					&nbsp;<Link to="/">here</Link>&nbsp;
 					to return home. If you think you should have access try clicking
-					<Link to="/login">here</Link>
+					&nbsp;<Link to="/login">here</Link>&nbsp;
 					to login.
 				</p>
 

@@ -1,28 +1,25 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import ErrorBar from './error-bar';
-import LoadingSpinner from './loading-spinner';
-import NavBar from './navbar';
+import ErrorBar from '../../components/error-bar';
+import LoadingSpinner from '../../components/loading-spinner';
+import NavBar from '../../components/navbar';
 import React, { lazy, Suspense } from 'react';
 
-const ChangePassword = lazy(() => import('../users/components/change-password'));
-// TODO: const CompleteRegistration = lazy(() => import('../users/components/complete-registration'));
-const DiveSite = lazy(() => import('../dive-sites/components/dive-site'));
-const DiveSites = lazy(() => import('../dive-sites/components/dive-sites'));
-const EmailTaken = lazy(() => import('../home/components/email-taken'));
+const ChangePassword = lazy(() => import('../../users/components/change-password'));
+const DiveSite = lazy(() => import('../../dive-sites/components/dive-site'));
+const DiveSites = lazy(() => import('../../dive-sites/components/dive-sites'));
+const EmailTaken = lazy(() => import('./email-taken'));
 const Forbidden = lazy(() => import('./forbidden'));
-const Friends = lazy(() => import('../friends/components/friends'));
+const Friends = lazy(() => import('../../friends/components/friends'));
 const Home = lazy(() => import('./home'));
-const Login = lazy(() => import('../users/components/login'));
-const LogEntry = lazy(() => import('../dive-log/components/log-entry'));
-const LogsList = lazy(() => import('../dive-log/components/logs-list'));
+const Login = lazy(() => import('../../users/components/login'));
+const LogEntry = lazy(() => import('../../dive-log/components/log-entry'));
+const LogsList = lazy(() => import('../../dive-log/components/logs-list'));
 const NotFound = lazy(() => import('./not-found'));
-const Profile = lazy(() => import('../users/components/profile'));
-const ServerError = lazy(() => import('../home/components/server-error'));
-const SignUp = lazy(() => import('../users/components/sign-up'));
+const Profile = lazy(() => import('../../users/components/profile'));
+const ServerError = lazy(() => import('./server-error'));
+const SignUp = lazy(() => import('../../users/components/sign-up'));
 
 const spinner = <LoadingSpinner message="Loading page..." />;
-
-// TODO: <Route path="/completeRegistration" exact component={ CompleteRegistration } />
 
 class App extends React.Component {
 	render() {
