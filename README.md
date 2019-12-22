@@ -117,20 +117,21 @@ gulp serve-prod
 be used to make your local dev instance of the site routable from the Internet by giving it a temporary
 URL.
 
-Create an ngrok account, download the client and, configure your auth token before continuing.
+Create an ngrok account, download the client, and configure your auth token before continuing.
 
-#### 1) Prepare the Backend
-The backend should be running with the appropriate environment variables set to the correct Client ID and
-Client Secret for the SSO provider(s) being tested. (See the documentation
-[here](https://github.com/ChrisCarleton/BottomTime-Core/blob/master/README.md).)
-
-#### 2) Open an Ngrok Tunnel
+#### 1) Open an Ngrok Tunnel
 Run ngrok with the following command. This will create a publicly-accessible tunnel back to your local
 port on which the application is running. Make a note of the HTTPS URL that ngrok provides for your tunnel.
 
 ```
 ngrok http --host-header=rewrite 8080
 ```
+
+#### 2) Prepare the Backend
+The backend should be running with the appropriate environment variables set to the correct Client ID and
+Client Secret for the SSO provider(s) being tested. (See the documentation
+[here](https://github.com/ChrisCarleton/BottomTime-Core/blob/master/README.md).) Additionally, the
+`BT_SITE_URL` environment variable should be set to the URL for your ngrok gateway.
 
 **Note:** By default the web application runs on port `8080`. If you are running it on a different port,
 then change the command above to reflect that.

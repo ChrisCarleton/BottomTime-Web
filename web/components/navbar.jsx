@@ -42,7 +42,13 @@ class AppNavBar extends React.Component {
 
 		if (!currentUser.isAnonymous) {
 			if (currentUser.isRegistrationIncomplete) {
-				return <Navbar.Text pullRight>New User</Navbar.Text>;
+				return (
+					<Nav pullRight>
+						<NavDropdown title="New User" id="user-nav-dropdown">
+							<MenuItem onClick={ this.handleLogoutClick }>Logout</MenuItem>
+						</NavDropdown>
+					</Nav>
+				);
 			}
 
 			const title = currentUser.firstName || currentUser.username;

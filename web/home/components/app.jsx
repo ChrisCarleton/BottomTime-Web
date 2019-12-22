@@ -22,6 +22,7 @@ const NotFound = lazy(() => import('./not-found'));
 const Profile = lazy(() => import('../../users/components/profile'));
 const ServerError = lazy(() => import('./server-error'));
 const SignUp = lazy(() => import('../../users/components/sign-up'));
+const Welcome = lazy(() => import('../../users/components/welcome'));
 
 const spinner = <LoadingSpinner message="Loading page..." />;
 
@@ -40,6 +41,7 @@ class App extends React.Component {
 				<Route path="/" exact component={ Home } />
 				<Route path="/signup" exact component={ SignUp } />
 				<Route path="/login" exact component={ Login } />
+				<Route path="/welcome" exact component={ Welcome } />
 				<Route path="/diveSites" exact component={ DiveSites } />
 				<Route path="/diveSites/new" exact component={ DiveSite } />
 				<Route path="/diveSites/:siteId" exact component={ DiveSite } />

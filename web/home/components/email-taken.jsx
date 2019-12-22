@@ -46,7 +46,7 @@ class EmailTaken extends React.Component {
 
 				<p>
 					If you feel something is wrong and you don&apos;t know of any account that should
-					have your e-mail address associated with it then contact
+					have your e-mail address associated with it then contact&nbsp;
 					<a href={ `mailto:${ config.adminEmail }` }>{ config.adminEmail }</a> for help.
 				</p>
 			</div>

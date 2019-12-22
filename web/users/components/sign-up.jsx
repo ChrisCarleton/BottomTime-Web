@@ -9,7 +9,7 @@ import Formsy from 'formsy-react';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import TextBox from '../../components/text-box';
 
 class SignUpPage extends React.Component {
@@ -39,7 +39,7 @@ class SignUpPage extends React.Component {
 
 			ErrorActions.showSuccess('Success!', 'Your new account has been created.');
 			CurrentUserActions.loginSucceeded(body);
-			return resetForm();
+			return this.props.history.push('/welcome');
 		} catch (err) {
 			if (err.response && err.response.status === 409) {
 				if (err.response.body.fieldName === 'username') {
@@ -171,7 +171,8 @@ class SignUpPage extends React.Component {
 }
 
 SignUpPage.propTypes = {
-	currentUser: PropTypes.object.isRequired
+	currentUser: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired
 };
 
-export default connectToStores(SignUpPage);
+export default connectToStores(withRouter(SignUpPage));
