@@ -4,28 +4,6 @@ import ErrorActions from '../../actions/error-actions';
 import TanksActions from '../../tanks/actions/tanks-actions';
 
 class CurrentUserActions {
-	trySignup(model, done) {
-		return async dispatch => {
-			dispatch();
-			try {
-				const { body } = await agent
-					.put(`/api/users/${ model.username }`)
-					.send({
-						email: model.email,
-						password: model.password,
-						role: 'user'
-					});
-
-
-				ErrorActions.showSuccess('Success!', 'Your new account has been created.');
-				done();
-				return this.loginSucceeded(body);
-			} catch (err) {
-				return done(err);
-			}
-		};
-	}
-
 	logout() {
 		return async dispatch => {
 			dispatch();
@@ -43,12 +21,24 @@ class CurrentUserActions {
 	}
 
 	loginSucceeded(user) {
-		TanksActions.refreshTanks();
-		return user;
+		return async dispatch => {
+			dispatch(user);
+			TanksActions.refreshTanks();
+			try {
+				const { body } = await agent.get(`/api/users/${ user.username }/profile`);
+				this.updateProfile(body);
+			} catch (err) {
+				ErrorActions.showError('An error occurred while retrieving your profile info');
+			}
+		};
 	}
 
 	updateUser(update) {
 		return update;
+	}
+
+	updateProfile(profile) {
+		return profile;
 	}
 }
 
