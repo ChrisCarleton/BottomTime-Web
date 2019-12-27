@@ -9,6 +9,7 @@ export const exampleUser = {
 	role: 'user',
 	isAnonymous: false,
 	isLockedOut: false,
+	isRegistrationIncomplete: false,
 	hasPassword: true,
 	distanceUnit: 'm',
 	weightUnit: 'kg',
@@ -137,6 +138,19 @@ const mockApis = {
 			weightUnit: 'kg',
 			temperatureUnit: 'c',
 			pressureUnit: 'bar'
+		});
+	},
+
+	postUsersUsernameCompleteRegistration(req, res) {
+		res.json({
+			...exampleUser,
+			username: req.body.username,
+			email: req.body.email,
+			hasPassword: false,
+			distanceUnit: req.body.distanceUnit,
+			weightUnit: req.body.weightUnit,
+			temperatureUnit: req.body.temperatureUnit,
+			pressureUnit: req.body.pressureUnit
 		});
 	},
 

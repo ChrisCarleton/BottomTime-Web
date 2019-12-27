@@ -69,6 +69,16 @@ class CompleteRegistration extends React.Component {
 								name="username"
 								controlId="username"
 								label="Username"
+								validations={ {
+									matchRegexp: /^[a-z0-9_.-]+$/i,
+									minLength: 5
+								} }
+								validationErrors={ {
+									minLength: 'User names must be at least 5 characters long.',
+									matchRegexp: 'User names can only contain letters, numbers, '
+										+ 'underscores, periods, and dashes'
+								} }
+								maxLength={ 50 }
 								required
 							/>
 							<TextBox
@@ -76,17 +86,24 @@ class CompleteRegistration extends React.Component {
 								controlId="email"
 								label="Email address"
 								value={ currentUser.email }
+								validations={ { isEmail: true } }
+								validationErrors={ {
+									isEmail: 'Email address must be valid.'
+								} }
+								maxLength={ 70 }
 								required
 							/>
 							<TextBox
 								name="firstName"
 								controlId="firstName"
 								label="First name"
+								maxLength={ 50 }
 							/>
 							<TextBox
 								name="lastName"
 								controlId="lastName"
 								label="Last name"
+								maxLength={ 50 }
 							/>
 						</Col>
 						<Col sm={ 12 } md={ 6 }>
@@ -202,7 +219,7 @@ class CompleteRegistration extends React.Component {
 					</Row>
 					<Row>
 						<Col sm={ 12 }>
-							<Button bsStyle="primary" type="submit">Register</Button>
+							<Button id="btn-complete-reg" bsStyle="primary" type="submit">Register</Button>
 						</Col>
 					</Row>
 				</Formsy>
