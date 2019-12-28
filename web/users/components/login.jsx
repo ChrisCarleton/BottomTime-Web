@@ -12,6 +12,8 @@ import React from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import TextBox from '../../components/text-box';
 
+require('../../styles/si-buttons.css');
+
 class Login extends React.Component {
 	static getStores() {
 		return [ CurrentUserStore ];
@@ -50,14 +52,12 @@ class Login extends React.Component {
 		return (
 			<div>
 				<PageTitle title="Login" />
-
-				<p>
-					Sign in with your username and password. <em>Coming soon: Sign in with Google, Twitter, etc.</em>
-				</p>
-
 				<Row>
 					<Col smHidden mdOffset={ 2 } />
 					<Col sm={ 12 } md={ 6 }>
+						<p>
+							Sign in with your username and password.
+						</p>
 						<Formsy onValidSubmit={ this.handleSubmit }>
 							<TextBox
 								autoFocus
@@ -75,6 +75,16 @@ class Login extends React.Component {
 							/>
 							<Button id="btn-login" bsStyle="primary" type="submit">Login</Button>
 						</Formsy>
+					</Col>
+					<Col sm={ 12 } md={ 5 } mdOffset={ 1 }>
+						<p>
+							Or use one of the third-party providers below.
+						</p>
+						<a href="/api/auth/google">
+							<Button id="btn-use-google" bsClass="btn-si btn-google">
+								Sign in with Google
+							</Button>
+						</a>
 					</Col>
 				</Row>
 			</div>

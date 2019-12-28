@@ -7,6 +7,7 @@ export default {
 			role: 'user',
 			isAnonymous: true,
 			isLockedOut: false,
+			isRegistrationIncomplete: false,
 			distanceUnit: 'm',
 			pressureUnit: 'bar',
 			weightUnit: 'kg',

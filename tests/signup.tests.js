@@ -56,7 +56,7 @@ describe('Sign up page', () => {
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.urlIs('http://localhost:8081/'));
+		await driver.wait(until.urlIs('http://localhost:8081/welcome'));
 
 		const [ { params } ] = stub.getCall(0).args;
 		expect(params.username).to.have.length(50);
@@ -122,7 +122,7 @@ describe('Sign up page', () => {
 		await driver.findElement(By.id('password')).sendKeys(password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.urlIs('http://localhost:8081/'));
+		await driver.wait(until.urlIs('http://localhost:8081/welcome'));
 
 		const [ { body } ] = stub.getCall(0).args;
 		expect(body.password).to.have.length(50);
@@ -151,7 +151,7 @@ describe('Sign up page', () => {
 		await driver.findElement(By.id('password')).sendKeys(user.password);
 		await driver.findElement(By.id('confirmPassword')).sendKeys(user.password);
 		await driver.findElement(By.id('btn-sign-up')).click();
-		await driver.wait(until.urlIs('http://localhost:8081/'));
+		await driver.wait(until.urlIs('http://localhost:8081/welcome'));
 		await driver.wait(until.elementLocated(By.id('user-nav-dropdown')));
 
 		const text = await driver.findElement(By.id('user-nav-dropdown')).getText();

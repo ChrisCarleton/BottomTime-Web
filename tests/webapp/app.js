@@ -14,6 +14,10 @@ app.post(
 	'/api/users/:username/changePassword',
 	(req, res) => mockApis.postUsersUsernameChangePassword(req, res)
 );
+app.post(
+	'/api/users/:username/completeRegistration',
+	(req, res) => mockApis.postUsersUsernameCompleteRegistration(req, res)
+);
 
 app.get('/api/users/:username/friends', (req, res) => mockApis.getUsersUsernameFriends(req, res));
 

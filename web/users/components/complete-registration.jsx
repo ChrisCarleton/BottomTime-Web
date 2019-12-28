@@ -1,6 +1,7 @@
 import agent from '../../agent';
 import { Button, Col, Row } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserActions from '../../users/actions/current-user-actions';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import ErrorActions from '../../actions/error-actions';
 import errorHandler from '../../components/error-handler';
@@ -9,8 +10,8 @@ import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';
 import React from 'react';
-// import { Redirect } from 'react-router-dom';
 import TextBox from '../../components/text-box';
+import { withRouter } from 'react-router-dom';
 
 class CompleteRegistration extends React.Component {
 	static getStores() {
@@ -29,9 +30,11 @@ class CompleteRegistration extends React.Component {
 	async onSubmit(model) {
 		try {
 			const { body } = await agent
-				.post(`/api/users/${ this.props.currentUser }/completeRegistration`)
+				.post(`/api/users/${ this.props.currentUser.username }/completeRegistration`)
 				.send(model);
-			console.log(body);
+			ErrorActions.showSuccess('Success!', 'Your new account has been created.');
+			CurrentUserActions.loginSucceeded(body);
+			this.props.history.push('/welcome');
 		} catch (err) {
 			this.props.handleError(err);
 		}
@@ -46,47 +49,61 @@ class CompleteRegistration extends React.Component {
 
 	render() {
 		const { currentUser } = this.props;
-		let isOk = false;
-		if (!currentUser.isAnonymous && currentUser.isRegistrationIncomplete) {
-			isOk = true;
-		}
-
 		return (
 			<div>
 				<PageTitle title="Complete Registration" />
 				<p>
-					Hey man, finish the registration.
+					Hi there!
 				</p>
-				{
-					isOk
-						? <p><strong>Everything is cool.</strong></p>
-						: <p><strong>User is anonymous or registration is complete!</strong></p>
-				}
+				<p>
+					Thanks for signing on to use our site! Please take a moment to complete your account
+					registration. We just need a username and an e-mail address - everything else is
+					optional.
+				</p>
 				<Formsy onValidSubmit={ this.onSubmit } onInvalidSubmit={ this.onInvalidSubmit }>
 					<Row>
 						<Col sm={ 12 } md={ 6 }>
 							<h3>Your Profile</h3>
 							<TextBox
+								autoFocus
 								name="username"
 								controlId="username"
 								label="Username"
+								validations={ {
+									matchRegexp: /^[a-z0-9_.-]+$/i,
+									minLength: 5
+								} }
+								validationErrors={ {
+									minLength: 'User names must be at least 5 characters long.',
+									matchRegexp: 'User names can only contain letters, numbers, '
+										+ 'underscores, periods, and dashes'
+								} }
+								maxLength={ 50 }
 								required
 							/>
 							<TextBox
 								name="email"
 								controlId="email"
 								label="Email address"
+								value={ currentUser.email }
+								validations={ { isEmail: true } }
+								validationErrors={ {
+									isEmail: 'Email address must be valid.'
+								} }
+								maxLength={ 70 }
 								required
 							/>
 							<TextBox
 								name="firstName"
 								controlId="firstName"
 								label="First name"
+								maxLength={ 50 }
 							/>
 							<TextBox
 								name="lastName"
 								controlId="lastName"
 								label="Last name"
+								maxLength={ 50 }
 							/>
 						</Col>
 						<Col sm={ 12 } md={ 6 }>
@@ -202,7 +219,7 @@ class CompleteRegistration extends React.Component {
 					</Row>
 					<Row>
 						<Col sm={ 12 }>
-							<Button bsStyle="primary" type="submit">Register</Button>
+							<Button id="btn-complete-reg" bsStyle="primary" type="submit">Register</Button>
 						</Col>
 					</Row>
 				</Formsy>
@@ -213,7 +230,8 @@ class CompleteRegistration extends React.Component {
 
 CompleteRegistration.propTypes = {
 	currentUser: PropTypes.object.isRequired,
-	handleError: PropTypes.func.isRequired
+	handleError: PropTypes.func.isRequired,
+	history: PropTypes.object.isRequired
 };
 
-export default errorHandler(connectToStores(CompleteRegistration));
+export default errorHandler(connectToStores(withRouter(CompleteRegistration)));

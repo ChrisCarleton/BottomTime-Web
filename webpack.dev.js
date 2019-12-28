@@ -16,6 +16,7 @@ module.exports = merge(common, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
+			'process.env.BT_ADMIN_EMAIL': JSON.stringify(process.env.BT_ADMIN_EMAIL),
 			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 			'process.env.BT_GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.BT_GOOGLE_MAPS_API_KEY)
 		}),

@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
-import Forbidden from '../../components/forbidden';
+import Forbidden from '../../home/components/forbidden';
 import { LinkContainer } from 'react-router-bootstrap';
 import LogEntryActions from '../actions/log-entry-actions';
 import LogEntryStore from '../stores/log-entry-store';
