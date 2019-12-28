@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import mockApis, { exampleUser } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
+const LogsPageUrl = mockApis.resolveUrl('/logs');
+
 describe('Displaying Logs', () => {
 
 	let authStub = null;
@@ -35,7 +37,7 @@ describe('Displaying Logs', () => {
 		it('Default sort order is by entry time - descending', async () => {
 			spy = sinon.spy(mockApis, 'getUsersUsernameLogs');
 
-			await driver.navigate().to('http://localhost:8081/logs/');
+			await driver.navigate().to(LogsPageUrl);
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
 
 			const [ { query } ] = spy.getCall(0).args;
@@ -47,7 +49,7 @@ describe('Displaying Logs', () => {
 		it('Can be changed to sort by max depth', async () => {
 			spy = sinon.spy(mockApis, 'getUsersUsernameLogs');
 
-			await driver.navigate().to('http://localhost:8081/logs/');
+			await driver.navigate().to(LogsPageUrl);
 			await driver.wait(until.elementLocated(By.id('sortBy_maxDepth')));
 			await driver.findElement(By.id('sortBy_maxDepth')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
@@ -61,7 +63,7 @@ describe('Displaying Logs', () => {
 		it('Can be changed to sort by bottom time', async () => {
 			spy = sinon.spy(mockApis, 'getUsersUsernameLogs');
 
-			await driver.navigate().to('http://localhost:8081/logs/');
+			await driver.navigate().to(LogsPageUrl);
 			await driver.wait(until.elementLocated(By.id('sortBy_maxDepth')));
 			await driver.findElement(By.id('sortBy_bottomTime')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
@@ -75,7 +77,7 @@ describe('Displaying Logs', () => {
 		it('Can be changed back to sorting by entry time', async () => {
 			spy = sinon.spy(mockApis, 'getUsersUsernameLogs');
 
-			await driver.navigate().to('http://localhost:8081/logs/');
+			await driver.navigate().to(LogsPageUrl);
 			await driver.wait(until.elementLocated(By.id('sortBy_maxDepth')));
 			await driver.findElement(By.id('sortBy_maxDepth')).click();
 			await driver.findElement(By.id('sortBy_entryTime')).click();
@@ -95,7 +97,7 @@ describe('Displaying Logs', () => {
 		it('Can be changed to sort in ascending order', async () => {
 			spy = sinon.spy(mockApis, 'getUsersUsernameLogs');
 
-			await driver.navigate().to('http://localhost:8081/logs/');
+			await driver.navigate().to(LogsPageUrl);
 			await driver.wait(until.elementLocated(By.id('sortOrder')));
 			await driver.findElement(By.id('sortOrder')).click();
 			await driver.wait(until.elementLocated(By.id('log-entries-grid')));
@@ -118,7 +120,7 @@ describe('Displaying Logs', () => {
 				res.json([]);
 			});
 
-			await driver.navigate().to('http://localhost:8081/logs/');
+			await driver.navigate().to(LogsPageUrl);
 			await driver.wait(until.elementLocated(By.id('no-entries-message')));
 		});
 	});
