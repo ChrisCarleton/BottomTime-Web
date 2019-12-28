@@ -12,7 +12,7 @@ const EmailErrorId = 'err-email';
 const FirstNameTextId = 'firstName';
 const LastNameTextId = 'lastName';
 const SubmitButtonId = 'btn-complete-reg';
-const WelcomePageUrl = 'http://localhost:8081/welcome';
+const WelcomePageUrl = mockApis.resolveUrl('/welcome');
 
 const LongString = faker.lorem.words(15);
 
@@ -26,23 +26,12 @@ describe('Complete registration page', () => {
 		isRegistrationIncomplete: true,
 		hasPassword: false
 	};
-	const ExpectedSubmit = {
-		username: ExpectedUsername,
-		email: NewUser.email,
-		firstName: 'Jerry',
-		lastName: 'Roflton',
-		distanceUnit: 'ft',
-		logsVisibility: 'public',
-		pressureUnit: 'psi',
-		temperatureUnit: 'f',
-		weightUnit: 'lbs'
-	};
 	let authMeStub = null;
 	let stub = null;
 
 	async function refreshPage() {
-		await driver.navigate().to('http://localhost:8081/');
-		await driver.wait(until.elementLocated(By.id('username')));
+		await driver.navigate().to(mockApis.resolveUrl('/'));
+		await driver.wait(until.elementLocated(By.id(UsernameTextId)));
 	}
 
 	before(() => {
@@ -146,6 +135,17 @@ describe('Complete registration page', () => {
 	});
 
 	it('Will succeed if form data is valid', async () => {
+		const ExpectedSubmit = {
+			username: ExpectedUsername,
+			email: NewUser.email,
+			firstName: 'Jerry',
+			lastName: 'Roflton',
+			distanceUnit: 'ft',
+			logsVisibility: 'public',
+			pressureUnit: 'psi',
+			temperatureUnit: 'f',
+			weightUnit: 'lbs'
+		};
 		stub = sinon.spy(mockApis, 'postUsersUsernameCompleteRegistration');
 		await driver.findElement(By.id(UsernameTextId)).sendKeys(ExpectedUsername);
 		await driver.findElement(By.id(FirstNameTextId)).sendKeys(ExpectedSubmit.firstName);

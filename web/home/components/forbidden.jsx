@@ -15,9 +15,7 @@ class Forbidden extends React.Component {
 				<p>
 					You&apos;re not authorized to view the page you requested. Try clicking
 					&nbsp;<Link to="/">here</Link>&nbsp;
-					to return home. If you think you should have access try clicking
-					&nbsp;<Link to="/login">here</Link>&nbsp;
-					to login.
+					to return home.
 				</p>
 
 				<Image src="/img/forbidden-sign.jpg" rounded />

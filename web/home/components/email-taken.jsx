@@ -27,13 +27,13 @@ class EmailTaken extends React.Component {
 				<p>
 					Sign in failed because an account already exists with the e-mail address provided
 					to us by { providerName }. If you would like to link your { providerName } account
-					with your existing account on this site follow these steps:
+					with your existing account on this site then please follow these steps:
 				</p>
 
 				<ol>
 					<li>
 						Log into your account the way you normally do.&nbsp;
-						(<Link to="/login">Click here to return to the login page</Link>.)
+						(Click <Link to="/login">here</Link> to return to the login page.)
 					</li>
 					<li>
 						Go to your profile page. (Click your username in the top right corner and then

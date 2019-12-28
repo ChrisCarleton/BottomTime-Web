@@ -1,6 +1,7 @@
 import faker from 'faker';
 import fakeMongoId from '../utils/fake-mongo-id';
 import moment from 'moment';
+import url from 'url';
 
 export const exampleUser = {
 	username: 'Lindsay.Irvine',
@@ -105,6 +106,11 @@ for (let i = 0; i < logEntries.length; i++) {
 }
 
 const mockApis = {
+	resolveUrl(targetUrl) {
+		const baseUrl = 'http://localhost:8081/';
+		return url.resolve(baseUrl, targetUrl);
+	},
+
 	getAuthMe(req, res) {
 		res.status(200).json({
 			username: 'Anonymous',

@@ -44,10 +44,6 @@ class Login extends React.Component {
 		}
 	}
 
-	getAuthUrl(provider) {
-		return `/api/auth/${ provider }`;
-	}
-
 	render() {
 		if (!this.props.currentUser.isAnonymous) {
 			return <Redirect to="/" />;
@@ -84,7 +80,7 @@ class Login extends React.Component {
 						<p>
 							Or use one of the third-party providers below.
 						</p>
-						<a href={ this.getAuthUrl('google') }>
+						<a href="/api/auth/google">
 							<Button id="btn-use-google" bsClass="btn-si btn-google">
 								Sign in with Google
 							</Button>
