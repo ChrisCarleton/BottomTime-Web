@@ -6,7 +6,7 @@ import mockApis, { exampleProfile, exampleUser } from '../webapp/mock-apis';
 import moment from 'moment';
 import sinon from 'sinon';
 
-const Url = 'http://localhost:8081/profile/g.Dog77';
+const Url = mockApis.resolveUrl('/profile/g.Dog77');
 
 describe('Editing Profiles', () => {
 	let getAuthStub = null;

@@ -3,6 +3,9 @@ import driver from '../web-driver';
 import mockApis, { ErrorIds, exampleProfile, exampleUser } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
+const ProfileBaseUrl = mockApis.resolveUrl('/profile');
+const ProfileUrl = mockApis.resolveUrl('/profile/JLapain999');
+const LoginUrl = mockApis.resolveUrl('/login');
 const Error403 = {
 	errorId: ErrorIds.forbidden,
 	status: 403,
@@ -27,7 +30,7 @@ describe('Profile page permissions', () => {
 				res.json({ ...exampleProfile, readOnly: true });
 			});
 
-			await driver.navigate().to('http://localhost:8081/profile/JLapain999');
+			await driver.navigate().to(ProfileUrl);
 			await driver.wait(until.elementLocated(By.id('name')));
 		});
 
@@ -37,13 +40,13 @@ describe('Profile page permissions', () => {
 				res.status(403).json(Error403);
 			});
 
-			await driver.navigate().to('http://localhost:8081/profile/JLapain999');
-			await driver.wait(until.urlIs('http://localhost:8081/login'));
+			await driver.navigate().to(ProfileUrl);
+			await driver.wait(until.urlIs(LoginUrl));
 		});
 
 		it('will redirect to login page if they try to view their own profile', async () => {
-			await driver.navigate().to('http://localhost:8081/profile');
-			await driver.wait(until.urlIs('http://localhost:8081/login'));
+			await driver.navigate().to(ProfileBaseUrl);
+			await driver.wait(until.urlIs(LoginUrl));
 		});
 	});
 
@@ -69,7 +72,7 @@ describe('Profile page permissions', () => {
 		});
 
 		it('will allow write-access to their own profile', async () => {
-			await driver.navigate().to('http://localhost:8081/profile');
+			await driver.navigate().to(ProfileBaseUrl);
 			await driver.wait(until.elementLocated(By.id('firstName')));
 		});
 
@@ -79,12 +82,12 @@ describe('Profile page permissions', () => {
 				res.json({ ...exampleProfile, readOnly: true });
 			});
 
-			await driver.navigate().to('http://localhost:8081/profile/JLapain999');
+			await driver.navigate().to(ProfileUrl);
 			await driver.wait(until.elementLocated(By.id('name')));
 		});
 
 		it('will allow write-access when service indicates that read-only flag is false', async () => {
-			await driver.navigate().to('http://localhost:8081/profile/JLapain999');
+			await driver.navigate().to(ProfileUrl);
 			await driver.wait(until.elementLocated(By.id('firstName')));
 		});
 
@@ -94,7 +97,7 @@ describe('Profile page permissions', () => {
 				res.status(403).json(Error403);
 			});
 
-			await driver.navigate().to('http://localhost:8081/profile/JLapain999');
+			await driver.navigate().to(ProfileUrl);
 			await driver.wait(until.elementLocated(By.id('forbidden-page')));
 		});
 	});

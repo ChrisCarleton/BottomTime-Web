@@ -4,6 +4,8 @@ import { expect } from 'chai';
 import mockApis, { ErrorIds } from './webapp/mock-apis';
 import sinon from 'sinon';
 
+const LoginUrl = mockApis.resolveUrl('/login');
+
 describe('Login page', () => {
 
 	const user = {
@@ -17,7 +19,7 @@ describe('Login page', () => {
 	};
 
 	async function refreshPage() {
-		await driver.navigate().to('http://localhost:8081/login/');
+		await driver.navigate().to(LoginUrl);
 		await driver.wait(until.elementLocated(By.id('username')));
 	}
 
@@ -53,7 +55,7 @@ describe('Login page', () => {
 		stub.callsFake((req, res) => res.json(user));
 
 		await driver.findElement(By.id('btn-login')).click();
-		await driver.wait(until.urlIs('http://localhost:8081/'));
+		await driver.wait(until.urlIs(mockApis.resolveUrl('/')));
 		await driver.wait(until.elementLocated(By.id('user-nav-dropdown')));
 
 		const text = await driver.findElement(By.id('user-nav-dropdown')).getText();
