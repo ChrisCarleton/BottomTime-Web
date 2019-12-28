@@ -22,12 +22,11 @@ async function fillInRequiredFields() {
 	await driver.findElement(By.id('bottomTime')).sendKeys(logEntries[0].bottomTime);
 }
 
-const BaseUrl = mockApis.resolveUrl('/');
-const NotFoundUrl = `${ BaseUrl }notFound`;
-const ForbiddenUrl = `${ BaseUrl }forbidden`;
-const LoginUrl = `${ BaseUrl }login`;
-const NewEntryUrl = `${ BaseUrl }logs/jake_smith/new`;
-const EntryUrl = `${ BaseUrl }logs/jake_smith/${ logEntries[0].entryId }`;
+const NotFoundUrl = mockApis.resolveUrl('/notFound');
+const ForbiddenUrl = mockApis.resolveUrl('/forbidden');
+const LoginUrl = mockApis.resolveUrl('/login');
+const NewEntryUrl = mockApis.resolveUrl('/logs/jake_smith/new');
+const EntryUrl = mockApis.resolveUrl(`logs/jake_smith/${ logEntries[0].entryId }`);
 
 describe('Loading and Submitting Log Entries', () => {
 	let authStub = null;
