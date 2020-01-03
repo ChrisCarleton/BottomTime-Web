@@ -4,7 +4,8 @@ import { expect } from 'chai';
 import mockApis, { ErrorIds, exampleUser } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
-const DefaultUrl = 'http://localhost:8081/logs';
+const DefaultUrl = mockApis.resolveUrl('/logs');
+const LoginUrl = mockApis.resolveUrl('/login');
 const Username = 'Timmy22';
 const UserUrl = `${ DefaultUrl }/${ Username }`;
 const Error403 = {
@@ -91,7 +92,7 @@ describe('Viewing Other User\'s Log Books', () => {
 			});
 
 			await driver.navigate().to(UserUrl);
-			await driver.wait(until.urlIs('http://localhost:8081/login'));
+			await driver.wait(until.urlIs(LoginUrl));
 
 			const [ { params } ] = getLogsStub.getCall(0).args;
 			expect(params.username).to.equal(Username);
@@ -101,7 +102,7 @@ describe('Viewing Other User\'s Log Books', () => {
 			getLogsStub = sinon.spy(mockApis, 'getUsersUsernameLogs');
 
 			await driver.navigate().to(DefaultUrl);
-			await driver.wait(until.urlIs('http://localhost:8081/login'));
+			await driver.wait(until.urlIs(LoginUrl));
 
 			expect(getLogsStub.notCalled).to.be.true;
 		});

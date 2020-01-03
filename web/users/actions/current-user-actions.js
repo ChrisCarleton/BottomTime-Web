@@ -34,10 +34,10 @@ class CurrentUserActions {
 				await agent.post('/api/auth/logout');
 				TanksActions.refreshTanks();
 			} catch (err) {
-				// Not much to do here. As long as the auth token gets cleared, we're good.
-				/* eslint-disable no-console */
-				console.error(err);
-				/* eslint-enable no-console */
+				ErrorActions.showError(
+					'Request to the server failed.',
+					'Your session may still be active in another tab.'
+				);
 			}
 		};
 	}

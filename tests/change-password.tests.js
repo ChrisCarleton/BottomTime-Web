@@ -20,7 +20,7 @@ let stub = null;
 let authStub = null;
 
 async function refreshPage() {
-	await driver.navigate().to('http://localhost:8081/changePassword/');
+	await driver.navigate().to(mockApis.resolveUrl('/changePassword/'));
 	await driver.wait(until.elementLocated(By.id(ControlIds.newPassword)));
 }
 
@@ -123,8 +123,8 @@ describe('Change password page', () => {
 
 	describe('for other users', () => {
 		it('requires user to be signed in', async () => {
-			await driver.navigate().to('http://localhost:8081/changePassword/');
-			await driver.wait(until.urlIs('http://localhost:8081/login'));
+			await driver.navigate().to(mockApis.resolveUrl('/changePassword/'));
+			await driver.wait(until.urlIs(mockApis.resolveUrl('/login')));
 		});
 
 		it('does not require old password if user does not have an existing password', async () => {

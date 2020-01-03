@@ -16,9 +16,9 @@ module.exports = merge(common, {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
+			'process.env.BT_ADMIN_EMAIL': JSON.stringify(process.env.BT_ADMIN_EMAIL),
 			// Force React to compile in production mode.
 			'process.env.NODE_ENV': JSON.stringify('production'),
-			'process.env.BT_API_URL': JSON.stringify('https://api.bottomtime.ca/'),
 			'process.env.BT_GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.BT_GOOGLE_MAPS_API_KEY)
 		})
 	]
