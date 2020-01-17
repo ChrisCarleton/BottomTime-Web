@@ -48,17 +48,12 @@ class Friends extends React.Component {
 
 	render() {
 		const {
-			currentUser,
 			profileCard,
 			showNewFriendRequestDialog
 		} = this.props;
 
-		if (currentUser.isAnonymous) {
-			return <RequireUser />;
-		}
-
 		return (
-			<div>
+			<RequireUser>
 				{ showNewFriendRequestDialog ? <NewFriendRequestDialog /> : null }
 				<Modal show={ profileCard !== '' } onHide={ FriendsActions.hideProfileCard }>
 					<Modal.Header closeButton>
@@ -89,7 +84,7 @@ class Friends extends React.Component {
 						<Route path="/friendRequests" exact component={ FriendRequests } />
 					</Switch>
 				</Suspense>
-			</div>
+			</RequireUser>
 		);
 	}
 }

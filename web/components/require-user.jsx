@@ -1,8 +1,8 @@
 import connecToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../users/stores/current-user-store';
+import Login from '../users/components/login';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 
 class RequireUser extends React.Component {
 	static getStores() {
@@ -15,14 +15,15 @@ class RequireUser extends React.Component {
 
 	render() {
 		if (this.props.currentUser.isAnonymous) {
-			return <Redirect to="/login" />;
+			return <Login />;
 		}
 
-		return null;
+		return <div>{ this.props.children }</div>;
 	}
 }
 
 RequireUser.propTypes = {
+	children: PropTypes.node.isRequired,
 	currentUser: PropTypes.object.isRequired
 };
 

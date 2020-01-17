@@ -221,8 +221,7 @@ class EditDiveSite extends React.Component {
 		const { currentDiveSite } = this.props;
 
 		return (
-			<div>
-				<RequireUser />
+			<RequireUser>
 				<Formsy
 					mapping={ DiveSiteUtils.mapFormValues }
 					onValidSubmit={ this.handleSubmit }
@@ -247,7 +246,7 @@ class EditDiveSite extends React.Component {
 						<DiveSiteRatings />
 					</Col>
 				</Row>
-			</div>
+			</RequireUser>
 		);
 	}
 }

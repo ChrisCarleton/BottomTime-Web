@@ -5,7 +5,6 @@ import ErrorActions from '../actions/error-actions';
 import React from 'react';
 
 import Forbidden from '../home/components/forbidden';
-import Login from '../users/components/login';
 import NotFound from '../home/components/not-found';
 import ServerError from '../home/components/server-error';
 
@@ -46,7 +45,6 @@ export default function (page) {
 
 				case UnauthorizedStatus:
 					CurrentUserActions.logout();
-					this.setState({ status: UnauthorizedStatus });
 					break;
 
 				case ForbiddenStatus:
@@ -72,9 +70,6 @@ export default function (page) {
 
 		render() {
 			switch (this.state.status) {
-			case UnauthorizedStatus:
-				return <Login />;
-
 			case ForbiddenStatus:
 				return <Forbidden />;
 
