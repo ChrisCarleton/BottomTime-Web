@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:jessie-browsers
+      - image: selenium/standalone-chrome:3.141.59
     steps:
       - checkout
       - restore_cache:
