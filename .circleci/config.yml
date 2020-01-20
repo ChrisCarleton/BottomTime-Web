@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: selenium/standalone-chrome:3.141.59
+      - image: ccarleton/nodejs-with-chrome:1.0.0
     steps:
       - checkout
       - restore_cache:
