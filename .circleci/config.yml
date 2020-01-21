@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Setup
           command: |
-            sudo npm install -g gulp-cli
+            npm install -g gulp-cli
             npm install
       - save_cache:
           name: Cache Dependencies
