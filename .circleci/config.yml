@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Setup
           command: |
-            sudo npm install -g gulp-cli
-            npm install
+            sudo npm install -g gulp-cli yarn
+            yarn install
       - save_cache:
           name: Cache Dependencies
           key: bottomtime_test_{{ checksum "package.json" }}
