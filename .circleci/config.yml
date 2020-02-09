@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: circleci/node:jessie-browsers
+      - image: circleci/node:10-buster-browsers
     steps:
       - checkout
       - restore_cache:
@@ -14,7 +14,7 @@ jobs:
           name: Setup
           command: |
             sudo npm install -g gulp-cli
-            npm install
+            yarn install
       - save_cache:
           name: Cache Dependencies
           key: bottomtime_test_{{ checksum "package.json" }}
