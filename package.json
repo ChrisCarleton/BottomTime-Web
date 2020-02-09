@@ -1,12 +1,14 @@
 {
-  "name": "bottomtime",
+  "name": "bottomtime-web",
   "version": "1.0.0",
   "description": "An online log book for scuba divers.",
   "main": "service/index.js",
   "private": true,
   "scripts": {
-    "build": "gulp package",
-    "test": "gulp test"
+	"build": "gulp package",
+	"lint": "gulp lint",
+	"test": "gulp build-and-test",
+	"server": "gulp"
   },
   "repository": {
     "type": "git",
