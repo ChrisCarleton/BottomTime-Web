@@ -42,10 +42,11 @@ bundle the project using production-friendly settings (compression, minification
 
 ## Building and Running Locally
 ### Prerequisites
-This project is built, tested, and packaged using the [Gulp CLI](https://www.npmjs.com/package/gulp-cli).
+This project is built, tested, and packaged using the [Gulp CLI](https://www.npmjs.com/package/gulp-cli). Dependencies are
+mananged using [yarn](https://yarnpkg.com/).
 
 ```
-npm install -g gulp-cli
+npm install -g gulp-cli yarn
 ```
 
 It is also dependent on the [Bottom Time Core](https://github.com/ChrisCarleton/BottomTime-Core) service to
