@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: selenium/node-chrome 
+      - image: circleci/node:10-buster-browsers
     steps:
       - checkout
       - restore_cache:
