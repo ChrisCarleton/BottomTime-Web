@@ -10,6 +10,7 @@ import {
 } from 'react-bootstrap';
 import CheckBox from '../../components/check-box';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentUserStore from '../../users/stores/current-user-store';
 import DiveSitesActions from '../actions/dive-sites-actions';
 import DiveSitesList from './dive-sites-list';
 import DiveSitesStore from '../stores/dive-sites-store';
@@ -27,11 +28,14 @@ import { withRouter } from 'react-router-dom';
 
 class DiveSites extends React.Component {
 	static getStores() {
-		return [ DiveSitesStore ];
+		return [ CurrentUserStore, DiveSitesStore ];
 	}
 
 	static getPropsFromStores() {
-		return DiveSitesStore.getState();
+		return {
+			currentUser: CurrentUserStore.getState().currentUser,
+			...DiveSitesStore.getState()
+		};
 	}
 
 	constructor(props) {
@@ -188,9 +192,15 @@ class DiveSites extends React.Component {
 				<PageTitle title="Dive Sites" />
 				<ButtonToolbar>
 					<ButtonGroup>
-						<LinkContainer to="/diveSites/new">
-							<Button bsStyle="primary">Create New Dive Site</Button>
-						</LinkContainer>
+						{
+							this.props.currentUser.isAnonymous
+								? null
+								: (
+									<LinkContainer to="/diveSites/new">
+										<Button bsStyle="primary">Create New Dive Site</Button>
+									</LinkContainer>
+								)
+						}
 					</ButtonGroup>
 				</ButtonToolbar>
 				<Panel expanded={ this.state.searchExpanded } onToggle={ this.searchPanelToggle }>
@@ -206,6 +216,7 @@ class DiveSites extends React.Component {
 }
 
 DiveSites.propTypes = {
+	currentUser: PropTypes.object.isRequired,
 	diveSites: PropTypes.arrayOf(PropTypes.object).isRequired,
 	history: PropTypes.object.isRequired,
 	isLoadingSites: PropTypes.bool.isRequired
