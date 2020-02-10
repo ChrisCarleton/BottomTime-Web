@@ -3,13 +3,12 @@ import {
 	Button,
 	ButtonGroup,
 	ButtonToolbar,
-	Col,
 	Glyphicon,
 	Label,
 	ListGroup,
-	ListGroupItem,
-	Row
+	ListGroupItem
 } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import DeclineFriendRequest from './decline-friend-request';
