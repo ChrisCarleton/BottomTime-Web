@@ -1,8 +1,5 @@
-import {
-	Col,
-	Glyphicon,
-	Row
-} from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
+import { Glyphicon } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tags from '../../components/tags';

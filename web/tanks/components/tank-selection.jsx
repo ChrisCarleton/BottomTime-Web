@@ -7,7 +7,7 @@ import EditTankProfile from './edit-tank-profile';
 import ErrorActions from '../../actions/error-actions';
 import FormGroup from '../../components/form-group';
 import HiddenField from '../../components/hidden-field';
-import LogEntryUtilities from '../../dive-log/components/log-entry-utilities';
+import LogEntryUtilities from '../../dive-log/utils/log-entry-utilities';
 import { propTypes as formsyProps, withFormsy } from 'formsy-react';
 import PropTypes from 'prop-types';
 import React from 'react';

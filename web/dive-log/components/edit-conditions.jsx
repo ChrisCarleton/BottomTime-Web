@@ -1,9 +1,6 @@
-import {
-	Col,
-	Glyphicon,
-	Row
-} from 'react-bootstrap';
-import LogEntryUtilities from './log-entry-utilities';
+import { Col, Row } from 'react-flexbox-grid';
+import { Glyphicon } from 'react-bootstrap';
+import LogEntryUtilities from '../utils/log-entry-utilities';
 import PropTypes from 'prop-types';
 import React from 'react';
 import TextBox from '../../components/text-box';
