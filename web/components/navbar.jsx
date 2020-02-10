@@ -35,15 +35,30 @@ class AppNavBar extends React.Component {
 	}
 
 	renderRightNav() {
-		if (!this.props.currentUser.isAnonymous) {
-			const title = this.props.currentUser.firstName || this.props.currentUser.username;
+		const {
+			currentUser,
+			pendingFriendRequests
+		} = this.props;
+
+		if (!currentUser.isAnonymous) {
+			if (currentUser.isRegistrationIncomplete) {
+				return (
+					<Nav pullRight>
+						<NavDropdown title="New User" id="user-nav-dropdown">
+							<MenuItem onClick={ this.handleLogoutClick }>Logout</MenuItem>
+						</NavDropdown>
+					</Nav>
+				);
+			}
+
+			const title = currentUser.firstName || currentUser.username;
 			return (
 				<Nav pullRight>
 					<LinkContainer to="/friendRequests">
 						<NavItem>
 							<Glyphicon glyph="user" />
 							&nbsp;
-							<Badge>{ this.props.pendingFriendRequests || 0 }</Badge>
+							<Badge>{ pendingFriendRequests || 0 }</Badge>
 						</NavItem>
 					</LinkContainer>
 					<NavDropdown title={ title } id="user-nav-dropdown">
@@ -72,6 +87,7 @@ class AppNavBar extends React.Component {
 	}
 
 	render() {
+		const { currentUser } = this.props;
 		return (
 			<Navbar fixedTop inverse>
 				<Navbar.Header>
@@ -89,7 +105,7 @@ class AppNavBar extends React.Component {
 							<NavItem>Home</NavItem>
 						</LinkContainer>
 						{
-							this.props.currentUser.isAnonymous
+							currentUser.isAnonymous || currentUser.isRegistrationIncomplete
 								? null
 								: [
 									<LinkContainer key="logs" to={ '/logs' }>

@@ -7,8 +7,8 @@ import faker from 'faker';
 import mockApis, { exampleUser, logEntries } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
-const NewEntryUrl = 'http://localhost:8081/logs/jake_smith/new';
-const EntryUrl = `http://localhost:8081/logs/jake_smith/${ logEntries[0].entryId }`;
+const NewEntryUrl = mockApis.resolveUrl('/logs/jake_smith/new');
+const EntryUrl = mockApis.resolveUrl(`/logs/jake_smith/${ logEntries[0].entryId }`);
 
 async function refreshPage(url) {
 	await driver.navigate().to(url);

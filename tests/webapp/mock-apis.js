@@ -1,6 +1,7 @@
 import faker from 'faker';
 import fakeMongoId from '../utils/fake-mongo-id';
 import moment from 'moment';
+import url from 'url';
 
 export const exampleUser = {
 	username: 'Lindsay.Irvine',
@@ -9,6 +10,7 @@ export const exampleUser = {
 	role: 'user',
 	isAnonymous: false,
 	isLockedOut: false,
+	isRegistrationIncomplete: false,
 	hasPassword: true,
 	distanceUnit: 'm',
 	weightUnit: 'kg',
@@ -104,6 +106,11 @@ for (let i = 0; i < logEntries.length; i++) {
 }
 
 const mockApis = {
+	resolveUrl(targetUrl) {
+		const baseUrl = 'http://localhost:8081/';
+		return url.resolve(baseUrl, targetUrl);
+	},
+
 	getAuthMe(req, res) {
 		res.status(200).json({
 			username: 'Anonymous',
@@ -137,6 +144,19 @@ const mockApis = {
 			weightUnit: 'kg',
 			temperatureUnit: 'c',
 			pressureUnit: 'bar'
+		});
+	},
+
+	postUsersUsernameCompleteRegistration(req, res) {
+		res.json({
+			...exampleUser,
+			username: req.body.username,
+			email: req.body.email,
+			hasPassword: false,
+			distanceUnit: req.body.distanceUnit,
+			weightUnit: req.body.weightUnit,
+			temperatureUnit: req.body.temperatureUnit,
+			pressureUnit: req.body.pressureUnit
 		});
 	},
 

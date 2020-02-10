@@ -2,7 +2,7 @@
 
 import agent from './agent';
 import alt from './alt';
-import App from './components/app';
+import App from './home/components/app';
 import config from './config';
 import initialState from './initial-state';
 import React from 'react';

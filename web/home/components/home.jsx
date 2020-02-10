@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PageTitle from './page-title';
+import PageTitle from '../../components/page-title';
 
 class Home extends React.Component {
 	render() {

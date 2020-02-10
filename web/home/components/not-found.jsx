@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Image } from 'react-bootstrap';
-import PageTitle from './page-title';
+import PageTitle from '../../components/page-title';
 import React from 'react';
 
-require('../img/lost-underwater.jpg');
+require('../../img/lost-underwater.jpg');
 
 class NotFound extends React.Component {
 	render() {

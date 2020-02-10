@@ -39,8 +39,8 @@ describe('Handle Error utility', () => {
 			res.sendStatus(401);
 		});
 
-		await driver.navigate().to('http://localhost:8081/logs');
-		await driver.wait(until.urlIs('http://localhost:8081/login'));
+		await driver.navigate().to(mockApis.resolveUrl('/logs'));
+		await driver.wait(until.urlIs(mockApis.resolveUrl('/login')));
 	});
 
 });

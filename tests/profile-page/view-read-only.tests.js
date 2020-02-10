@@ -5,6 +5,8 @@ import mockApis, { exampleProfile, exampleUser } from '../webapp/mock-apis';
 import moment from 'moment';
 import sinon from 'sinon';
 
+const ProfileUrl = mockApis.resolveUrl('/profile/g.Dog77');
+
 describe('Viewing Read-Only Profiles', () => {
 	let getAuthStub = null;
 	let getProfileStub = null;
@@ -41,7 +43,7 @@ describe('Viewing Read-Only Profiles', () => {
 	});
 
 	it('Loads fields as expected', async () => {
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('memberSince')));
 		let text = await driver.findElement(By.id('memberSince')).getText();
 		expect(text).to.equal('3 years ago');
@@ -96,7 +98,7 @@ describe('Viewing Read-Only Profiles', () => {
 			readOnly: true
 		};
 
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('memberSince')));
 		let text = await driver.findElement(By.id('memberSince')).getText();
 		expect(text).to.equal('3 years ago');
@@ -144,7 +146,7 @@ describe('Viewing Read-Only Profiles', () => {
 	it('Displays name correctly if no first name is supplied', async () => {
 		testProfile.firstName = null;
 
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('name')));
 
 		const text = await driver.findElement(By.id('name')).getText();
@@ -154,7 +156,7 @@ describe('Viewing Read-Only Profiles', () => {
 	it('Displays name correctly if no last name is supplied', async () => {
 		testProfile.lastName = null;
 
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('name')));
 
 		const text = await driver.findElement(By.id('name')).getText();
@@ -164,7 +166,7 @@ describe('Viewing Read-Only Profiles', () => {
 	it('Displays dives logged correctly if the number is zero', async () => {
 		testProfile.divesLogged = 0;
 
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('divesLogged')));
 
 		const text = await driver.findElement(By.id('divesLogged')).getText();
@@ -174,7 +176,7 @@ describe('Viewing Read-Only Profiles', () => {
 	it('Displays bottom time correctly if the number is zero', async () => {
 		testProfile.bottomTimeLogged = 0;
 
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('bottomTimeLogged')));
 
 		const text = await driver.findElement(By.id('bottomTimeLogged')).getText();
@@ -184,7 +186,7 @@ describe('Viewing Read-Only Profiles', () => {
 	it('Displays bottom time correctly if the number less than 60 minutes', async () => {
 		testProfile.bottomTimeLogged = 32;
 
-		await driver.navigate().to('http://localhost:8081/profile/g.Dog77');
+		await driver.navigate().to(ProfileUrl);
 		await driver.wait(until.elementLocated(By.id('bottomTimeLogged')));
 
 		const text = await driver.findElement(By.id('bottomTimeLogged')).getText();

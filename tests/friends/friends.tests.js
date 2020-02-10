@@ -3,7 +3,7 @@ import driver from '../web-driver';
 import mockApis, { exampleUser } from '../webapp/mock-apis';
 import sinon from 'sinon';
 
-const FriendsUrl = 'http://localhost:8081/friends/';
+const FriendsUrl = mockApis.resolveUrl('/friends/');
 
 async function refreshPage() {
 	await driver.navigate().to(FriendsUrl);

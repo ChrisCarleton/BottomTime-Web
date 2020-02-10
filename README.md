@@ -26,6 +26,9 @@ The application has a small number of environment variables that can be set to c
 These variables should be set in the terminal used to package the project because Webpack will hard-code
 them into the bundle at build time.
 
+* **BT_ADMIN_EMAIL** - The e-mail address users should use to contact an administrator. (This address
+is displayed in several spots in the application, including some error pages.) The default value is
+`admin@bottomtime.ca`.
 * **BT_API_URL** - This environment variable is only used by the Webpack dev server when testing locally.
 It can be used to override the URL to the API backend. The default value is `http://localhost:29201/`.
 * **BT_GOOGLE_MAPS_API_KEY** - The Google Maps component used in the application requires an API key to
@@ -39,10 +42,11 @@ bundle the project using production-friendly settings (compression, minification
 
 ## Building and Running Locally
 ### Prerequisites
-This project is built, tested, and packaged using the [Gulp CLI](https://www.npmjs.com/package/gulp-cli).
+This project is built, tested, and packaged using the [Gulp CLI](https://www.npmjs.com/package/gulp-cli). Dependencies are
+mananged using [yarn](https://yarnpkg.com/).
 
 ```
-npm install -g gulp-cli
+npm install -g gulp-cli yarn
 ```
 
 It is also dependent on the [Bottom Time Core](https://github.com/ChrisCarleton/BottomTime-Core) service to
@@ -114,20 +118,21 @@ gulp serve-prod
 be used to make your local dev instance of the site routable from the Internet by giving it a temporary
 URL.
 
-Create an ngrok account, download the client and, configure your auth token before continuing.
+Create an ngrok account, download the client, and configure your auth token before continuing.
 
-#### 1) Prepare the Backend
-The backend should be running with the appropriate environment variables set to the correct Client ID and
-Client Secret for the SSO provider(s) being tested. (See the documentation
-[here](https://github.com/ChrisCarleton/BottomTime-Core/blob/master/README.md).)
-
-#### 2) Open an Ngrok Tunnel
+#### 1) Open an Ngrok Tunnel
 Run ngrok with the following command. This will create a publicly-accessible tunnel back to your local
 port on which the application is running. Make a note of the HTTPS URL that ngrok provides for your tunnel.
 
 ```
 ngrok http --host-header=rewrite 8080
 ```
+
+#### 2) Prepare the Backend
+The backend should be running with the appropriate environment variables set to the correct Client ID and
+Client Secret for the SSO provider(s) being tested. (See the documentation
+[here](https://github.com/ChrisCarleton/BottomTime-Core/blob/master/README.md).) Additionally, the
+`BT_SITE_URL` environment variable should be set to the URL for your ngrok gateway.
 
 **Note:** By default the web application runs on port `8080`. If you are running it on a different port,
 then change the command above to reflect that.
