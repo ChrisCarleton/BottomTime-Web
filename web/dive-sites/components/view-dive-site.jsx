@@ -1,4 +1,4 @@
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import DiveSiteDetails from './dive-site-details';
 import FormGroup from '../../components/form-group';
 import Formsy from 'formsy-react';

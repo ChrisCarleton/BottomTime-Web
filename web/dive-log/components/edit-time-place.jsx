@@ -1,8 +1,5 @@
-import {
-	Col,
-	Glyphicon,
-	Row
-} from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
+import { Glyphicon } from 'react-bootstrap';
 import config from '../../config';
 import moment from 'moment';
 import PropTypes from 'prop-types';

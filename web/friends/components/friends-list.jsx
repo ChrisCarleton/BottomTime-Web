@@ -4,13 +4,12 @@ import {
 	ButtonGroup,
 	ButtonToolbar,
 	Checkbox,
-	Col,
 	Glyphicon,
 	Label,
 	ListGroup,
-	ListGroupItem,
-	Row
+	ListGroupItem
 } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import FriendsActions from '../actions/friends-actions';

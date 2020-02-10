@@ -1,5 +1,6 @@
 import agent from '../../agent';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../actions/current-user-actions';
 import CurrentUserStore from '../stores/current-user-store';
