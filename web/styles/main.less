@@ -2,13 +2,9 @@
 @import "./tags.less";
 @import "./sliders.less";
 
-@container-bg: #eef;
+@import "./variables.less";
 
 // Bootstrap overrides
-@body-bg: #0ef;
-@text-color: #000;
-@font-family-sans-serif: "Lato", Helvetica, Arial, sans-serif;
-@nav-tabs-active-link-hover-bg: @container-bg;
 
 body {
 	background-color: darkblue;
@@ -19,8 +15,18 @@ body {
 
 #main-section {
 	padding: 50px 15px 15px 15px;
-	background-color: @container-bg;
+	background-color: #eef;
 	border-radius: 18px;
+
+	@media (min-width: @screen-sm-min) {
+
+	}
+	@media (min-width: @screen-md-min) {
+
+	}
+	@media (min-width: @screen-lg-min) {
+
+	}
 }
 
 #brand-img {
