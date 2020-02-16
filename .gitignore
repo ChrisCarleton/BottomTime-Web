@@ -60,6 +60,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# Visual Studio Code settings
+.vscode/
+
 # next.js build output
 .next
 
