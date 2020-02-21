@@ -4,10 +4,9 @@ import {
 	Button,
 	ButtonGroup,
 	ButtonToolbar,
-	Col,
-	Panel,
-	Row
+	Panel
 } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import CheckBox from '../../components/check-box';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';

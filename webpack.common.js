@@ -8,6 +8,7 @@ const webpack = require('webpack');
 module.exports = {
 	entry: {
 		polyfill: '@babel/polyfill',
+		controls: './web/components/controls.js',
 		main: './web/app.js'
 	},
 	module: {

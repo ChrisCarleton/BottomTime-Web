@@ -3,12 +3,11 @@ import {
 	Alert,
 	Button,
 	ButtonGroup,
-	Col,
 	Glyphicon,
 	Media,
-	Panel,
-	Row
+	Panel
 } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentDiveSiteActions from '../actions/current-site-actions';
 import CurrentDiveSiteStore from '../stores/current-site-store';

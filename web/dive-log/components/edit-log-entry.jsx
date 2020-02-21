@@ -1,9 +1,6 @@
 import agent from '../../agent';
-import {
-	Button,
-	Col,
-	Row
-} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Conditions from './edit-conditions';
 import connectToStores from 'alt-utils/lib/connectToStores';
@@ -13,7 +10,7 @@ import DiveInfo from './edit-dive-info';
 import ErrorActions from '../../actions/error-actions';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
-import LogEntryUtilities from './log-entry-utilities';
+import LogEntryUtilities from '../utils/log-entry-utilities';
 import OtherInfo from './edit-other-info';
 import PropTypes from 'prop-types';
 import React from 'react';

@@ -2,10 +2,9 @@ import agent from '../../agent';
 import {
 	Button,
 	ButtonGroup,
-	ButtonToolbar,
-	Col,
-	Row
+	ButtonToolbar
 } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import CurrentDiveSiteActions from '../actions/current-site-actions';
 import DiveSiteRatings from './dive-site-ratings-list';
 import DiveSiteUtils from '../utils/dive-site-utils';

@@ -1,8 +1,5 @@
-import {
-	Button,
-	Col,
-	Row
-} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
 import Formsy from 'formsy-react';
 import FriendsActions from '../actions/friends-actions';
 import PropTypes from 'prop-types';

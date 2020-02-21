@@ -1,8 +1,5 @@
-import {
-	Col,
-	Glyphicon,
-	Row
-} from 'react-bootstrap';
+import { Col, Row } from 'react-flexbox-grid';
+import { Glyphicon } from 'react-bootstrap';
 import config from '../../config';
 import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';

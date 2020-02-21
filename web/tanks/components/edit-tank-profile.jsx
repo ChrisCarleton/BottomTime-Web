@@ -2,7 +2,7 @@ import { Button, Modal } from 'react-bootstrap';
 import Dot from 'dot-object';
 import Formsy from 'formsy-react';
 import HiddenField from '../../components/hidden-field';
-import LogEntryUtilities from '../../dive-log/components/log-entry-utilities';
+import LogEntryUtilities from '../../dive-log/utils/log-entry-utilities';
 import { nullIfEmpty, trim, toPressure } from '../../transform-functions';
 import PropTypes from 'prop-types';
 import RadioList from '../../components/radio-list';

@@ -1,15 +1,9 @@
+import { Alert, Clearfix } from 'react-bootstrap';
+import { Col, Grid, Row } from 'react-flexbox-grid';
 import PropTypes from 'prop-types';
 import React from 'react';
 import LoadingSpinner from '../../components/loading-spinner';
 import LogsListItem from './logs-list-item';
-
-import {
-	Alert,
-	Clearfix,
-	Col,
-	Grid,
-	Row
-} from 'react-bootstrap';
 
 class LogsListGrid extends React.Component {
 	render() {
@@ -49,7 +43,7 @@ class LogsListGrid extends React.Component {
 		}
 
 		return (
-			<Grid id="log-entries-grid">
+			<Grid fluid id="log-entries-grid">
 				<Row>{ elements }</Row>
 			</Grid>
 		);
