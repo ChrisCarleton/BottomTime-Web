@@ -5,14 +5,13 @@ import CurrentDiveSiteActions from '../actions/current-site-actions';
 import CurrentDiveSiteStore from '../stores/current-site-store';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import EditDiveSite from './edit-dive-site';
-import handleError from '../../handle-error';
+import errorHandler from '../../components/error-handler';
 import { LinkContainer } from 'react-router-bootstrap';
 import LoadingSpinner from '../../components/loading-spinner';
 import PageTitle from '../../components/page-title';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ViewDiveSite from './view-dive-site';
-import { withRouter } from 'react-router-dom';
 
 class DiveSite extends React.Component {
 	static getStores() {
@@ -50,11 +49,7 @@ class DiveSite extends React.Component {
 						isLoading: false
 					});
 				} catch (err) {
-					this.setState({
-						...this.state,
-						isLoading: false
-					});
-					handleError(err, this.props.history);
+					this.props.handleError(err);
 				}
 			} else {
 				CurrentDiveSiteActions.updateCurrentDiveSite({});
@@ -129,8 +124,8 @@ class DiveSite extends React.Component {
 DiveSite.propTypes = {
 	currentDiveSite: PropTypes.object.isRequired,
 	currentUser: PropTypes.object.isRequired,
-	history: PropTypes.object.isRequired,
+	handleError: PropTypes.func.isRequired,
 	match: PropTypes.object.isRequired
 };
 
-export default connectToStores(withRouter(DiveSite));
+export default errorHandler(connectToStores(DiveSite));
