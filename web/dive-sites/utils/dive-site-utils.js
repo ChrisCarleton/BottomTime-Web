@@ -37,7 +37,9 @@ export default {
 	},
 
 	mapQueryParameters(queryParams) {
-		return stripEmptiness(dot.object(queryParams, QueryMods));
+		const query = stripEmptiness(dot.object(queryParams, QueryMods));
+		query.count = 100;
+		return query;
 	},
 
 	postSubmitValidation(model, invalidateForm) {

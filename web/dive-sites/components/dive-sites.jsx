@@ -12,7 +12,6 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import DiveSitesActions from '../actions/dive-sites-actions';
 import DiveSitesList from './dive-sites-list';
-import DiveSitesStore from '../stores/dive-sites-store';
 import DiveSiteUtils from '../utils/dive-site-utils';
 import Formsy from 'formsy-react';
 import handleError from '../../handle-error';
@@ -27,14 +26,11 @@ import { withRouter } from 'react-router-dom';
 
 class DiveSites extends React.Component {
 	static getStores() {
-		return [ CurrentUserStore, DiveSitesStore ];
+		return [ CurrentUserStore ];
 	}
 
 	static getPropsFromStores() {
-		return {
-			currentUser: CurrentUserStore.getState().currentUser,
-			...DiveSitesStore.getState()
-		};
+		return CurrentUserStore.getState();
 	}
 
 	constructor(props) {
@@ -45,23 +41,6 @@ class DiveSites extends React.Component {
 		};
 		this.handleSearch = this.handleSearch.bind(this);
 		this.searchPanelToggle = this.searchPanelToggle.bind(this);
-	}
-
-	componentDidMount() {
-		setTimeout(async () => {
-			DiveSitesActions.beginLoadingSites();
-			try {
-				const { body } = await agent
-					.get('/api/diveSites')
-					.query({
-						count: 200
-					});
-				DiveSitesActions.updateSites(body);
-			} catch (err) {
-				DiveSitesActions.finishLoadingSites();
-				handleError(err, this.props.history);
-			}
-		}, 0);
 	}
 
 	async handleSearch(model) {
@@ -211,10 +190,7 @@ class DiveSites extends React.Component {
 				<Panel expanded={ this.state.searchExpanded } onToggle={ this.searchPanelToggle }>
 					<Panel.Body>{ this.renderSearchForm() }</Panel.Body>
 				</Panel>
-				<DiveSitesList
-					diveSites={ this.props.diveSites }
-					isLoadingSites={ this.props.isLoadingSites }
-				/>
+				<DiveSitesList />
 			</div>
 		);
 	}
@@ -222,9 +198,7 @@ class DiveSites extends React.Component {
 
 DiveSites.propTypes = {
 	currentUser: PropTypes.object.isRequired,
-	diveSites: PropTypes.arrayOf(PropTypes.object).isRequired,
-	history: PropTypes.object.isRequired,
-	isLoadingSites: PropTypes.bool.isRequired
+	history: PropTypes.object.isRequired
 };
 
 export default withRouter(connectToStores(DiveSites));

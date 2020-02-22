@@ -3,7 +3,8 @@ import DiveSitesActions from '../actions/dive-sites-actions';
 
 class DiveSitesStore {
 	constructor() {
-		this.isLoadingSites = true;
+		this.isLoadingSites = false;
+		this.isPristine = true;
 		this.diveSites = [];
 
 		this.bindListeners({
@@ -27,6 +28,7 @@ class DiveSitesStore {
 
 	handleUpdateSites(sites) {
 		this.diveSites = sites || [];
+		this.isPristine = false;
 		this.isLoadingSites = false;
 	}
 }
