@@ -1,6 +1,7 @@
 import Dot from 'dot-object';
 import {
 	nullIfEmpty,
+	stripEmptiness,
 	toCurrentUserName,
 	toNumber,
 	trim
@@ -32,11 +33,11 @@ const QueryMods = {
 
 export default {
 	mapFormValues(formData) {
-		return dot.object(formData, FormMods);
+		return stripEmptiness(dot.object(formData, FormMods));
 	},
 
 	mapQueryParameters(queryParams) {
-		return dot.object(queryParams, QueryMods);
+		return stripEmptiness(dot.object(queryParams, QueryMods));
 	},
 
 	postSubmitValidation(model, invalidateForm) {
