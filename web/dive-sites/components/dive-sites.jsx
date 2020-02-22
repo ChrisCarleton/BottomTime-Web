@@ -165,14 +165,20 @@ class DiveSites extends React.Component {
 								value={ false }
 							/>
 						</Col>
-						<Col sm={ 12 } md={ 6 } lg={ 4 }>
-							<CheckBox
-								controlId="owner"
-								name="owner"
-								label="Show only my dive sites"
-								value={ false }
-							/>
-						</Col>
+						{
+							this.props.currentUser.isAnonymous
+								? null
+								: (
+									<Col sm={ 12 } md={ 6 } lg={ 4 }>
+										<CheckBox
+											controlId="owner"
+											name="owner"
+											label="Show only my dive sites"
+											value={ false }
+										/>
+									</Col>
+								)
+						}
 					</Row>
 				</Panel.Collapse>
 			</Formsy>
