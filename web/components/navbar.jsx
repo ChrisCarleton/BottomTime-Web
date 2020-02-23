@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 require('../img/dive-flag-icon.jpg');
 
@@ -30,8 +31,14 @@ class AppNavBar extends React.Component {
 		};
 	}
 
+	constructor(props) {
+		super(props);
+		this.handleLogoutClick = this.handleLogoutClick.bind(this);
+	}
+
 	handleLogoutClick() {
 		CurrentUserActions.logout();
+		this.props.history.push('/');
 	}
 
 	renderRightNav() {
@@ -128,7 +135,8 @@ class AppNavBar extends React.Component {
 
 AppNavBar.propTypes = {
 	currentUser: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired,
 	pendingFriendRequests: PropTypes.number
 };
 
-export default connectToStores(AppNavBar);
+export default withRouter(connectToStores(AppNavBar));
