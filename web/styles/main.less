@@ -4,10 +4,10 @@
 
 @import "./variables.less";
 
-// Bootstrap overrides
+@import "./buttons.less";
 
 body {
-	background-color: darkblue;
+	background-color: @bg-colour;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-attachment: fixed;
@@ -15,7 +15,7 @@ body {
 
 #main-section {
 	padding: 50px 15px 15px 15px;
-	background-color: #eef;
+	background-color: @container-colour;
 	border-radius: 18px;
 
 	@media (min-width: @screen-sm-min) {

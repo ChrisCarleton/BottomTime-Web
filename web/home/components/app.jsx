@@ -73,7 +73,7 @@ class App extends React.Component {
 				<div>
 					<NavBar />
 					<ErrorBar />
-					<div id="main-section" className="container">
+					<div id="main-section">
 						<Suspense fallback={ spinner }>
 							{ pageContent }
 						</Suspense>
