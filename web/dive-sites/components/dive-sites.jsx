@@ -11,6 +11,7 @@ import {
 import { Col, Row } from 'react-flexbox-grid';
 import CheckBox from '../../components/check-box';
 import connectToStores from 'alt-utils/lib/connectToStores';
+import CurrentSiteActions from '../actions/current-site-actions';
 import CurrentUserStore from '../../users/stores/current-user-store';
 import DiveSitesActions from '../actions/dive-sites-actions';
 import DiveSitesList from './dive-sites-list';
@@ -26,6 +27,7 @@ import RadioList from '../../components/radio-list';
 import React from 'react';
 import SearchBox from '../../components/search-box';
 import Slider from '../../components/slider';
+import { withRouter } from 'react-router-dom';
 
 class DiveSites extends React.Component {
 	static getStores() {
@@ -50,6 +52,7 @@ class DiveSites extends React.Component {
 		};
 		this.handleSearch = this.handleSearch.bind(this);
 		this.handleLoadMore = this.handleLoadMore.bind(this);
+		this.handleNewSite = this.handleNewSite.bind(this);
 		this.searchPanelToggle = this.searchPanelToggle.bind(this);
 		this.renderDiveSitesList = this.renderDiveSitesList.bind(this);
 	}
@@ -82,6 +85,11 @@ class DiveSites extends React.Component {
 		} catch (err) {
 			return done(err);
 		}
+	}
+
+	handleNewSite() {
+		CurrentSiteActions.updateCurrentDiveSite({});
+		this.props.history.push('/diveSites/new');
 	}
 
 	searchPanelToggle() {
@@ -251,9 +259,9 @@ class DiveSites extends React.Component {
 							this.props.currentUser.isAnonymous
 								? null
 								: (
-									<LinkContainer to="/diveSites/new">
-										<Button bsStyle="primary">Create New Dive Site</Button>
-									</LinkContainer>
+									<Button onClick={ this.handleNewSite } bsStyle="primary">
+										Create New Dive Site
+									</Button>
 								)
 						}
 					</ButtonGroup>
@@ -271,7 +279,8 @@ DiveSites.propTypes = {
 	currentUser: PropTypes.object.isRequired,
 	diveSites: PropTypes.arrayOf(PropTypes.object).isRequired,
 	handleError: PropTypes.func.isRequired,
+	history: PropTypes.object.isRequired,
 	isPristine: PropTypes.bool.isRequired
 };
 
-export default errorHandler(connectToStores(DiveSites));
+export default withRouter(errorHandler(connectToStores(DiveSites)));
