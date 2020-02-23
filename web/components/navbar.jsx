@@ -11,11 +11,10 @@ import connectToStores from 'alt-utils/lib/connectToStores';
 import CurrentUserActions from '../users/actions/current-user-actions';
 import CurrentUserStore from '../users/stores/current-user-store';
 import FriendsStore from '../friends/stores/friends-store';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 
 require('../img/dive-flag-icon.jpg');
 
