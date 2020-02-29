@@ -60,62 +60,62 @@ class ChangePassword extends React.Component {
 
 		return (
 			<div>
-				<RequireUser />
 				<PageTitle title="Change Password" />
-
-				<Formsy onValidSubmit={ this.handleSubmit }>
-					{
-						hasPassword
-							? (
-								<TextBox
-									controlId="oldPassword"
-									label="Old password"
-									name="oldPassword"
-									required
-									password
-								/>
-							)
-							: null
-					}
-					<TextBox
-						controlId="newPassword"
-						label="New password"
-						name="newPassword"
-						validations={ {
-							matchRegexp: config.passwordRegex,
-							minLength: 7,
-							maxLength: 50
-						} }
-						validationErrors={ {
-							matchRegexp: 'Password did not meet strength requirements. (See above!)',
-							minLength: 'Password must be at least 7 characters long.',
-							maxLength: 'Passwords can be no more than 50 characters long.'
-						} }
-						required
-						password
-					/>
-					<TextBox
-						controlId="confirmPassword"
-						label="Confirm password"
-						name="confirmPassword"
-						validations={ {
-							equalsField: 'newPassword'
-						} }
-						validationErrors={ {
-							equalsField: 'Passwords do not match.'
-						} }
-						required
-						password
-					/>
-					<Button
-						id="btn-change"
-						bsStyle="primary"
-						type="submit"
-						disabled={ this.state.isWaiting }
-					>
-						Change Password
-					</Button>
-				</Formsy>
+				<RequireUser>
+					<Formsy onValidSubmit={ this.handleSubmit }>
+						{
+							hasPassword
+								? (
+									<TextBox
+										controlId="oldPassword"
+										label="Old password"
+										name="oldPassword"
+										required
+										password
+									/>
+								)
+								: null
+						}
+						<TextBox
+							controlId="newPassword"
+							label="New password"
+							name="newPassword"
+							validations={ {
+								matchRegexp: config.passwordRegex,
+								minLength: 7,
+								maxLength: 50
+							} }
+							validationErrors={ {
+								matchRegexp: 'Password did not meet strength requirements. (See above!)',
+								minLength: 'Password must be at least 7 characters long.',
+								maxLength: 'Passwords can be no more than 50 characters long.'
+							} }
+							required
+							password
+						/>
+						<TextBox
+							controlId="confirmPassword"
+							label="Confirm password"
+							name="confirmPassword"
+							validations={ {
+								equalsField: 'newPassword'
+							} }
+							validationErrors={ {
+								equalsField: 'Passwords do not match.'
+							} }
+							required
+							password
+						/>
+						<Button
+							id="btn-change"
+							bsStyle="primary"
+							type="submit"
+							disabled={ this.state.isWaiting }
+						>
+							Change Password
+						</Button>
+					</Formsy>
+				</RequireUser>
 			</div>
 		);
 	}

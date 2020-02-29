@@ -44,24 +44,25 @@ class Profile extends React.Component {
 	}
 
 	render() {
-		if (this.props.currentUser.isAnonymous) {
-			if (!this.props.match.params.username) {
-				return <RequireUser />;
-			}
-		}
+		const {
+			currentProfile,
+			currentUser,
+			isLoading,
+			match
+		} = this.props;
 
-		const username = this.props.match.params.username || this.props.currentUser.username;
+		const username = match.params.username || currentUser.username;
 		let element = null;
-		if (this.props.isLoading) {
+		if (isLoading) {
 			element = <LoadingSpinner message="Loading profile information..." />;
-		} else if (this.props.currentProfile.readOnly) {
+		} else if (currentProfile.readOnly) {
 			element = (
-				<ViewProfile profile={ this.props.currentProfile } />
+				<ViewProfile profile={ currentProfile } />
 			);
 		} else {
 			element = (
 				<EditProfile
-					profile={ this.props.currentProfile }
+					profile={ currentProfile }
 					username={ username }
 				/>
 			);
@@ -70,7 +71,9 @@ class Profile extends React.Component {
 		return (
 			<div>
 				<PageTitle title="Profile" />
-				{ element }
+				<RequireUser customFunction={ () => currentUser.isAnonymous && !match.params.username }>
+					{ element }
+				</RequireUser>
 			</div>
 		);
 	}

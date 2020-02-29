@@ -15,7 +15,13 @@ class RequireUser extends React.Component {
 	}
 
 	render() {
-		if (this.props.currentUser.isAnonymous) {
+		const {
+			children,
+			currentUser,
+			customFunction
+		} = this.props;
+
+		if ((customFunction && customFunction()) || currentUser.isAnonymous) {
 			return (
 				<div>
 					<Alert bsStyle="warning">
@@ -28,13 +34,14 @@ class RequireUser extends React.Component {
 			);
 		}
 
-		return <div>{ this.props.children }</div>;
+		return <div>{ children }</div>;
 	}
 }
 
 RequireUser.propTypes = {
 	children: PropTypes.node.isRequired,
-	currentUser: PropTypes.object.isRequired
+	currentUser: PropTypes.object.isRequired,
+	customFunction: PropTypes.func
 };
 
 export default connecToStores(RequireUser);

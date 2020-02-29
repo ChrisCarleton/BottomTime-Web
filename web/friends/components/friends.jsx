@@ -53,7 +53,7 @@ class Friends extends React.Component {
 		} = this.props;
 
 		return (
-			<RequireUser>
+			<div>
 				{ showNewFriendRequestDialog ? <NewFriendRequestDialog /> : null }
 				<Modal show={ profileCard !== '' } onHide={ FriendsActions.hideProfileCard }>
 					<Modal.Header closeButton>
@@ -70,21 +70,23 @@ class Friends extends React.Component {
 					<Breadcrumb.Item active>Dive Buddies</Breadcrumb.Item>
 				</Breadcrumb>
 				<PageTitle title="My Dive Buddies" />
-				<Nav bsStyle="tabs">
-					<LinkContainer to="/friends">
-						<NavItem>Dive Buddies</NavItem>
-					</LinkContainer>
-					<LinkContainer to="/friendRequests">
-						<NavItem>Dive Buddy Requests</NavItem>
-					</LinkContainer>
-				</Nav>
-				<Suspense fallback={ Spinner }>
-					<Switch>
-						<Route path="/friends" exact component={ FriendsList } />
-						<Route path="/friendRequests" exact component={ FriendRequests } />
-					</Switch>
-				</Suspense>
-			</RequireUser>
+				<RequireUser>
+					<Nav bsStyle="tabs">
+						<LinkContainer to="/friends">
+							<NavItem>Dive Buddies</NavItem>
+						</LinkContainer>
+						<LinkContainer to="/friendRequests">
+							<NavItem>Dive Buddy Requests</NavItem>
+						</LinkContainer>
+					</Nav>
+					<Suspense fallback={ Spinner }>
+						<Switch>
+							<Route path="/friends" exact component={ FriendsList } />
+							<Route path="/friendRequests" exact component={ FriendRequests } />
+						</Switch>
+					</Suspense>
+				</RequireUser>
+			</div>
 		);
 	}
 }
