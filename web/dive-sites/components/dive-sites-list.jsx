@@ -1,5 +1,7 @@
-import { Alert, Badge, Glyphicon, Media } from 'react-bootstrap';
+import { Badge, Media } from 'react-bootstrap';
+import connectToStores from 'alt-utils/lib/connectToStores';
 import DiveSitesListItem from './dive-sites-list-item';
+import DiveSitesStore from '../stores/dive-sites-store';
 import LoadingSpinner from '../../components/loading-spinner';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,23 +9,22 @@ import React from 'react';
 require('../../img/dive-site-flag.png');
 
 class DiveSitesList extends React.Component {
-	render() {
-		if (this.props.isLoadingSites) {
-			return <LoadingSpinner message="Loading dive sites..." />;
-		}
+	static getStores() {
+		return [ DiveSitesStore ];
+	}
 
-		if (this.props.diveSites.length === 0) {
-			return (
-				<Alert bsStyle="info">
-					<p>
-						<Glyphicon glyph="info-sign" />
-						&nbsp;
-						No dive sites match your search criteria.
-						Click <strong>Create New Dive Site</strong> above to add dive sites or modify your
-						search criteria.
-					</p>
-				</Alert>
-			);
+	static getPropsFromStores() {
+		return DiveSitesStore.getState();
+	}
+
+	render() {
+		const {
+			isLoadingSites,
+			diveSites
+		} = this.props;
+
+		if (isLoadingSites) {
+			return <LoadingSpinner message="Loading dive sites..." />;
 		}
 
 		return (
@@ -31,7 +32,7 @@ class DiveSitesList extends React.Component {
 				<p>Showing <Badge>{ this.props.diveSites.length }</Badge> dive sites.</p>
 				<Media.List>
 					{
-						this.props.diveSites.map(
+						diveSites.map(
 							site => <DiveSitesListItem key={ site.siteId } diveSite={ site } />
 						)
 					}
@@ -46,4 +47,4 @@ DiveSitesList.propTypes = {
 	isLoadingSites: PropTypes.bool.isRequired
 };
 
-export default DiveSitesList;
+export default connectToStores(DiveSitesList);

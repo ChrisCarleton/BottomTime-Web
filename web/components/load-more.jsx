@@ -7,6 +7,7 @@ class LoadMore extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isEof: false,
 			isLoading: false
 		};
 
@@ -14,16 +15,25 @@ class LoadMore extends React.Component {
 	}
 
 	handleLoadMore() {
-		this.setState({ isLoading: true });
-		this.props.load(err => {
-			this.setState({ isLoading: false });
-			this.props.handleError(err);
+		this.setState({ isLoading: true, isEof: false });
+		this.props.load((err, eof) => {
+			this.setState({ isLoading: false, isEof: false });
+			if (err) {
+				this.props.handleError(err);
+			}
+			if (eof) {
+				this.setState({ isLoading: false, isEof: true });
+			}
 		});
 	}
 
 	render() {
 		if (this.state.isLoading) {
-			return <LoadingSpinner />;
+			return <LoadingSpinner message={ this.props.loadingMessage } />;
+		}
+
+		if (this.state.isEof) {
+			return null;
 		}
 
 		return (
@@ -39,7 +49,12 @@ class LoadMore extends React.Component {
 
 LoadMore.propTypes = {
 	handleError: PropTypes.func.isRequired,
-	load: PropTypes.func.isRequired
+	load: PropTypes.func.isRequired,
+	loadingMessage: PropTypes.string.isRequired
+};
+
+LoadMore.defaultProps = {
+	loadingMessage: 'Loading more results...'
 };
 
 export default LoadMore;

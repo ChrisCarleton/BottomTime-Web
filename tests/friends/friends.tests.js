@@ -29,8 +29,8 @@ describe('Friends Page', () => {
 		await refreshPage();
 	});
 
-	it('Anonymous users will be redirected to the login page', async () => {
+	it('Anonymous users will be asked to sign in', async () => {
 		await driver.navigate().to(FriendsUrl);
-		await driver.wait(until.urlMatches(/.*\/login(\?.*)?$/));
+		await driver.wait(until.elementLocated(By.id('btn-login')));
 	});
 });

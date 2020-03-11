@@ -63,3 +63,13 @@ export function nullIfEmpty(str) {
 
 	return str;
 }
+
+export function stripEmptiness(obj) {
+	Object.keys(obj).forEach(key => {
+		if (typeof obj[key] === 'undefined' || obj[key] === null) {
+			delete obj[key];
+		}
+	});
+
+	return obj;
+}

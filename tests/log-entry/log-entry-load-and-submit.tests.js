@@ -26,7 +26,7 @@ const NotFoundUrl = mockApis.resolveUrl('/notFound');
 const ForbiddenUrl = mockApis.resolveUrl('/forbidden');
 const LoginUrl = mockApis.resolveUrl('/login');
 const NewEntryUrl = mockApis.resolveUrl('/logs/jake_smith/new');
-const EntryUrl = mockApis.resolveUrl(`logs/jake_smith/${ logEntries[0].entryId }`);
+const EntryUrl = mockApis.resolveUrl(`/logs/jake_smith/${ logEntries[0].entryId }`);
 
 describe('Loading and Submitting Log Entries', () => {
 	let authStub = null;

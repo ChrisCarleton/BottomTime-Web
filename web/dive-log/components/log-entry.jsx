@@ -51,29 +51,30 @@ class LogEntry extends React.Component {
 		const logsListPage = `/logs/${ this.props.match.params.username || '' }`;
 		const pageTitle = this.props.match.params.logId ? 'View/Edit Log Entry' : 'Create Log Entry';
 		let pageContent = null;
+		const {
+			currentEntry,
+			currentUser,
+			isLoading,
+			match
+		} = this.props;
 
-		if (
-			this.props.currentUser.isAnonymous && (
-				!this.props.match.params.username
-				|| !this.props.match.params.logId
-			)
-		) {
-			return <RequireUser />;
+		function loginRequired() {
+			return currentUser.isAnonymous && (!match.params.username || !match.params.logId);
 		}
 
-		if (this.props.isLoading) {
+		if (isLoading) {
 			pageContent = <LoadingSpinner message="Loading Log Entry..." />;
 		} else if (this.props.currentEntry.readOnly) {
 			pageContent = (
 				<ViewLogEntry
-					currentEntry={ this.props.currentEntry }
+					currentEntry={ currentEntry }
 				/>
 			);
 		} else {
 			pageContent = (
 				<EditLogEntry
-					currentUser={ this.props.currentUser }
-					currentEntry={ this.props.currentEntry }
+					currentUser={ currentUser }
+					currentEntry={ currentEntry }
 				/>
 			);
 		}
@@ -90,7 +91,9 @@ class LogEntry extends React.Component {
 					<Breadcrumb.Item active>{ pageTitle }</Breadcrumb.Item>
 				</Breadcrumb>
 				<PageTitle title={ pageTitle } />
-				{ pageContent }
+				<RequireUser customFunction={ loginRequired }>
+					{ pageContent }
+				</RequireUser>
 			</div>
 		);
 	}

@@ -124,7 +124,7 @@ describe('Change password page', () => {
 	describe('for other users', () => {
 		it('requires user to be signed in', async () => {
 			await driver.navigate().to(mockApis.resolveUrl('/changePassword/'));
-			await driver.wait(until.urlIs(mockApis.resolveUrl('/login')));
+			await driver.wait(until.elementLocated(By.id('btn-login')));
 		});
 
 		it('does not require old password if user does not have an existing password', async () => {

@@ -6,11 +6,10 @@ class Welcome extends React.Component {
 	render() {
 		return (
 			<div>
-				<RequireUser />
 				<PageTitle title="Welcome to Bottom Time!" />
-				<p>
+				<RequireUser>
 					TODO: Make this a really nice welcome page.
-				</p>
+				</RequireUser>
 			</div>
 		);
 	}

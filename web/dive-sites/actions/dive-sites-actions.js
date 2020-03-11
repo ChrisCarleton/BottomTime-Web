@@ -12,6 +12,10 @@ class DiveSitesActions {
 	updateSites(sites) {
 		return sites;
 	}
+
+	appendSites(sites) {
+		return sites;
+	}
 }
 
 export default alt.createActions(DiveSitesActions);

@@ -103,18 +103,21 @@ class LogsList extends React.Component {
 	}
 
 	render() {
-		if (!this.state.username) {
-			return <RequireUser />;
-		}
+		const {
+			currentUser,
+			isForbidden,
+			isSearching,
+			listEntries,
+			sortBy,
+			sortOrder
+		} = this.props;
 
-		if (this.props.isForbidden) {
-			return this.props.currentUser.isAnonymous
-				? <RequireUser />
-				: <Forbidden />;
+		if (isForbidden && !currentUser.isAnonymous) {
+			return <Forbidden />;
 		}
 
 		let reverseOrderText = null;
-		switch (this.props.sortBy) {
+		switch (sortBy) {
 		case 'maxDepth':
 			reverseOrderText = 'Shallowest first';
 			break;
@@ -138,51 +141,52 @@ class LogsList extends React.Component {
 				</Breadcrumb>
 
 				<PageTitle title={ `${ this.state.possessive } Log Book` } />
+				<RequireUser customFunction={ () => currentUser.isAnonymous && !this.state.username }>
+					<ButtonToolbar>
+						<LinkContainer to={ `/logs/${ currentUser.username }/new` }>
+							<Button bsStyle="primary">Create New</Button>
+						</LinkContainer>
 
-				<ButtonToolbar>
-					<LinkContainer to={ `/logs/${ this.props.currentUser.username }/new` }>
-						<Button bsStyle="primary">Create New</Button>
-					</LinkContainer>
+						<ToggleButtonGroup
+							name="sortBy"
+							value={ sortBy }
+							onChange={ this.handleSortByChanged }
+						>
+							<ToggleButton id="sortBy_entryTime" value="entryTime">
+								By Date
+							</ToggleButton>
+							<ToggleButton id="sortBy_maxDepth" value="maxDepth">
+								By Depth
+							</ToggleButton>
+							<ToggleButton id="sortBy_bottomTime" value="bottomTime">
+								By Duration
+							</ToggleButton>
+						</ToggleButtonGroup>
 
-					<ToggleButtonGroup
-						name="sortBy"
-						value={ this.props.sortBy }
-						onChange={ this.handleSortByChanged }
-					>
-						<ToggleButton id="sortBy_entryTime" value="entryTime">
-							By Date
-						</ToggleButton>
-						<ToggleButton id="sortBy_maxDepth" value="maxDepth">
-							By Depth
-						</ToggleButton>
-						<ToggleButton id="sortBy_bottomTime" value="bottomTime">
-							By Duration
-						</ToggleButton>
-					</ToggleButtonGroup>
+						<ToggleButtonGroup
+							type="checkbox"
+							value={ sortOrder === 'asc' ? [ 'asc' ] : [] }
+							onChange={ this.handleSortOrderChanged }
+						>
+							<ToggleButton id="sortOrder" value="asc">
+								{ reverseOrderText }
+							</ToggleButton>
+						</ToggleButtonGroup>
+					</ButtonToolbar>
 
-					<ToggleButtonGroup
-						type="checkbox"
-						value={ this.props.sortOrder === 'asc' ? [ 'asc' ] : [] }
-						onChange={ this.handleSortOrderChanged }
-					>
-						<ToggleButton id="sortOrder" value="asc">
-							{ reverseOrderText }
-						</ToggleButton>
-					</ToggleButtonGroup>
-				</ButtonToolbar>
-
-				<div id="logs-list">
-					{
-						this.props.listEntries && this.props.listEntries.length > 0
-							? <p>Showing <Label>{ this.props.listEntries.length }</Label>{ ' entries.' }</p>
-							: null
-					}
-					<LogsListGrid
-						isSearching={ this.props.isSearching }
-						listEntries={ this.props.listEntries }
-						username={ this.state.username }
-					/>
-				</div>
+					<div id="logs-list">
+						{
+							listEntries && listEntries.length > 0
+								? <p>Showing <Label>{ listEntries.length }</Label>{ ' entries.' }</p>
+								: null
+						}
+						<LogsListGrid
+							isSearching={ isSearching }
+							listEntries={ listEntries }
+							username={ this.state.username }
+						/>
+					</div>
+				</RequireUser>
 			</div>);
 	}
 }
