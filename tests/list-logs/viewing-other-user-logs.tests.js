@@ -92,7 +92,7 @@ describe('Viewing Other User\'s Log Books', () => {
 			});
 
 			await driver.navigate().to(UserUrl);
-			await driver.wait(until.urlIs(LoginUrl));
+			await driver.wait(until.elementLocated(By.id('btn-login')));
 
 			const [ { params } ] = getLogsStub.getCall(0).args;
 			expect(params.username).to.equal(Username);
