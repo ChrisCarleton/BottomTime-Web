@@ -6,7 +6,9 @@
   "private": true,
   "scripts": {
     "build": "gulp package",
-    "test": "gulp test"
+    "test": "gulp test",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -87,6 +89,8 @@
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.0.0",
     "react-tag-autocomplete": "^5.10.0",
-    "superagent": "^5.0.2"
-  }
+    "superagent": "^5.0.2",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
